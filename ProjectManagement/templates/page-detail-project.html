@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <!-- Gantt Chart-->
+    <!--start container-->
+    <div class="container">
+        <div class="section">
+            <h2 class="header bold">Agruppa</h2>
+            <h4 class="bold">Cliente Responsable: Luis González</h4>
+            <br>
+            <div class="row">
+                 <div class = "col s10 m10 l9 center">
+                     <div id="gantt_chart"></div>
+                 </div>
+            </div>
+        </div>
+
+        <!-- DataTable-->
+        <div class="section">
+             <!--DataTables Users-->
+            <div id="table-datatables">
+                <div class="row">
+                    <div class="col s8 m8 l9">
+                        <h3 class="header bold">Tareas</h3>
+                        <table id="data-table-simple" class="responsive-table display centered striped" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Responsable</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Requerida por</th>
+                                <th>Requiere de</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Responsable</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Requerida por</th>
+                                <th>Requiere de</th>
+                                <th>Acción</th>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr>
+                                <td>AGP-001</td>
+                                <td>Tarea 1</td>
+                                <td>Pedro Pérez</td>
+                                <td>01/03/2017</td>
+                                <td>04/03/2017</td>
+                                <td>AGP-003</td>
+                                <td>AGP-002</td>
+                                <td>
+                                    <a class="waves-effect waves-light"><i class = "mdi-content-create"> </i></a>
+                                    <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>AGP-002</td>
+                                <td>Tarea 2</td>
+                                <td>Pedro Pérez</td>
+                                <td>26/02/2017</td>
+                                <td>27/02/2017</td>
+                                <td>AGP-003</td>
+                                <td>--</td>
+                                <td><a class="waves-effect waves-light"> <i class = "mdi-content-create"></i></a>
+                                    <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class = "row">
+                        <div class="col s2 m2 l1 center">
+                            <p><a class="btn-floating btn-large waves-effect waves-light pink lighten-2" href = "#">
+                                <i class="mdi-content-add"></i></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+    <div class="section">
+        <div class="row">
+            <div class="col s4 m4 l4">
+                <a class="btn cyan waves-effect waves-light" href="#">Cancelar</a>
+            </div>
+            <div class="col l2"><p></p></div>
+            <div class="col s4 m4 l3">
+                <a class="btn right disabled" href="#">Cerrar Proyecto</a>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- End Gantt Chart-->
+
+
+
+<!-- LEFT RIGHT SIDEBAR NAV-->
+    <aside id="right-sidebar-nav">
+        <ul id="slide-out" class="side-nav fixed right-aligned rightside-navigation">
+            <li class="li-hover">
+               <h3 class="center">Restan</h3>
+               <h3 class="center">25 <br>Días</h3>
+            </li>
+            <li class="li-hover"><div class="divider"></div></li>
+            <li class="li-hover">
+            <li class="li-hover">
+               <p class="center">Fecha Inicio: 03 march, 2017</p>
+            </li>
+            <li class="li-hover">
+               <p class="center">Fecha Fin: 03 jun, 2017</p>
+            </li>
+            <ul class="chat-collapsible" data-collapsible="expandable">
+                <li>
+                    <div class="collapsible-header teal white-text active center">
+                        Personas<a class="right" href="#"><i class="mdi-content-add" ></i></a>
+                    </div>
+
+                    <div class="collapsible-body recent-activity">
+                        <div class="recent-activity-list  row">
+                            <div class="col s9 recent-activity-list-text">
+                                <div>Pedro Pérez</div>
+                                <div>María González</div>
+                                <div>José Sánchez</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header light-blue white-text active center">
+                        Documentos
+                        <a class="right" href="#"><i class="mdi-content-add"></i></a>
+                    </div>
+                    <div class="collapsible-body sales-repoart">
+                        <div class="sales-repoart-list chat-out-list row">
+                            <div class="col s9 recent-activity-list-text">
+                                <div>Documento 1</div>
+                                <div>Documento 2</div>
+                                <div>Documento 3</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                </ul>
+            </li>
+        </ul>
+    <!--<a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu" ></i></a> -->
+    </aside>
+
+
+
+{% endblock %}
+
+{% block script%}
+    <!--chart google-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="../static/js/gantt.js"></script>
+{% endblock %}

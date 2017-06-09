@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+
+     <!--Title start-->
+    <div class=" grey lighten-4">
+      <div class="container">
+        <div class="row">
+          <div class="col s12 m12 l12">
+            <h1 class="bold black-text center">Proyectos</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Title end-->
+
+
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+   <!--start container-->
+    <div class="container">
+      <div class="section">
+
+        <!--DataTables Users-->
+                   <!--New Users-->
+              <div class = "row">
+                  <div class="col s3 m3 l3">
+                      <p></p>
+                  </div>
+                  <div class="col s6 m6 l6">
+                      <div class="card-panel">
+                          <h4 class="header2">Nuevo Proyecto</h4>
+                          <div class="row">
+                              <form class="col s12">
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-editor-format-align-left prefix"></i>
+                                          <input id="first_name" type="text" class="validate">
+                                          <label for="first_name">Nombre</label>
+                                      </div>
+                                  </div>
+                                 <!--AUTOCOMPLETE-->
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-account-circle prefix"></i>
+                                          <input type="text" id="autocomplete" class="autocomplete">
+                                          <label for="autocomplete">Cliente Responsable</label>
+                                      </div>
+                                  </div>
+                                 <!--AUTOCOMPLETE-->
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-image-portrait prefix"></i>
+                                          <input type="text" id="autocomplete" class="autocomplete">
+                                          <label for="autocomplete">Responsable de la Empresa</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s1">
+                                          <i class="mdi-action-event prefix"></i>
+                                      </div>
+                                      <div class="input-date-picker col s11">
+                                          <label for="start">Fecha de Inicio</label>
+                                          <input id="start" type="date" class="datepicker">
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s1">
+                                          <i class="mdi-action-event prefix"></i>
+                                      </div>
+                                      <div class="input-date-picker col s11">
+                                          <label for="start">Fecha Fin (Estimada)</label>
+                                          <input id="start" type="date" class="datepicker">
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s1">
+                                          <i class="mdi-action-history prefix"></i>
+                                      </div>
+                                      <div class="input-field col s11">
+                                          <select name="select">
+                                              <option value="" disabled selected>Elija una opción</option>
+                                              <option value="Administrador">Administrador</option>
+                                              <option value="Arquitecto de Software">Arquitecto de Software</option>
+                                              <option value="Consultor Funcional">Consultor Funcional</option>
+                                              <option value="Cliente">Cliente</option>
+                                              <option value="Desarrollador">Desarrollador</option>
+                                              <option value="Project Management">Project Management</option>
+                                          </select>
+                                          <label for ="rol">Status</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-description prefix"></i>
+                                          <input id="username" type="text" length="120">
+                                          <label for="username">Descripción</label>
+                                      </div>
+                                  </div>
+
+                                      <div class="row">
+                                          <div class="input-field col s4">
+                                              <a class="btn cyan waves-effect waves-light right" href="{% url 'users'%}">Cancelar
+                                                  <i class="mdi-content-reply right"></i>
+                                              </a>
+                                          </div>
+                                          <div class="input-field col s8">
+                                              <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Guardar
+                                                  <i class="mdi-content-send right"></i>
+                                              </button>
+                                          </div>
+                                      </div>
+
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+
+      </div>
+
+    </div>
+    <!--end container-->
+
+
+{% endblock %}
+
+{% block script%}
+
+   <script src="static/js/jquery-ui.js"></script>
+
+  <!-- Others-->
+  <script type="text/javascript" src="static/js/others.js"></script>
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load staticfiles %} 
+
+
+{% block content %}
+
+
+     <!--Title start-->
+    <div class=" grey lighten-4">
+      <div class="container">
+        <div class="row">
+          <div class="col s12 m12 l12">
+            <h1 class="bold black-text center">Perfil</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Title end-->
+
+
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+   <!--start container-->
+    <div class="container">
+      <div class="section">
+
+        <!--DataTables Users-->
+                   <!--New Users-->
+              <div class = "row">
+                  
+                  <div class="col s12 m12 l12">
+                      <div class="card-panel">
+                          <h4 class="header2">Perfil</h4>
+                          <div class="row">
+                              <form class="col s6">
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-account-box prefix"></i>
+                                          <input id="first_name" type="text" class="validate" value="John">
+                                          <label for="first_name">Nombre</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-account-box prefix"></i>
+                                          <input id="last_name" type="text" class="validate" value="Doe">
+                                          <label for="last_name">Apellido</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-account-circle prefix"></i>
+                                          <input id="username" type="text" class="validate" value="jdoe">
+                                          <label for="username">Username</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-social-group prefix"></i>
+                                          <input disabled value="Administrador" id="rol" type="text" class="validate" >
+                                          <label for ="rol">Rol</label>
+                                                                                   
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-communication-email prefix"></i>
+                                          <input disabled value = "jdoe@idbcgroup.com" id="email4" type="email" class="validate">
+                                          <label for="email4">Email</label>
+                                      </div>
+                                  </div>
+
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-hardware-phone-iphone prefix"></i>
+                                          <input type="text" id="phone" class="validate" value="0412-9123344">
+                                          <label for="phone">Teléfono</label>
+                                      </div>
+                                  </div>                     
+                                      <div class="row">
+                                          <div class="input-field col s4">
+                                              <a class="btn cyan waves-effect waves-light right" href="{% url 'users'%}">Cancelar
+                                                  <i class="mdi-content-reply right"></i>
+                                              </a>
+                                          </div>
+                                          <div class="input-field col s8">
+                                              <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Guardar
+                                                  <i class="mdi-content-send right"></i>
+                                              </button>
+                                          </div>
+                                      </div>
+
+                              </form>
+                               <form class="col s6 m6 l6 center">
+                                  <img src="static/images/avatar.jpg" alt="" class="circle responsive-img valign profile-image">
+                                  <div class="row">
+                                  <div class="col s3"><p></p></div>
+                                  <div class="file-field input-field col s7">
+                                  <div class="btn col s4">
+                                    <span>Examinar</span>
+                                    <input type="file" accept='.jpg, .png, .jpeg'/>
+                                  </div>
+                                    <input class="file-path validate " type="text" />
+                                    
+                                  </div>
+                                  
+                                 </div>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+                 
+              </div>
+    
+
+      </div>
+
+    </div>
+    <!--end container-->
+
+
+{% endblock %}
+
+{% block script%}
+
+   <script src="static/js/jquery-ui.js"></script>
+
+  <!-- Others-->
+  <script type="text/javascript" src="static/js/others.js"></script>
+   
+{% endblock %}

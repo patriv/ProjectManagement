@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load staticfiles %} 
+
+
+{% block content %}
+
+
+     <!--Title start-->
+    <div class=" grey lighten-4">
+      <div class="container">
+        <div class="row">
+          <div class="col s12 m12 l12">
+            <h1 class="bold black-text center">Usuarios</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Title end-->
+
+
+
+    <div class = "modal" id = "modal2">
+        <div class="modal-content">
+            <h4 class = "orange-text">Eliminar Usuario</h4>
+            <div class="divider"></div>
+            <p> ¿Está seguro que desea eliminar a este usuario? </p>
+            </div>
+            <div class="divider"></div>
+            <div class = "modal-footer">
+                <a href="page-user.html" class="waves-effect waves-red btn-flat modal-action modal-close ">Aceptar</a>
+                <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Cancelar</a>
+            </div>
+    </div>
+
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+   <!--start container-->
+    <div class="container">
+      <div class="section">
+
+        <!--DataTables Users-->
+        <div id="table-datatables">
+
+          <div class="row">
+            <div class="col s2 m2 l2">
+            <p></p>
+            </div>
+            <div class="col s8 m8 l8">
+              <table id="data-table-simple" class="responsive-table display centered striped" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Username</th>
+                        <th>Rol</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Acción</th>
+
+                    </tr>
+                </thead>
+
+                <tfoot>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Username</th>
+                        <th>Rol</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th></th>
+
+                    </tr>
+                </tfoot>
+
+                <tbody>
+
+                    <tr>
+                        <td>Ashton Cox</td>
+                        <td>acox</td>
+                        <td>Desarrollador</td>
+                        <td>acoxgmail.com</td>
+                        <td>0414-1233344</td>
+                        <td>
+                            <a class="waves-effect waves-light"><i class = "mdi-content-create"> </i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Cedric Kelly</td>
+                        <td>ckelly</td>
+                        <td>Administrador</td>
+                        <td>ckellygmail.com</td>
+                        <td>0412-3334455</td>
+                        <td>
+                            <a class="waves-effect waves-light"><i class = "mdi-content-create"> </i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Airi Satou</td>
+                        <td>asatou</td>
+                        <td>Consultor Funcional</td>
+                        <td>asatou@gmail.com</td>
+                        <td>0414/9876655</td>
+                        <td>
+                            <a class="waves-effect waves-light" href="{% url 'update_users'%}"><i class = "mdi-content-create"> </i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Brielle Williamson</td>
+                        <td>bwilliamson</td>
+                        <td>Project Management</td>
+                        <td>bwilliamsongmail.com</td>
+                        <td>0416-2223333</td>
+                       <td ><a class="waves-effect waves-light"><i class = "mdi-content-create"></i></a>
+                           <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                           </a>
+                       </td>
+
+                    </tr>
+                    <tr>
+                        <td>Herrod Chandler</td>
+                        <td>hchandler</td>
+                        <td>Project Management</td>
+                        <td>hchandler</td>
+                        <td>0412-3456677</td>
+                        <td><a class="waves-effect waves-light"> <i class = "mdi-content-create"></i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Rhona Davidson</td>
+                        <td>rdavidson</td>
+                        <td>Consultor Funcional</td>
+                        <td>rdavidson@gmail.com </td>
+                        <td>0414-2223344</td>
+                        <td><a class="waves-effect waves-light"> <i class = "mdi-content-create"></i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                </tbody>
+              </table>
+            </div>
+            <div class = "row">
+             <div class="col s2 m2 l2 center">
+             <p><a class="btn-floating btn-large waves-effect waves-light pink lighten-2" href = "{% url 'new_users' %}"><i class="mdi-content-add"></i></a></p>
+            </div>
+            </div>
+          </div>
+        </div>
+        <br>
+
+      </div>
+
+    </div>
+    <!--end container-->
+
+
+{% endblock %}
+
+{% block script%}
+    <!-- data-tables -->
+    <script type="text/javascript" src="../static/js/plugins/data-tables/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../static/js/plugins/data-tables/data-tables-script.js"></script>
+
+{% endblock %}

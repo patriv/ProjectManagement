@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load staticfiles %} 
+
+
+{% block content %}
+
+
+     <!--Title start-->
+    <div class=" grey lighten-4">
+      <div class="container">
+        <div class="row">
+          <div class="col s12 m12 l12">
+            <h1 class="bold black-text center">Usuarios</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Title end-->
+
+
+        <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+   <!--start container-->
+    <div class="container">
+      <div class="section">
+
+        <!--DataTables Users-->
+                   <!--New Users-->
+              <div class = "row">
+                  <div class="col s3 m3 l3">
+                      <p></p>
+                  </div>
+                  <div class="col s6 m6 l6">
+                      <div class="card-panel">
+                          <h4 class="header2">Editar Usuario</h4>
+                          <div class="row">
+                              <form class="col s12">
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-account-circle prefix"></i>
+                                          <input id="first_name" type="text" class="validate" value="Airi">
+                                          <label for="first_name">Nombre</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-account-circle prefix"></i>
+                                          <input id="last_name" type="text" class="validate" value="Satou">
+                                          <label for="last_name">Apellido</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-action-account-circle prefix"></i>
+                                          <input id="username" type="text" class="validate" value="asatou">
+                                          <label for="username">Username</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s1">
+                                          <i class="mdi-social-group prefix"></i>
+                                      </div>
+                                      <div class="input-field col s11">
+                                          <select name="select">
+                                              <option value="" disabled selected>Elija una opción</option>
+                                              <option value="Administrador">Administrador</option>
+                                              <option value="Arquitecto de Software">Arquitecto de Software</option>
+                                              <option value="Consultor Funcional" selected="Consultor Funcional">Consultor Funcional</option>
+                                              <option value="Cliente">Cliente</option>
+                                              <option value="Desarrollador">Desarrollador</option>
+                                              <option value="Project Management">Project Management</option>
+                                          </select>
+                                          <label for ="rol">Rol</label>
+                                      </div>
+                                  </div>
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-communication-email prefix"></i>
+                                          <input id="email4" type="email" class="validate" value="asatou@gmail.com">
+                                          <label for="email">Email</label>
+                                      </div>
+                                  </div>
+
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-file-folder prefix"></i>
+                                          <input type="text" id="phone" class="validate" value="0414/9876655">
+                                          <label for="phone">Teléfono</label>
+                                      </div>
+                                  </div>
+
+                                  <!--AUTOCOMPLETE-->
+                                  <div class="row">
+                                      <div class="input-field col s12">
+                                          <i class="mdi-file-folder prefix"></i>
+                                          <input type="text" id="autocomplete" class="autocomplete" value="Agruppa">
+                                          <label for="autocomplete">Proyecto</label>
+                                      </div>
+                                  </div>
+
+                                      <div class="row">
+                                          <div class="input-field col s4">
+                                              <a class="btn cyan waves-effect waves-light right" href="{% url 'users'%}">Cancelar
+                                                  <i class="mdi-content-reply right"></i>
+                                              </a>
+                                          </div>
+                                          <div class="input-field col s8">
+                                              <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Modificar
+                                                  <i class="mdi-content-send right"></i>
+                                              </button>
+                                          </div>
+                                      </div>
+
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+    
+
+      </div>
+
+    </div>
+    <!--end container-->
+
+
+{% endblock %}
+
+{% block script%}
+
+   <script src="static/js/jquery-ui.js"></script>
+
+  <!-- Others-->
+  <script type="text/javascript" src="static/js/others.js"></script>
+   
+{% endblock %}
