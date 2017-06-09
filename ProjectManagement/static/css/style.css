@@ -1489,3 +1489,15 @@ background-size: cover;
 #add{
   display: contents;
 }
+
+.modal_form {
+  width: 50% !important ;
+  height: 100% !important;
+}
+
+.ui-menu-item{
+  z-index: 4000 !important;
+  position: relative;
+  background: white;
+  max-width: 220px;
+}
