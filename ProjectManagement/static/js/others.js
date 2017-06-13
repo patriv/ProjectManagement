@@ -61,7 +61,7 @@ $( function() {
       "Scheme"
     ];
     function split( val ) {
-      return val.split( /,\s*/ );
+      return val.split( /x\s*/ );
     }
     function extractLast( term ) {
       return split( term ).pop();
@@ -88,14 +88,22 @@ $( function() {
         },
         select: function( event, ui ) {
           var terms = split( this.value );
+          var x = " x ";
           // remove the current input
           terms.pop();
           // add the selected item
           terms.push( ui.item.value );
           // add placeholder to get the comma-and-space at the end
           terms.push( "" );
-          this.value = terms.join( ", " );
+          this.value = terms.join(  x );
+          terms.chosen();
+      
           return false;
         }
       });
   } );
+
+
+$(".chosen").bind("chosen:maxselected", function () {
+    alert("Máximo número de elementos seleccionado")
+});

@@ -1501,3 +1501,7 @@ background-size: cover;
   background: white;
   max-width: 220px;
 }
+
+.chosen-container.chosen-container-multi{
+  width: 100% !important;
+}

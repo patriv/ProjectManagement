@@ -1,5 +1,5 @@
 "projects":[ 
-  {"name": "Afghanistan", "code": "AF"}, 
+  {"id": "Afghanistan", "text": "AF"}, 
   {"name": "Aland Islands", "code": "AX"}, 
   {"name": "Albania", "code": "AL"}, 
   {"name": "Algeria", "code": "DZ"}, 
