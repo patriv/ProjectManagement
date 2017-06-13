@@ -11,24 +11,26 @@
 
     <!--Modal-->
     <div class = "modal" id = "modal2">
+    <nav class="background-nav-modal">
+            <h3 class = "bold center">Eliminar Tarea</h3>
+        </nav>
         <div class="modal-content">
-            <h4 class = "blue-text">Eliminar Tarea</h4>
-        <div class="divider"></div>
-            <br>
             <p> ¿Está seguro que desea eliminar esta tarea? </p>
         </div>
         <div class="divider"></div>
-        <div class = "modal-footer">
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close ">Aceptar</a>
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Cancelar</a>
+        <div class = "modal-footer background-nav-modal">
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
     </div>
 
     <!--Modal new task-->
     <div class = "modal modal_form" id = "new_task">
-        <div class="modal-content">
+        <nav class="background-nav-modal">
             <h3 class = "bold center">Tareas</h3>
-            <div class="divider"></div>
+        </nav>
+        <div class="modal-content ">
+
             <div class="container">
                 <div class="section">
                     <div class="row">
@@ -69,10 +71,11 @@
                                      </div>
                                  </div>
                                   <div class="row">
-                                        <div class="col s2">
+                                        <div class="col s12">
                                             <i class="mdi-content-content-paste prefix"></i>
+                                            <label for="start">Requerida por</label>
                                         </div>
-                                         <label for="start">Requerida por</label>
+
                                      
                                      <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
@@ -90,10 +93,11 @@
                                   
                                   </div>
                                  <div class="row">
-                                        <div class="col s2">
+                                        <div class="col s12">
                                             <i class="mdi-content-content-paste prefix"></i>
+                                            <label for="start">Requiere de</label>
                                         </div>
-                                         <label for="start">Requiere de</label>
+
                                      
                                      <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
@@ -120,7 +124,7 @@
                                  <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-description prefix"></i>
-                                          <textarea id="description" type="text" class="materialize-textarea" length="120"></textarea>
+                                          <textarea id="description" type="text" class="materialize-textarea"  length="120" maxlength="120"></textarea>
                                           <label for="description">Descripción</label>
                                       </div>
                                   </div>
@@ -131,19 +135,19 @@
             </div>
         </div>
         <div class="divider"></div>
-        <div class = "modal-footer">
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close ">Aceptar</a>
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Cancelar</a>
+        <div class = "modal-footer background-nav-modal">
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
     </div>
-
     <!--End modal new task-->
 
     <!--Modal People-->
-    <div class = "modal modal_form" id = "new_people">
+    <div class = "modal" id = "new_people">
+        <nav class="background-nav-modal">
+            <h3 class = "bold center">Personas</h3>
+        </nav>
             <div class="modal-content">
-                <h3 class = "bold center">Personas</h3>
-                <div class="divider"></div>
                 <div class="container">
                     <div class="section">
                         <div class="row">
@@ -167,15 +171,55 @@
                     </div>
                 </div> 
             </div>
-
-            <div class = "modal-footer">
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close ">Agregar</a>
-            <a href="{% url 'new_users' %}" class="waves-effect waves-red btn-flat modal-action modal-close">Registrar</a>
+            <div class = "modal-footer background-nav-modal">
+            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text ">Agregar</a>
+            <a href="{% url 'new_users' %}" class="waves-effect waves-red btn-flat modal-action modal-close white-text">Registrar</a>
         </div>
-    </div>               
-                                       
-
+    </div>
     <!--End modal People-->
+
+    <!--Modal Documents-->
+    <div class = "modal" id = "new_document">
+        <nav class="background-nav-modal">
+            <h3 class = "bold center">Documentos</h3>
+        </nav>
+        <div class="modal-content">
+                <div class="container">
+                    <div class="section">
+                        <div class="row">
+                            <div class="col s2"><p></p></div>
+                            <div class="col s8">
+                                 <form class="col s12" id="showDocument">
+                                     <div class="col l2 right">
+                                             <p><a class="btn-floating btn-large tooltipped waves-effect waves-light pink lighten-2 modal-trigger"
+                                                   data-position="bottom" data-delay="50" data-tooltip="Más Documentos" onclick="moreDocument();">
+                                                 <i class="mdi-content-add"></i></a></p>
+                                     </div>
+                                     <div class="row" >
+                                          <div class="input-field col l10">
+                                              <div class="file-field input-field">
+                                                  <input class="file-path validate" type="text" />
+                                                  <div class="btn">
+                                                    <span>File</span>
+                                                    <input type="file"/>
+                                                  </div>
+                                                </div>
+                                          </div>
+                                     </div>
+
+                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class = "modal-footer background-nav-modal">
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
+        </div>
+    </div>
+
+    <!--End Modal Documents-->
 
 
     <!-- Gantt Chart-->
@@ -259,13 +303,13 @@
                                 <td>AGP-003</td>
                                 <td>--</td>
                                 <td>
-                                     <select class="browser-default chosen">
+                                    <select class="browser-default chosen">
                                         <option value="" disabled selected>Status</option>
                                         <option value="1">In Progress</option>
                                         <option value="2">Technical Review</option>
                                         <option value="3">Functional Review</option>
                                         <option value="3">Customer Acceptance</option>
-                                  </select>
+                                    </select>
                                 </td>
                                 <td><a class="waves-effect waves-light"> <i class = "mdi-content-create"></i></a>
                                     <a class = "waves-effect waves-light modal-trigger" href = "#modal2">
@@ -340,8 +384,8 @@
                 <li>
                     <div class="collapsible-header light-blue white-text active center">
                         Documentos
-                        <a class="right tooltipped" data-position="bottom" data-delay="50" data-tooltip="Agregar Documentos"
-                           href="#"><i class="mdi-content-add"></i></a>
+                        <a class="right tooltipped modal-trigger" data-position="bottom" data-delay="50" data-tooltip="Agregar Documentos"
+                           href="#new_document"><i class="mdi-content-add"></i></a>
                     </div>
                     <div class="collapsible-body sales-repoart">
                         <div class="sales-repoart-list chat-out-list row">
@@ -374,6 +418,15 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript" src="../static/js/gantt.js"></script>
 
+    <script>
+    function moreDocument() {
+        alert("aaa");
+  var $newdiv1 = $('<div class="row" ><div class="input-field col l10"><div class="file-field input-field"> ' +
+      '<input id="input-'+i+'" class="file-path validate" type="text" /><div class="btn"><span>File</span><input type="file"/></div> ' +
+      '</div></div> </div>');
+  $("#showDocument").append($newdiv1);
 
+}
+    </script>
 
 {% endblock %}

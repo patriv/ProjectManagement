@@ -159,7 +159,7 @@ li.li-hover:hover{
   position: absolute;
   left: 48%;
   top: 46%;
-  background: url(../images/user-bg.jpg) no-repeat center center;  
+  background: url(../images/user-bg.jpg) no-repeat center center;
   z-index: 1001;
 }
 #loader:before {
@@ -1504,4 +1504,8 @@ background-size: cover;
 
 .chosen-container.chosen-container-multi{
   width: 100% !important;
+}
+
+.background-nav-modal{
+  background-image: url("../images/download-modal.png") !important;
 }

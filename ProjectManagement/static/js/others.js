@@ -104,6 +104,53 @@ $( function() {
   } );
 
 
+function nombre(fic,i) {
+  // como se llama en el div ---> onchange="nombre(this.value,i-1)
+  fic = fic.split('\\');
+  alert(fic[fic.length-1]);
+  var input = "#input-"+i;
+  alert(input);
+  $(input).attr("value",fic[fic.length-1]);
+
+}
+
+// Agregar más documentos
 $(".chosen").bind("chosen:maxselected", function () {
     alert("Máximo número de elementos seleccionado")
 });
+
+function abc(i) {
+  var input = "#input-"+i;
+  var a = $('div[class="btn"]');
+  a.find('input[type="file"]').change(function(){
+    input.val(a[0].files[0].name);
+    input.trigger("change");
+  });
+}
+    $(document).ready(function() {
+    var i = 1;
+});
+var i = 1;
+function moreDocument() {
+  var $newdiv1 = $('<div class="row" ><div class="input-field col l10"><div class="file-field input-field"> ' +
+      '<input id="input-'+i+'" class="file-path validate" type="text" /><div class="btn"><span>File</span><input type="file" onchange="abc(i-1)"/></div> ' +
+      '</div></div> </div>');
+  $("#showDocument").append($newdiv1);
+  i = i+1;
+}
+
+function children() {
+  var child= $('.file-field').children();
+  alert(child);
+  console.log(child);
+  for (i in child){
+    if (i.value===""){
+      alert("no");
+    }
+    else{
+      moreDocument();
+    }
+  }
+
+
+}
