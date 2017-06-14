@@ -127,13 +127,11 @@ function abc(i) {
     input.trigger("change");
   });
 }
-    $(document).ready(function() {
-    var i = 1;
-});
+
 var i = 1;
 function moreDocument() {
   var $newdiv1 = $('<div class="row" ><div class="input-field col l10"><div class="file-field input-field"> ' +
-      '<input id="input-'+i+'" class="file-path validate" type="text" /><div class="btn"><span>File</span><input type="file" onchange="abc(i-1)"/></div> ' +
+      '<input id="input-'+i+'" class="file-path validate" type="text" /><div class="btn"><span>File</span><input type="file" onchange="nombre(this.value,i-1)"/></div> ' +
       '</div></div> </div>');
   $("#showDocument").append($newdiv1);
   i = i+1;
