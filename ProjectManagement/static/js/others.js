@@ -128,27 +128,10 @@ function abc(i) {
   });
 }
 
-var i = 1;
-function moreDocument() {
-  var $newdiv1 = $('<div class="row" ><div class="input-field col l10"><div class="file-field input-field"> ' +
-      '<input id="input-'+i+'" class="file-path validate" type="text" /><div class="btn"><span>File</span><input type="file" onchange="nombre(this.value,i-1)"/></div> ' +
-      '</div></div> </div>');
-  $("#showDocument").append($newdiv1);
-  i = i+1;
-}
-
-function children() {
-  var child= $('.file-field').children();
-  alert(child);
-  console.log(child);
-  for (i in child){
-    if (i.value===""){
-      alert("no");
-    }
-    else{
-      moreDocument();
-    }
-  }
 
 
-}
+
+
+
+
+
