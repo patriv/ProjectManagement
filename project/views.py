@@ -34,3 +34,6 @@ class Update_Project(TemplateView):
 
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
+
+class Role(TemplateView):
+    template_name = 'page-role.html'

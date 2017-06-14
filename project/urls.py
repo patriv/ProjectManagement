@@ -57,6 +57,11 @@ urlpatterns = [
         name='detail_project'),
 
     url(
+        r'^role',
+        Role.as_view(),
+        name='role'),
+
+    url(
     r'^logout',
     django.contrib.auth.views.logout,
     {

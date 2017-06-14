@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+     <!--Title start-->
+    <div class=" grey lighten-4">
+      <div class="container">
+        <div class="row">
+          <div class="col s12 m12 l12">
+            <h1 class="bold black-text center">Roles</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Title end-->
+
+
+    <!--Modal People-->
+    <div class = "modal" id = "new_role">
+        <nav class="background-nav-modal">
+            <h3 class = "bold center">Roles</h3>
+        </nav>
+            <div class="modal-content">
+                <div class="container">
+                    <div class="section">
+                        <div class="row">
+                            <div class="col s2"><p></p></div>
+                            <div class="col s8">
+                                 <form class="col s12">
+                                     <div class="row">
+                                          <div class="input-field col s12">
+                                            <select data-placeholder="Usuarios" class="chosen-select browser-default" multiple tabindex="4" >
+                                              <option value=""></option>
+                                              <option>José López</option>
+                                              <option>Ana González</option>
+                                              <option>María Martínez</option>
+                                              <option>Samuel Rondón</option>
+                                          </select>
+                                          </div>
+                                      </div>
+                                  </form> 
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            <div class = "modal-footer background-nav-modal">
+            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text ">Agregar</a>
+            <a href="{% url 'new_users' %}" class="waves-effect waves-red btn-flat modal-action modal-close white-text">Registrar</a>
+        </div>
+    </div>
+    <!--End modal People-->
+
+
+
+
+       <!--start container-->
+    <div class="container">
+      <div class="section">
+
+        <!--DataTables Role-->
+        <div id="table-datatables">
+
+          <div class="row">
+            <div class="col s2 m2 l2">
+            <p></p>
+            </div>
+            <div class="col s8 m8 l8">
+              <table id="data-table-simple" class="responsive-table display centered striped" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tfoot>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Acción</th>
+                    </tr>
+                </tfoot>
+
+                <tbody>
+
+                    <tr>
+                        <td>Administrador</td>
+                        <td>
+                            <a class="waves-effect waves-light"><i class = "mdi-content-create"> </i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Arquitecto de Software</td>
+                        <td>
+                            <a class="waves-effect waves-light"><i class = "mdi-content-create"> </i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Cliente</td>
+                        <td>
+                            <a class="waves-effect waves-light" href="{% url 'update_users'%}"><i class = "mdi-content-create"> </i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>Consultor Funcional</td>
+                        
+                       <td ><a class="waves-effect waves-light"><i class = "mdi-content-create"></i></a>
+                           <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                           </a>
+                       </td>
+
+                    </tr>
+                    <tr>
+                        <td>Project Management</td>
+                        <td><a class="waves-effect waves-light"> <i class = "mdi-content-create"></i></a>
+                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+                   
+                </tbody>
+              </table>
+            </div>
+            <div class = "row">
+             <div class="col s2 m2 l2 center">
+             <p><a class="btn-floating btn-large waves-effect waves-light pink lighten-2 tooltipped modal-trigger"
+                   data-position="bottom" data-delay="50" data-tooltip="Agregar Rol" href = "#new_role"><i class="mdi-content-add"></i></a></p>
+            </div>
+            </div>
+          </div>
+        </div>
+        <br>
+
+      </div>
+
+    </div>
+{% endblock %}
