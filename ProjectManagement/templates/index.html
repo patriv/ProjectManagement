@@ -24,32 +24,29 @@
 <!--Title end-->
 
 <!--Modal-->
-<div class = "modal" id = "modal2">
-
-    <div class="modal-content">
-
-        <h4 class = "blue-text">Eliminar Proyecto</h4>
-        <div class="divider"></div>
-            <br>
+ <div class = "modal" id = "modal2">
+        <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
+            <h3 class = "bold center">Eliminar Proyecto</h3>
+        </nav>
+        <div class="modal-content">
             <p> ¿Está seguro que desea eliminar este proyecto? </p>
         </div>
         <div class="divider"></div>
-        <div class = "modal-footer">
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close ">Aceptar</a>
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close">Cancelar</a>
+        <div class = "modal-footer background-nav-modal">
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
     </div>
 
-
             <!-- //////////////////////////////////////////////////////////////////////////// -->
-
        <!--start container-->
         <div class="container">
             <div class="section">
                 <div class="section">
                     <div class="row">
                          <div class = "col s12 m12 l7">
-                             <p class="right"><a class="btn-floating btn-large tooltipped waves-effect waves-light pink lighten-2"
+                             <p class="right"><a class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2"
                                                  data-position="bottom" data-delay="50" data-tooltip="Nuevo Proyecto" href = "{% url 'new_project' %}"><i class="mdi-content-add"></i></a></p>
                          </div>
                     </div>
@@ -61,12 +58,11 @@
                          <div class="col s12 m12 l5" id ="detail" style="display: none;">
                              <div class="col s8 m8 l8"> <p></p></div>
                              <div class="col s4 m4 l4">
-                                 <a class="center tooltipped" data-position="bottom" data-delay="50" data-tooltip="Detallar Proyecto" href="{% url 'detail_project' %}"><i class="mdi-action-visibility prefix" id="visible"></i></a>
-                                 <a class="center tooltipped" data-position="bottom" data-delay="50" data-tooltip="Editar Proyecto" href="{% url 'update_project' %}"><i class="mdi-content-create prefix"></i></a>
+                                 <a class="center tooltipped" data-position="left" data-delay="50" data-tooltip="Detallar Proyecto" href="{% url 'detail_project' %}"><i class="mdi-action-visibility prefix" id="visible"></i></a>
+                                 <a class="center tooltipped" data-position="top" data-delay="50" data-tooltip="Editar Proyecto" href="{% url 'update_project' %}"><i class="mdi-content-create prefix"></i></a>
                                  <a class="waves-effect waves-light modal-trigger center tooltipped chat-collapse"
-                                    data-position="bottom" data-delay="50" data-tooltip="Eliminar Proyecto" href="#modal2"><i class="mdi-action-highlight-remove prefix" id="remove"></i></a>
+                                    data-position="right" data-delay="50" data-tooltip="Eliminar Proyecto" href="#modal2"><i class="mdi-action-highlight-remove prefix" id="remove"></i></a>
                              </div>
-
                              <div class="row">
                                  <div class="col s12 m12 l6 center">
                                      <p>Agruppa</p>
@@ -113,7 +109,6 @@
                                 <th>Status</th>
                             </tr>
                             </tfoot>
-
                             <tbody>
                             <tr>
                                 <td>AGP-001</td>
@@ -148,155 +143,14 @@
                             </tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
-
-
             </div>
         </div>
       <!-- END CONTENT -->
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
-            <!-- START RIGHT SIDEBAR NAV-->
-            <aside id="right-sidebar-nav">
-                <ul id="chat-out" class="side-nav rightside-navigation">
-                    <li class="li-hover">
-                    <a href="#" data-activates="chat-out" class="chat-close-collapse right"><i class="mdi-navigation-close"></i></a>
-                    <div id="right-search" class="row">
-                        <form class="col s12">
-                            <div class="input-field">
-                                <i class="mdi-action-search prefix"></i>
-                                <input id="icon_prefix" type="text" class="validate">
-                                <label for="icon_prefix">Search</label>
-                            </div>
-                        </form>
-                    </div>
-                    </li>
-                    <li class="li-hover">
-                        <ul class="chat-collapsible" data-collapsible="expandable">
-                        <li>
-                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Recent Activity</div>
-                            <div class="collapsible-body recent-activity">
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">just now</a>
-                                        <p>Jim Doe Purchased new equipments for zonal office.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-device-airplanemode-on"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">Yesterday</a>
-                                        <p>Your Next flight for USA will be on 15th August 2015.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">5 Days Ago</a>
-                                        <p>Natalya Parker Send you a voice mail for next conference.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-store"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">Last Week</a>
-                                        <p>Jessy Jay open a new store at S.G Road.</p>
-                                    </div>
-                                </div>
-                                <div class="recent-activity-list chat-out-list row">
-                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
-                                    </div>
-                                    <div class="col s9 recent-activity-list-text">
-                                        <a href="#">5 Days Ago</a>
-                                        <p>Natalya Parker Send you a voice mail for next conference.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header light-blue white-text active"><i class="mdi-editor-attach-money"></i>Sales Repoart</div>
-                            <div class="collapsible-body sales-repoart">
-                                <div class="sales-repoart-list  chat-out-list row">
-                                    <div class="col s8">Target Salse</div>
-                                    <div class="col s4"><span id="sales-line-1"></span>
-                                    </div>
-                                </div>
-                                <div class="sales-repoart-list chat-out-list row">
-                                    <div class="col s8">Payment Due</div>
-                                    <div class="col s4"><span id="sales-bar-1"></span>
-                                    </div>
-                                </div>
-                                <div class="sales-repoart-list chat-out-list row">
-                                    <div class="col s8">Total Delivery</div>
-                                    <div class="col s4"><span id="sales-line-2"></span>
-                                    </div>
-                                </div>
-                                <div class="sales-repoart-list chat-out-list row">
-                                    <div class="col s8">Total Progress</div>
-                                    <div class="col s4"><span id="sales-bar-2"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="collapsible-header red white-text"><i class="mdi-action-stars"></i>Favorite Associates</div>
-                            <div class="collapsible-body favorite-associates">
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="../static/images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Eileen Sideways</p>
-                                        <p class="place">Los Angeles, CA</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="../static/images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Zaham Sindil</p>
-                                        <p class="place">San Francisco, CA</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="../static/images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Renov Leongal</p>
-                                        <p class="place">Cebu City, Philippines</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="../static/images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Weno Carasbong</p>
-                                        <p>Tokyo, Japan</p>
-                                    </div>
-                                </div>
-                                <div class="favorite-associate-list chat-out-list row">
-                                    <div class="col s4"><img src="../static/images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
-                                    </div>
-                                    <div class="col s8">
-                                        <p>Nusja Nawancali</p>
-                                        <p class="place">Bangkok, Thailand</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
-            <!-- LEFT RIGHT SIDEBAR NAV-->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
 
 {% endblock %}
-
 
 {% block script%}
     <!--chart google-->

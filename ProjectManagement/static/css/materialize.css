@@ -5814,7 +5814,7 @@ small {
 .btn, .btn-large {
   text-decoration: none;
   color: #FFF;
-  background-color: orange;
+  background-color: #7c4dff;
   text-align: center;
   letter-spacing: .5px;
   -webkit-transition: 0.2s ease-out;
@@ -5824,7 +5824,7 @@ small {
   transition: 0.2s ease-out;
   cursor: pointer; }
   .btn:hover, .btn-large:hover {
-    background-color: #FF7514; }
+    background-color:#651fff ; }
 
 .btn-floating {
   display: inline-block;
@@ -5986,6 +5986,9 @@ button.btn-floating {
     background-color: rgba(76, 175, 80, 0.7); }
   .waves-effect.waves-teal .waves-ripple {
     background-color: rgba(0, 150, 136, 0.7); }
+  .waves-effect.waves-purple1 .waves-ripple{
+    background-color: #7c4dff;
+  }
 
 .waves-notransition {
   -webkit-transition: none !important;
@@ -6313,8 +6316,8 @@ textarea.materialize-textarea {
   input[type=number]:focus:not([readonly]),
   input[type=search]:focus:not([readonly]),
   textarea.materialize-textarea:focus:not([readonly]) {
-    border-bottom: 1px solid orange;
-    box-shadow: 0 1px 0 0 orange; }
+    border-bottom: 1px solid #651fff ;
+    box-shadow: 0 1px 0 0 #651fff ; }
   input[type=text]:focus:not([readonly]) + label,
   input[type=password]:focus:not([readonly]) + label,
   input[type=email]:focus:not([readonly]) + label,
@@ -6326,7 +6329,7 @@ textarea.materialize-textarea {
   input[type=number]:focus:not([readonly]) + label,
   input[type=search]:focus:not([readonly]) + label,
   textarea.materialize-textarea:focus:not([readonly]) + label {
-    color: orange; }
+    color: #651fff ; }
   input[type=text].valid, input[type=text]:focus.valid,
   input[type=password].valid,
   input[type=password]:focus.valid,
@@ -6471,7 +6474,7 @@ textarea.materialize-textarea {
     -ms-transition: color 0.2s;
     transition: color 0.2s; }
     .input-field .prefix.active {
-      color: orange; } /*CAMBIA EL COLOR DE LOS �CONOS!*/
+      color: #7c4dff ; } /*CAMBIA EL COLOR DE LOS �CONOS!*/
   .input-field .prefix ~ input,
   .input-field .prefix ~ textarea {
     margin-left: 3rem;
@@ -6717,8 +6720,8 @@ form p:last-child {
   height: 22px;
   border-top: 2px solid transparent;
   border-left: 2px solid transparent;
-  border-right: 2px solid orange;
-  border-bottom: 2px solid orange;
+  border-right: 2px solid #6200ea ;
+  border-bottom: 2px solid #6200ea ;
   -webkit-transform: rotate(40deg);
   -moz-transform: rotate(40deg);
   -ms-transform: rotate(40deg);

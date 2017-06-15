@@ -11,7 +11,8 @@
 
     <!--Modal-->
     <div class = "modal" id = "modal2">
-    <nav class="background-nav-modal">
+        <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
             <h3 class = "bold center">Eliminar Tarea</h3>
         </nav>
         <div class="modal-content">
@@ -27,6 +28,7 @@
     <!--Modal new task-->
     <div class = "modal modal_form" id = "new_task">
         <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
             <h3 class = "bold center">Tareas</h3>
         </nav>
         <div class="modal-content ">
@@ -145,6 +147,7 @@
     <!--Modal update task-->
     <div class = "modal modal_form" id = "update_task">
         <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
             <h3 class = "bold center">Tareas</h3>
         </nav>
         <div class="modal-content ">
@@ -263,6 +266,7 @@
     <!--Modal People-->
     <div class = "modal" id = "new_people">
         <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
             <h3 class = "bold center">Personas</h3>
         </nav>
             <div class="modal-content">
@@ -299,6 +303,7 @@
     <!--Modal Documents-->
     <div class = "modal" id = "new_document">
         <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
             <h3 class = "bold center">Documentos</h3>
         </nav>
         <div class="modal-content">
@@ -309,7 +314,7 @@
                             <div class="col s8">
                                  <form class="col s12" id="showDocument">
                                      <div class="col l2 right">
-                                             <p><a class="btn-floating btn-large tooltipped waves-effect waves-light pink lighten-2 modal-trigger"
+                                             <p><a class="btn-floating btn-large tooltipped waves-effect waves-light modal-trigger  deep-purple accent-2"
                                                    data-position="bottom" data-delay="50" data-tooltip="Más Documentos" onclick="moreDocument();">
                                                  <i class="mdi-content-add"></i></a></p>
                                      </div>
@@ -441,7 +446,7 @@
                     </div>
                     <div class = "row">
                         <div class="col s2 m2 l1">
-                            <p><a class="btn-floating btn-large tooltipped waves-effect waves-light pink lighten-2 modal-trigger"
+                            <p><a class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2 modal-trigger"
                                  data-position="bottom" data-delay="50" data-tooltip="Nueva Tarea" href = "#new_task">
                                 <i class="mdi-content-add"></i></a></p>
                         </div>
@@ -455,8 +460,10 @@
     <div class="section">
         <div class="row">
             <div class="col s4 m4 l4">
-                <a class="btn cyan waves-effect waves-light" href="#">Cancelar</a>
+                <a class="btn  deep-purple accent-2 waves-effect waves-light" href="#">Cancelar</a>
             </div>
+
+
             <div class="col l2"><p></p></div>
             <div class="col s4 m4 l3">
                 <a class="btn right disabled" href="#">Cerrar Proyecto</a>
@@ -502,7 +509,7 @@
                 <li>
                     <div class="collapsible-header light-blue white-text active center">
                         Documentos
-                        <a class="right tooltipped modal-trigger" data-position="bottom" data-delay="50" data-tooltip="Agregar Documentos"
+                        <a class="right tooltipped modal-trigger " data-position="bottom" data-delay="50" data-tooltip="Agregar Documentos"
                            href="#new_document"><i class="mdi-content-add"></i></a>
                     </div>
                     <div class="collapsible-body sales-repoart">
@@ -521,9 +528,17 @@
         </ul>
     <!--<a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu" ></i></a> -->
     </aside>
+{% endblock %}
 
-
-
+{% block footer %}
+      <footer class="page-footer background-nav">
+    <div class="footer-copyright">
+      <div class="container">
+        <span class ="grey-text text-lighten-4">Copyright © 2017 <a class="grey-text text-lighten-4" target="_blank">IDBC Group</a> All rights reserved.</span>
+        <span class="right grey-text text-lighten-4" style="padding-right: 230px;"> Design and Developed by <a class="grey-text text-lighten-4">IDBC Group</a></span>
+        </div>
+    </div>
+  </footer>
 {% endblock %}
 
 {% block script%}
