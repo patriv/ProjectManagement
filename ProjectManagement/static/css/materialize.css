@@ -5915,7 +5915,7 @@ button.btn-floating {
       background-color: #eee; }
     .dropdown-content li > a, .dropdown-content li > span {
       font-size: 1.2rem;
-      color: #ff4081;
+      color: black;
       display: block;
       padding: 1rem 1rem; }
     .dropdown-content li > a > i {
@@ -6211,7 +6211,7 @@ select:focus {
 
 button:focus {
   outline: none;
-  background-color: #ff548e; }
+  background-color: #7c4dff; }
 
 label {
   font-size: 0.8rem;
@@ -8075,7 +8075,7 @@ select {
 
 .picker__date-display {
   text-align: center;
-  background-color: #ff4081;
+  background-image: url("../images/datepicker.png");
   color: #fff;
   padding-bottom: 15px;
   font-weight: 300; }
@@ -8087,7 +8087,7 @@ select {
   background: #fef3f7; }
 
 .picker__weekday-display {
-  background-color: #ff1c69;
+  background-image:  url("../images/datepicker.png");
   padding: 10px;
   font-weight: 200;
   letter-spacing: .5;
@@ -8126,7 +8126,7 @@ select {
   border: 1px solid transparent; }
 
 .picker__day.picker__day--today {
-  color: #ff4081; }
+  color: #7C4DFF; }
 
 .picker__day.picker__day--today.picker__day--selected {
   color: #fff; }
@@ -8143,7 +8143,7 @@ select {
   -ms-transform: scale(0.9);
   -o-transform: scale(0.9);
   transform: scale(0.9);
-  background-color: #ff4081;
+  background-color: #7C4DFF;
   color: #ffffff; }
   .picker__day--selected.picker__day--outfocus,
   .picker__day--selected:hover.picker__day--outfocus,
@@ -8157,7 +8157,7 @@ select {
 .picker__close, .picker__today {
   font-size: 1.1rem;
   padding: 0 1rem;
-  color: #ff4081; }
+  color: #7C4DFF; }
 
 .picker__nav--prev:before,
 .picker__nav--next:before {

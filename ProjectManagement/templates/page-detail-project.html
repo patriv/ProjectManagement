@@ -31,26 +31,32 @@
             <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
             <h3 class = "bold center">Tareas</h3>
         </nav>
+        <div class="col s6 ">
+            <br>
+            <span class="right required-modal"><span class="red-text "> *</span> Denota campo requerido</span>
+        </div>
         <div class="modal-content ">
-
             <div class="container">
                 <div class="section">
                     <div class="row">
                         <div class="col s2"><p></p></div>
                         <div class="col s8">
+                            <div class="row">
+
+                            </div>
                              <form class="col s12">
                                  <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-editor-format-align-left prefix"></i>
                                           <input id="first_name" type="text" class="validate">
-                                          <label for="first_name">Nombre</label>
+                                          <label for="first_name">Nombre <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                  <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-account-circle prefix"></i>
                                           <input id="first_name" type="text" class="validate">
-                                          <label for="first_name">Responsable</label>
+                                          <label for="first_name">Responsable <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                  <div class="row">
@@ -59,7 +65,7 @@
                                           
                                       </div>
                                       <div class="input-date-picker col s10">
-                                        <label for="start">Fecha de Inicio</label>
+                                        <label for="start">Fecha de Inicio <span class="red-text"> *</span></label>
                                         <input id="start" type="date" class="datepicker">
                                       </div>
                                  </div>
@@ -68,14 +74,14 @@
                                          <i class="mdi-action-event prefix"></i>
                                      </div>
                                      <div class="input-date-picker col s10">
-                                         <label for="start">Fecha Fin</label>
+                                         <label for="start">Fecha Fin <span class="red-text"> *</span></label>
                                          <input id="start" type="date" class="datepicker">
                                      </div>
                                  </div>
                                   <div class="row">
                                         <div class="col s12">
                                             <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requerida por</label>
+                                            <label for="start">Requerida por <span class="red-text"> *</span></label>
                                         </div>
 
                                      
@@ -97,7 +103,7 @@
                                  <div class="row">
                                         <div class="col s12">
                                             <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requiere de</label>
+                                            <label for="start">Requiere de <span class="red-text"> *</span></label>
                                         </div>
 
                                      
@@ -120,14 +126,14 @@
                                       <div class="input-field col s12">
                                           <i class="mdi-editor-format-align-left prefix"></i>
                                           <input id="status" type="text" class="validate">
-                                          <label for="status">Status</label>
+                                          <label for="status">Status <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                  <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-description prefix"></i>
                                           <textarea id="description" type="text" class="materialize-textarea"  length="120" maxlength="120"></textarea>
-                                          <label for="description">Descripción</label>
+                                          <label for="description">Descripción <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                              </form>

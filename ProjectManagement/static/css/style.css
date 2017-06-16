@@ -1509,3 +1509,11 @@ background-size: cover;
 .background-nav-modal{
   background-image: url("../images/download-modal.png") !important;
 }
+
+.required-modal{
+  padding-right: 20px;
+}
+
+.modal-close{
+  padding-right: 20px;
+}
