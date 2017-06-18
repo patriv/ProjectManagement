@@ -13,11 +13,10 @@ class Login(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
-        print(form.is_valid())
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-            error_username = "Tu username  o contraseña no son correctos."
+            error_username = "Tu username/email  o contraseña no son correctos."
             user_auth = authenticate_user(username, password)
             if user_auth is not None:
                 if user_auth.is_active:
@@ -27,7 +26,7 @@ class Login(TemplateView):
                         login(request, user)
                         return HttpResponseRedirect(reverse_lazy('project'))
                     else:
-                        messages.error(request, "Lo sentimos, su correo o contraseña no son correctos")
+                        form.add_error(None, error_username)
                         return render(request, 'page-login.html',
                                       {'form': form})
                 else:
