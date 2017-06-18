@@ -16,9 +16,8 @@ class Login(TemplateView):
         print(form.is_valid())
         if form.is_valid():
             username = request.POST['username']
-            print(username)
             password = request.POST['password']
-            print(password)
+            error_username = "Tu username  o contraseña no son correctos."
             user_auth = authenticate_user(username, password)
             if user_auth is not None:
                 if user_auth.is_active:
@@ -32,11 +31,15 @@ class Login(TemplateView):
                         return render(request, 'page-login.html',
                                       {'form': form})
                 else:
-                    messages.error(request, "Aún no has confirmado tu correo.")
+                    print("else")
+
+                    #messages.error(request, "Aún no has confirmado tu correo.")
                     return render(request, 'page-login.html',
                                   {'form': form})
             else:
-                messages.error(request, "Lo sentimos, su correo o contraseña no son correctos.")
+                print("is none")
+                form.add_error(None, error_username)
+                #messages.error(request, "Lo sentimos, su correo o contraseña no son correctos.")
                 return render(request, 'page-login.html',
                               {'form': form})
         else:
