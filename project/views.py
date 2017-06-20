@@ -2,7 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
@@ -98,19 +98,71 @@ class Role(FormView):
             Role, self).get_context_data(**kwargs)
         role = Group.objects.all()
         context['roles'] = role
+        context['title'] = 'Agregar'
         return context
 
     def post(self, request, *args, **kwargs):
-        print("en post")
         post_values = request.POST.copy()
         form = RoleForm(post_values)
-        print(form.is_valid())
-
         if form.is_valid():
             newRole = form.save()
+            print(newRole.pk)
             messages.success(request, "Su rol se ha guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('role'))
         else:
             context = {'form': form}
             return render(request, 'page-role.html', context)
+
+
+def DeleteRole(request,id):
+    print("delete")
+   # pk = request.POST.get('pk')
+    role = Group.objects.get(pk=id)
+    print(role)
+    role.delete()
+    messages.success(request, "El rol " + str(role.name) +" se ha eliminado exitosamente")
+    return HttpResponseRedirect(reverse_lazy('role'))
+
+
+# class DeleteRole(DeleteView):
+#     model = Group
+#     template_name = 'page-role.html'
+#     success_url = reverse_lazy('role')
+
+# def deleteRole(request, id):
+#     role= Group.objects.get(pk=id)
+#     print("el id es")
+#     print(role)
+#     role.delete()
+#     messages.success(request, "El rol se ha eliminado exitosamente")
+#     return HttpResponseRedirect(reverse_lazy('role'))
+
+class UpdateRole(CreateView):
+    template_name = 'page-role.html'
+    form_class = RoleForm
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            UpdateRole, self).get_context_data(**kwargs)
+
+        role= Group.objects.get(pk=self.kwargs['id'])
+        print(role)
+        data ={
+            'name': role.name
+        }
+        form = RoleForm(initial=data)
+        context['form']=form
+        return context
+
+
+
+def updateRole(request, id, name):
+    try:
+        role = Group.objects.get(pk=id)
+        role.name= name
+        role.save()
+        return True
+    except:
+        return False
+
 

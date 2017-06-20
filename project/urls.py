@@ -62,6 +62,16 @@ urlpatterns = [
         name='role'),
 
     url(
+        r'^delete-role/(?P<id>\w+)$',
+        DeleteRole,
+        name='delete_role'),
+
+    url(
+        r'^update-role/(?P<id>\w+)$',
+        updateRole,
+        name='update_role'),
+
+    url(
     r'^logout',
     django.contrib.auth.views.logout,
     {
