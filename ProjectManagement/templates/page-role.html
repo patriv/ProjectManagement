@@ -45,11 +45,12 @@
                         <div class="row">
                             <div class="col s2"><p></p></div>
                             <div class="col s8">
-                                 <form class="col s12">
+                                 <form class="col s12" action= "" method="post">
+                                 {% csrf_token %}
                                      <div class="row">
                                           <div class="input-field col s12">
                                             <i class="mdi-action-account-box prefix"></i>
-                                            <input id="name" type="text" class="validate">
+                                            <input id="name" type="text" class="validate" name="name">
                                             <label for="name">Nombre</label>
                                           </div>
                                       </div>
@@ -86,16 +87,17 @@
                                             </p>
                                           </div>
                                       </div>
-                                  </form> 
+                                  
                             </div>
                         </div>
                     </div>
                 </div> 
             </div>
             <div class = "modal-footer background-nav-modal">
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text ">Guardar</a>
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text">Cancelar</a>
+            <button class="waves-effect btn-flat modal-action white-text " type="submit" >Guardar</button>
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
+        </form> 
     </div>
     <!--End modal role-->
 
@@ -194,50 +196,16 @@
 
                 <tbody>
 
+                  {% for rol in roles %}  
                     <tr>
-                        <td>Administrador</td>
+                        <td>{{rol.name}}</td>
                         <td>
                             <a class="waves-effect waves-light  modal-trigger" href="#update_role"><i class = "mdi-content-create"> </i></a>
                             <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
                             </a>
                         </td>
-
                     </tr>
-                    <tr>
-                        <td>Arquitecto de Software</td>
-                        <td>
-                            <a class="waves-effect waves-light modal-trigger"><i class = "mdi-content-create"> </i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>Cliente</td>
-                        <td>
-                            <a class="waves-effect waves-light modal-trigger" href="#"><i class = "mdi-content-create"> </i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>Consultor Funcional</td>
-                        
-                       <td ><a class="waves-effect waves-light modal-trigger"><i class = "mdi-content-create"></i></a>
-                           <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                           </a>
-                       </td>
-
-                    </tr>
-                    <tr>
-                        <td>Project Management</td>
-                        <td><a class="waves-effect waves-light modal-trigger"> <i class = "mdi-content-create"></i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                            </a>
-                        </td>
-
-                    </tr>
+                 {% endfor %}
                    
                 </tbody>
               </table>
@@ -255,4 +223,27 @@
       </div>
 
     </div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+{% if form.errors %}
+  {% for field in form %}
+    {% for error in field.errors %}
+      Materialize.toast('{{ error|escape }}', 4000);
+    {% endfor %}
+  {% endfor %}
+  {% for error in form.non_field_errors %}
+    Materialize.toast('{{ error|escape }}', 4000);
+  {% endfor %}
+{% endif %}
+
+
+{% if messages %}
+  {% for message in messages %}
+    Materialize.toast('{{message}}',4000);
+  {% endfor %}
+{% endif %} 
+</script>
+
 {% endblock %}

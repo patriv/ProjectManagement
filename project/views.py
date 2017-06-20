@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import *
@@ -16,8 +16,8 @@ class Login(TemplateView):
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-            error_username = "Tu username/email  o contraseña no son correctos."
-            user_auth = authenticate_user(username, password)
+            error_username = "Tu username/email o contraseña no son correctos."
+            user_auth = authenticate_user(username)
             if user_auth is not None:
                 if user_auth.is_active:
                     user = authenticate(username=user_auth.username,
@@ -36,9 +36,7 @@ class Login(TemplateView):
                     return render(request, 'page-login.html',
                                   {'form': form})
             else:
-                print("is none")
                 form.add_error(None, error_username)
-                #messages.error(request, "Lo sentimos, su correo o contraseña no son correctos.")
                 return render(request, 'page-login.html',
                               {'form': form})
         else:
@@ -47,7 +45,7 @@ class Login(TemplateView):
 
 
 
-def authenticate_user(username=None, password=None):
+def authenticate_user(username=None):
     try:
         user = User.objects.get(username=username)
         if user is not None:
@@ -91,5 +89,28 @@ class Update_Project(TemplateView):
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
 
-class Role(TemplateView):
+class Role(FormView):
     template_name = 'page-role.html'
+    form_class = RoleForm
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            Role, self).get_context_data(**kwargs)
+        role = Group.objects.all()
+        context['roles'] = role
+        return context
+
+    def post(self, request, *args, **kwargs):
+        print("en post")
+        post_values = request.POST.copy()
+        form = RoleForm(post_values)
+        print(form.is_valid())
+
+        if form.is_valid():
+            newRole = form.save()
+            messages.success(request, "Su rol se ha guardado exitosamente")
+            return HttpResponseRedirect(reverse_lazy('role'))
+        else:
+            context = {'form': form}
+            return render(request, 'page-role.html', context)
+
