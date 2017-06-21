@@ -96,8 +96,8 @@ class Role(FormView):
     def get_context_data(self, **kwargs):
         context = super(
             Role, self).get_context_data(**kwargs)
-        role = Group.objects.all()
-        context['roles'] = role
+        role=Group.objects.all()
+        context['form'] = role
         context['title'] = 'Agregar'
         return context
 
@@ -110,8 +110,8 @@ class Role(FormView):
             messages.success(request, "Su rol se ha guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('role'))
         else:
-            context = {'form': form}
-            return render(request, 'page-role.html', context)
+            context = {'form': form,'title':'Agregar'}
+            return render(request, 'page-role.html',context)
 
 
 def DeleteRole(request,id):
@@ -120,27 +120,15 @@ def DeleteRole(request,id):
     messages.success(request, "El rol " + str(role.name) +" se ha eliminado exitosamente")
     return HttpResponseRedirect(reverse_lazy('role'))
 
-
-# class DeleteRole(DeleteView):
-#     model = Group
-#     template_name = 'page-role.html'
-#     success_url = reverse_lazy('role')
-
-# def deleteRole(request, id):
-#     role= Group.objects.get(pk=id)
-#     print("el id es")
-#     print(role)
-#     role.delete()
-#     messages.success(request, "El rol se ha eliminado exitosamente")
-#     return HttpResponseRedirect(reverse_lazy('role'))
-
-class UpdateRole(FormView):
+class UpdateRole(CreateView):
     template_name = 'page-role.html'
     form_class = RoleForm
 
     def get_context_data(self, **kwargs):
+        print("en get")
         context = super(
             UpdateRole, self).get_context_data(**kwargs)
+        context['title'] = 'Editar'
 
         role= Group.objects.get(pk=self.kwargs['id'])
         print(role)
@@ -148,18 +136,28 @@ class UpdateRole(FormView):
             'name': role.name
         }
         form = RoleForm(initial=data)
-        context['form']=form
+        context['roles']=form
         return context
 
+    def post(self, request, *args, **kwargs):
+        post_values = request.POST.copy()
+        form = RoleForm(post_values)
+        print(form.is_valid())
 
-
-def updateRole(request, id, name):
-    try:
-        role = Group.objects.get(pk=id)
-        role.name= name
-        role.save()
+        if form.is_valid():
+            role = Group.objects.get('pk')
+            print("en post")
         return True
-    except:
-        return False
+
+
+#
+# def updateRole(request, id, name):
+#     try:
+#         role = Group.objects.get(pk=id)
+#         role.name= name
+#         role.save()
+#         return True
+#     except:
+#         return False
 
 
