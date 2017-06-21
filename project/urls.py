@@ -68,7 +68,7 @@ urlpatterns = [
 
     url(
         r'^update-role/(?P<id>\w+)$',
-        updateRole,
+        UpdateRole.as_view(),
         name='update_role'),
 
     url(

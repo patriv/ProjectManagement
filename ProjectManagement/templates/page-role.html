@@ -124,11 +124,12 @@
                                                 <div class="row">
                                                     <div class="col s2"><p></p></div>
                                                     <div class="col s8">
-                                                        <form class="col s12">
+                                                        <form class="col s12" action="" method="post">
+                                                        {% csrf_token %}
                                                             <div class="row">
                                                                 <div class="input-field col s12">
                                                                     <i class="mdi-action-account-box prefix"></i>
-                                                                    <input id="name" type="text" class="validate" value="Administrador">
+                                                                    <input id="name" type="text" class="validate" name="name">
                                                                     <label for="name">Nombre</label>
                                                                 </div>
                                                             </div>
@@ -182,7 +183,7 @@
                                     <td>{{rol.name}}</td>
                                     <td>
                                         <a class="waves-effect waves-light  modal-trigger" href="#update_role"><i class = "mdi-content-create"> </i></a>
-                                        <a class = "waves-effect waves-light modal-trigger" data-id="{{ rol.pk }}" href = "{% url 'delete_role' rol.pk %}" data-target="#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                                        <a class = "waves-effect waves-light" onClick="if (confirm('¿Está seguro que desea eliminar el rol {{rol.name}}?')){window.location.href='{% url 'delete_role' rol.pk %}'};"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -268,6 +269,8 @@ $(".modal-content #myId").val( myid );
 {#        });#}
 {#    }#}
 {#</script>#}
+
+
 
 
 {% endblock %}

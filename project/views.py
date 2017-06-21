@@ -115,10 +115,7 @@ class Role(FormView):
 
 
 def DeleteRole(request,id):
-    print("delete")
-   # pk = request.POST.get('pk')
     role = Group.objects.get(pk=id)
-    print(role)
     role.delete()
     messages.success(request, "El rol " + str(role.name) +" se ha eliminado exitosamente")
     return HttpResponseRedirect(reverse_lazy('role'))
