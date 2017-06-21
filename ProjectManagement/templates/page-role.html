@@ -82,6 +82,22 @@
     </div>
     <!--End modal role-->
 
+    <!--Modal delete-->
+    <div class = "modal" id = "modal2">
+        <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
+            <h3 class = "bold center">Eliminar Rol</h3>
+        </nav>
+        <div class="modal-content" id="myId">
+            ¿Está seguro que desea eliminar este rol?
+        </div>
+        <div class="divider"></div>
+        <div class = "modal-footer background-nav-modal">
+            <a id="acceptDelete" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
+            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
+        </div>
+    </div>
+    <!--End delete-->
 
 
     <!--start container-->
@@ -111,8 +127,7 @@
 
                             <tbody>
 
-                                {% for rol in form %}
-                                    <div class = "modal" id = "updateRole">
+                                <div class = "modal" id = "updateRole">
                                     <nav class="background-nav-modal">
                                         <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
                                         <h3 class = "bold center">{{ title }} Roles</h3>
@@ -123,7 +138,7 @@
                                                 <div class="row">
                                                     <div class="col s2"><p></p></div>
                                                     <div class="col s8">
-                                                        <form class="col s12" action="{% url 'update_role' rol.pk %}" method="post">
+                                                        <form class="col s12" action="" method="post">
                                                         {% csrf_token %}
                                                             <div class="row">
                                                                 <div class="input-field col s12">
@@ -176,13 +191,13 @@
                                     </div>
                                     </form>
                                 </div>
-                                {% endfor %}
+
                                 <!--End modal Role-->
-                                {% for rol in form %}
+                                {% for rol in roles %}
                                 <tr>
                                     <td>{{rol.name}}</td>
                                     <td>
-                                        <a class="waves-effect waves-light modal-trigger open-AddBookDialog" data-pk="{{ rol.name }}" data-target="updateRole" data-link-update= "{% url 'update_role' rol.pk %}"><i class = "mdi-content-create"> </i>{{ rol.pk }}</a>
+                                        <a class="waves-effect waves-light modal-trigger open-AddBookDialog" id ="edit" data-pk="{{ rol.name }}" data-target="updateRole" data-link-update= "{% url 'update_role' rol.pk %}"><i class = "mdi-content-create"> </i>{{ rol.pk }}</a>
 
                                        <a class = "waves-effect waves-light modal-trigger open-AddBookDialog1" data-target="modal2" data-link-delete="{% url 'delete_role' rol.pk %}" >
 
@@ -191,23 +206,6 @@
                                     </td>
                                 </tr>
 
-                                    <!--Modal delete-->
-                                <div class = "modal" id = "modal2">
-                                    <nav class="background-nav-modal">
-                                        <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
-                                        <h3 class = "bold center">Eliminar Rol</h3>
-                                    </nav>
-                                    <div class="modal-content" id="myId">
-                                        ¿Está seguro que desea eliminar este rol?
-                                    </div>
-                                    <div class="divider"></div>
-                                    <div class = "modal-footer background-nav-modal">
-                                        <a id="acceptDelete" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
-                                        <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
-                                    </div>
-                                </div>
-
-                                <!--End delete-->
                             {% endfor %}
                             </tbody>
                         </table>
@@ -253,9 +251,10 @@ $(document).on("click", ".open-AddBookDialog", function () {
      var myPk = $(this).data('pk');
      alert(myBookId);
      alert(myPk);
-     $("#updateRole").attr("href", myBookId );
+     $("#edit").attr("href", myBookId );
      $("#updateRole, #name").val(myPk );
 });
+
 </script>
 
     <script>
@@ -273,4 +272,4 @@ $(document).on("click", ".open-AddBookDialog", function () {
 
 {% endblock %}
 
-onClick="if (confirm('¿Está seguro que desea eliminar el rol {{rol.name}}?')){window.location.href='{% url 'delete_role' rol.pk %}'}"
+{#onClick="if (confirm('¿Está seguro que desea eliminar el rol {{rol.name}}?')){window.location.href='{% url 'delete_role' rol.pk %}'}"#}

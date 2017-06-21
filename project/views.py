@@ -97,13 +97,13 @@ class Role(FormView):
         context = super(
             Role, self).get_context_data(**kwargs)
         role=Group.objects.all()
-        context['form'] = role
+        context['roles'] = role
         context['title'] = 'Agregar'
         return context
 
     def post(self, request, *args, **kwargs):
         post_values = request.POST.copy()
-        form = RoleForm(post_values)
+        form = RoleForm(request.POST)
         if form.is_valid():
             newRole = form.save()
             print(newRole.pk)
@@ -111,6 +111,7 @@ class Role(FormView):
             return HttpResponseRedirect(reverse_lazy('role'))
         else:
             context = {'form': form,'title':'Agregar'}
+            print(context)
             return render(request, 'page-role.html',context)
 
 
@@ -118,7 +119,9 @@ def DeleteRole(request,id):
     role = Group.objects.get(pk=id)
     role.delete()
     messages.success(request, "El rol " + str(role.name) +" se ha eliminado exitosamente")
+    print("redireccion")
     return HttpResponseRedirect(reverse_lazy('role'))
+
 
 class UpdateRole(CreateView):
     template_name = 'page-role.html'
@@ -130,12 +133,13 @@ class UpdateRole(CreateView):
             UpdateRole, self).get_context_data(**kwargs)
         context['title'] = 'Editar'
 
-        role= Group.objects.get(pk=self.kwargs['id'])
+        role= Group.objects.get(pk=self.kwargs['pk'])
         print(role)
         data ={
             'name': role.name
         }
         form = RoleForm(initial=data)
+        print(form)
         context['roles']=form
         return context
 
@@ -145,7 +149,7 @@ class UpdateRole(CreateView):
         print(form.is_valid())
 
         if form.is_valid():
-            role = Group.objects.get('pk')
+            role = kwargs['pk']
             print("en post")
         return True
 
