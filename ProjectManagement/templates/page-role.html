@@ -107,11 +107,7 @@
                             </tfoot>
 
                             <tbody>
-                            {% for rol in roles %}
-
-
-                                {% endfor %}
-
+                         {% for rol in roles %}
                                 <!--Modal update Role-->
                                 <div class = "modal" id = "update_role">
                                     <nav class="background-nav-modal">
@@ -129,8 +125,8 @@
                                                             <div class="row">
                                                                 <div class="input-field col s12">
                                                                     <i class="mdi-action-account-box prefix"></i>
-                                                                    <input id="name" type="text" class="validate" name="name">
-                                                                    <label for="name">Nombre</label>
+                                                                    <input id="name" type="text" class="validate" name="name" value="{{rol.name}}">
+                                                                    <label for="name">Nombre {{rol.pk}}</label>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -173,17 +169,20 @@
                                         </div>
                                     </div>
                                     <div class = "modal-footer background-nav-modal">
-                                        <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text ">Guardar</a>
+                                        <a id = "guardar" href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text ">Guardar</a>
                                         <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text">Cancelar</a>
                                     </div>
                                 </div>
                                 <!--End modal Role-->
-                                {% for rol in roles %}
+                                
                                 <tr>
                                     <td>{{rol.name}}</td>
                                     <td>
-                                        <a class="waves-effect waves-light  modal-trigger" href="#update_role"><i class = "mdi-content-create"> </i></a>
-                                        <a class = "waves-effect waves-light" onClick="if (confirm('¿Está seguro que desea eliminar el rol {{rol.name}}?')){window.location.href='{% url 'delete_role' rol.pk %}'};"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                                        <a class="waves-effect waves-light  modal-trigger" id="hola" data-target="update_role" data-link-update = "{% url 'update_role' rol.pk %}"><i class = "mdi-content-create"> </i></a>
+
+                                       <a class = "waves-effect waves-light" onClick="if (confirm('¿Está seguro que desea eliminar el rol {{rol.name}}?')){window.location.href='{% url 'delete_role' rol.pk %}'};"> 
+
+                                       <i class = "mdi-action-highlight-remove" id = "remove"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -252,23 +251,15 @@ $(".modal-content #myId").val( myid );
 });
     </script>
 
-{##}
-{#<script type="text/javascript">#}
-{#    function deleteRole(rolePk) {#}
-{#        var request = $.ajax({#}
-{#            type: "POST",#}
-{#            url: "{% url 'delete_role' rolePk %}",#}
-{#            data: {#}
-{#                "csrfmiddlewaretoken": "{{ csrf_token }}",#}
-{#                "identificador_id": rolePk#}
-{#            },#}
-{#        });#}
-{#        request.done(function(response) {#}
-{#            alert("Identificador eliminado");#}
-{#            // Cierra el modal, oculta el identificador eliminado, etc.#}
-{#        });#}
-{#    }#}
-{#</script>#}
+<script type="text/javascript">
+    
+    $('#update_role').on("click", function(){
+           var linkEliminar = $('#hola').data('link-update');
+           alert(linkEliminar);
+          $("#guardar").attr("href", linkEliminar);
+       });
+     
+</script>
 
 
 

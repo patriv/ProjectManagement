@@ -134,7 +134,7 @@ def DeleteRole(request,id):
 #     messages.success(request, "El rol se ha eliminado exitosamente")
 #     return HttpResponseRedirect(reverse_lazy('role'))
 
-class UpdateRole(CreateView):
+class UpdateRole(FormView):
     template_name = 'page-role.html'
     form_class = RoleForm
 
