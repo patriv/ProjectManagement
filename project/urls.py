@@ -57,9 +57,14 @@ urlpatterns = [
         name='detail_project'),
 
     url(
-        r'^role/$',
+        r'^role/',
         Role.as_view(),
         name='role'),
+
+    url(
+        r'^add-role',
+        AddRole.as_view(),
+        name='add_role'),
 
     url(
         r'^delete-role/(?P<id>\w+)$',
@@ -67,7 +72,7 @@ urlpatterns = [
         name='delete_role'),
 
     url(
-        r'^update-role/(?P<pk>\w+)$',
+        r'^update-role/(?P<id>\w+)$',
         UpdateRole.as_view(),
         name='update_role'),
 
