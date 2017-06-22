@@ -5,4 +5,3 @@ from project.models import *
 
 # Register your models here.
 
-admin.site.register(profileUser)

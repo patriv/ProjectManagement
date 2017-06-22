@@ -43,8 +43,6 @@ class Login(TemplateView):
             context = {'form': form}
             return render(request, 'page-login.html', context)
 
-
-
 def authenticate_user(username=None):
     try:
         user = User.objects.get(username=username)
@@ -58,15 +56,62 @@ def authenticate_user(username=None):
         except User.DoesNotExist:
             return None
 
-
 class Home(TemplateView):
     template_name = 'index.html'
 
 class Users(TemplateView):
     template_name = 'page-user.html'
 
-class New_Users(TemplateView):
+class New_Users(FormView):
     template_name = 'page-new-user.html'
+    form_class = ProfileForm
+
+    def post(self, request, *args, **kwargs):
+        print("en post")
+        post_values = request.POST.copy()
+        form = ProfileForm(request.POST)
+        print(form)
+        print(form.is_valid())
+        if form.is_valid():
+            user = form.save(commit=False)
+            #user.is_active = False
+            role= post_values['role']
+            group= Group.objects.get(pk=role)
+            phone = post_values['phone']
+            new_user = profileUser(user= user, role=group, phone=phone)
+
+           # group = Group.objects.get(name="Clientes")
+
+            # try:
+            #     activation_key = create_token()
+            #     while UserProfile.objects.filter(activation_key=activation_key).count() > 0:
+            #         activation_key = create_token()
+            #     c = {'usuario': user.get_full_name,
+            #          'key': activation_key,
+            #          'host': request.META['HTTP_HOST']}
+            #     subject = 'Aplicación Prueba - Activación de cuenta'
+            #     message_template = 'success.html'
+            #     email = user.email
+            #     send_email(subject, message_template, c, email)
+            # except:
+            #     form.add_error(
+            #         None, "Hubo un error en la conexión intente registrarse de nuevo. Gracias")
+            #     context = {'form': form, 'host': request.get_host()}
+            #     return render(request, 'register.html', context)
+
+            user.save()
+            new_user.save()
+            #user.groups.add(group)
+           # key_expires = datetime.datetime.today() + datetime.timedelta(days=1)
+            #user_profile = UserProfile(user=user, activation_key=activation_key,
+                  #                     key_expires=key_expires)
+           # user_profile.save()
+            context = {'form':form}
+            messages.success(request,"El usuario ha sido guardado exitosamente")
+            return render(request, 'page-new-user.html', context)
+        else:
+            return render(request, 'page-new-user.html', {'form': form})
+
 
 class Update_Users(TemplateView):
     template_name = 'page-update-user.html'
@@ -88,90 +133,6 @@ class Update_Project(TemplateView):
 
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
-
-
-# Ver role
-class Role(TemplateView):
-    template_name = 'page-role.html'
-   
-
-    def get_context_data(self, **kwargs):
-        context = super(
-            Role, self).get_context_data(**kwargs)
-        role=Group.objects.all()
-        context['roles'] = role
-        return context
-
-
-
-class AddRole(FormView):
-    template_name= 'page-role.html'
-    form_class = RoleForm   
-
-    def get_context_data(self, **kwargs):
-        context = super(
-        AddRole, self).get_context_data(**kwargs)
-
-        context['title'] = 'Agregar'
-
-        return context    
-
-    def post(self, request, *args, **kwargs):
-        post_values = request.POST.copy()
-        form = RoleForm(request.POST)
-        if form.is_valid():
-            newRole = form.save()
-            print(newRole.pk)
-            messages.success(request, "Su rol se ha guardado exitosamente")
-            return HttpResponseRedirect(reverse_lazy('role'))
-        else:
-            return HttpResponseRedirect(reverse_lazy('role'))
-
-
-def DeleteRole(request,id):
-    role = Group.objects.get(pk=id)
-    role.delete()
-    messages.success(request, "El rol " + str(role.name) +" se ha eliminado exitosamente")
-    print("redireccion")
-    return HttpResponseRedirect(reverse_lazy('role'))
-
-
-class UpdateRole(FormView):
-    template_name = 'page-role.html'
-    form_class = RoleForm
-
-    def get_context_data(self, **kwargs):
-        print("en get")
-        context = super(
-            UpdateRole, self).get_context_data(**kwargs)
-        context['title'] = 'Editar'
-
-        role= Group.objects.get(pk=self.kwargs['id'])
-        print(role)
-        data ={
-            'name': role.name
-        }
-        form = RoleForm(initial=data)
-        print(form)
-        context['roles']=form
-        return context
-
-
-    def post(self, request, *args, **kwargs):
-        print("e post")
-        post_values = request.POST.copy()
-        form = RoleForm(post_values)
-        print(form.is_valid())
-
-        if form.is_valid():
-            pk = kwargs['id']
-            role = Group.objects.get(id = pk)
-            role.name = request.POST['name']
-            role.save()
-            messages.success(request, "Su rol se ha guardado exitosamente")
-            return HttpResponseRedirect(reverse_lazy('role'))
-        else:
-            return HttpResponseRedirect(reverse_lazy('role'))
 
 
 
