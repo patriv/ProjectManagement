@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import hashlib
+import random
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
@@ -7,6 +10,8 @@ from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
 from project.forms import *
+from project.models import *
+
 
 class Login(TemplateView):
     template_name = 'page-login.html'
@@ -70,7 +75,6 @@ class New_Users(FormView):
         context = super(
             New_Users, self).get_context_data(**kwargs)
         role = Group.objects.all()
-        print(role)
         context['roles']=role
         return context
 
@@ -78,11 +82,8 @@ class New_Users(FormView):
         print("en post")
         post_values = request.POST.copy()
         form = UserForm(post_values)
-        print(form)
-        print(form.is_valid())
         if form.is_valid():
             user = form.save(commit=False)
-            print(user)
             user.save()
             print(user.pk)
             user_pk = User.objects.get(id=user.id)
@@ -96,34 +97,36 @@ class New_Users(FormView):
             new_user = profileUser(user = user_pk, phone=phone)
             new_user.save()
 
-            # try:
-            #     activation_key = create_token()
-            #     while UserProfile.objects.filter(activation_key=activation_key).count() > 0:
-            #         activation_key = create_token()
-            #     c = {'usuario': user.get_full_name,
-            #          'key': activation_key,
-            #          'host': request.META['HTTP_HOST']}
-            #     subject = 'Aplicación Prueba - Activación de cuenta'
-            #     message_template = 'success.html'
-            #     email = user.email
-            #     send_email(subject, message_template, c, email)
-            # except:
-            #     form.add_error(
-            #         None, "Hubo un error en la conexión intente registrarse de nuevo. Gracias")
-            #     context = {'form': form, 'host': request.get_host()}
-            #     return render(request, 'register.html', context)
+            activation_key = create_token()
+            while profileUser.objects.filter(activation_key=activation_key).count() > 0:
+                activation_key = create_token()
+                c = {'usuario': user.get_full_name,
+                     'key': activation_key,
+                     'host': request.META['HTTP_HOST']}
+                subject = 'Aplicación Prueba - Activación de cuenta'
+                message_template = 'success.html'
+                email = user.email
+                send_email(subject, message_template, c, email)
+
 
            # new_user.save()
             #user.groups.add(group)
            # key_expires = datetime.datetime.today() + datetime.timedelta(days=1)
-            #user_profile = UserProfile(user=user, activation_key=activation_key,
-                  #                     key_expires=key_expires)
-           # user_profile.save()
+
             context = {'form':form}
             messages.success(request,"El usuario ha sido guardado exitosamente")
             return render(request, 'page-new-user.html', context)
         else:
             return render(request, 'page-new-user.html', {'form': form})
+
+def create_token():
+    chars = list('ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz0123456789')
+    random.shuffle(chars)
+    chars = ''.join(chars)
+    sha1 = hashlib.sha1(chars.encode('utf8'))
+    token = sha1.hexdigest()
+    key = token[:12]
+    return key
 
 
 class Update_Users(TemplateView):

@@ -22,10 +22,13 @@ class UserForm(forms.ModelForm):
 	new=[]
 	for i in group:
 		new.append((i.id,i.name))
+
 	rol = forms.ChoiceField(
         required=True,
         choices=new
     )
+
+	print(new)
 	class Meta:
 		model= User
 		fields = ('first_name','last_name','username','email')
