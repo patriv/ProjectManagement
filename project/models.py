@@ -7,7 +7,6 @@ from django.db import models
 
 class profileUser(models.Model):
         user = models.OneToOneField(User)
-        role = models.ForeignKey(Group)
         phone = models.CharField(max_length=11, blank=True)
         image_profile = models.ImageField(upload_to='images/', blank=True)
 

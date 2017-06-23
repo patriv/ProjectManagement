@@ -3,6 +3,8 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from project.models import profileUser
+from django.db import models
+from role.forms import *
 
 
 class LoginForm(forms.Form):
@@ -16,11 +18,14 @@ class UserForm(forms.ModelForm):
 	username=forms.CharField()
 	phone = forms.CharField(required=False)
 	email = forms.EmailField()
+	group=Group.objects.all()
+	new=[]
+	for i in group:
+		new.append((i.id,i.name))
+	rol = forms.ChoiceField(
+        required=True,
+        choices=new
+    )
 	class Meta:
 		model= User
 		fields = ('first_name','last_name','username','email')
-
-class ProfileForm(forms.ModelForm):
-	class Meta:
-		model=profileUser
-		fields=('user','role',)

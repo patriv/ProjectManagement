@@ -64,23 +64,37 @@ class Users(TemplateView):
 
 class New_Users(FormView):
     template_name = 'page-new-user.html'
-    form_class = ProfileForm
+    form_class = UserForm
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            New_Users, self).get_context_data(**kwargs)
+        role = Group.objects.all()
+        print(role)
+        context['roles']=role
+        return context
 
     def post(self, request, *args, **kwargs):
         print("en post")
         post_values = request.POST.copy()
-        form = ProfileForm(request.POST)
+        form = UserForm(post_values)
         print(form)
         print(form.is_valid())
         if form.is_valid():
             user = form.save(commit=False)
-            #user.is_active = False
-            role= post_values['role']
+            print(user)
+            user.save()
+            print(user.pk)
+            user_pk = User.objects.get(id=user.id)
+            print(user_pk.id)
+            role= post_values['rol']
+            print("soy rol")
+            print(role)
             group= Group.objects.get(pk=role)
+            user.groups.add(group)
             phone = post_values['phone']
-            new_user = profileUser(user= user, role=group, phone=phone)
-
-           # group = Group.objects.get(name="Clientes")
+            new_user = profileUser(user = user_pk, phone=phone)
+            new_user.save()
 
             # try:
             #     activation_key = create_token()
@@ -99,8 +113,7 @@ class New_Users(FormView):
             #     context = {'form': form, 'host': request.get_host()}
             #     return render(request, 'register.html', context)
 
-            user.save()
-            new_user.save()
+           # new_user.save()
             #user.groups.add(group)
            # key_expires = datetime.datetime.today() + datetime.timedelta(days=1)
             #user_profile = UserProfile(user=user, activation_key=activation_key,
@@ -138,3 +151,76 @@ class Detail_Project(TemplateView):
 
 
 
+# class UserRegistration(TemplateView):
+#     template_name = 'signup.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super(UserRegistration, self).get_context_data(**kwargs)
+#         context['states'] = Estado.objects.all()
+#         context['formulario1'] = UserForm()
+#         context['telfform'] = CelularForm()
+#         context['formulario2'] = DireccionForm()
+#         # TEMPORAL
+#         context['mentorform'] = MentorForm()
+#         return context
+
+#     def post(self, request, *args, **kwargs):
+#         post_values = request.POST.copy()
+#         userForm = UserForm(post_values)
+#         direcForm = DireccionForm(post_values)
+#         userattrForm = CelularForm(post_values)
+
+#         # TEMPORAL
+#         userattrForm_temporal = MentorForm(post_values)
+
+#         if userForm.is_valid() and direcForm.is_valid() and userattrForm.is_valid():
+#             # User
+#             new_user = userForm.save()
+#             new_user.is_active = 0
+#             new_user.set_password(post_values['password'])
+#             new_user.save()
+
+#             # salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
+#             activation_key = "clubmercado" + str(new_user.id)
+#             key_expires = datetime.datetime.today() + datetime.timedelta(2)
+#             new_profile = UserProfile(user=new_user, activation_key=activation_key,
+#                                       key_expires=key_expires)
+#             new_profile.save()
+
+#             # Direction
+#             direction = direcForm.save()
+#             # User Attributes
+#             userattr = userattrForm.save(commit=False)
+#             userattr.user = new_user
+#             userattr.direccion = direction
+#             userattr.mentor = User.objects.get(pk=int(post_values['mentor']))  ### MENTOR
+#             userattr.save()
+#             # User Group
+#             UserGroup(user=new_user, group=Group.objects.get(id=1)).save()  ### CABLEADO
+
+#             # Notifications
+#             for x in ['1', '2', '3', '4', '5']:
+#                 Notifications(notification_id=x, sms='t', email='t', user_id=new_user.id).save()
+
+#             c = {'usuario': new_user.first_name,
+#                  'key': activation_key,
+#                  'host': request.META['HTTP_HOST']}
+#             from_email = 'equipo@clubmercado.com'
+#             email_subject = 'Club Mercado - Activación de cuenta'
+#             message = get_template('correos/registro.html').render(c)
+#             msg = EmailMessage(email_subject, message, to=[new_user.email], from_email=from_email)
+#             msg.content_subtype = 'html'
+#             msg.send()
+
+#             return HttpResponseRedirect('../../?msg=2')
+#         else:
+#             context = {
+#                 'formulario1': userForm,
+#                 'telfform': userattrForm,
+#                 'formulario2': direcForm,
+#                 'mentorform': userattrForm_temporal,
+#                 'states': Estado.objects.all()
+
+#             }
+#             return render_to_response('signup.html', context,
+# context_instance=RequestContext(request))
