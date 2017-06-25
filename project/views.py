@@ -21,7 +21,27 @@ class Login(TemplateView):
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
+            print(username)
+            user_pk = User.objects.get(username=username)
+            print(user_pk.password)
+
+            if (user_pk.password == ""):
+                user_profile = profileUser.objects.get(user=user_pk.pk)
+                user_profile_password = user_profile.activation_key
+                print("dentro de if")
+                print(user_profile_password)
+                print(password)
+                if(user_profile_password == password):
+                    print("tengo que crear la vista")
+                    return HttpResponseRedirect(reverse_lazy('change_password'))
+                # else:
+                #                     form.add_error(None, error_username)
+                # return render(request, 'page-login.html',
+                #               {'form': form})
+
+            
             error_username = "Tu username/email o contraseña no son correctos."
+
             user_auth = authenticate_user(username)
             if user_auth is not None:
                 if user_auth.is_active:
@@ -35,8 +55,6 @@ class Login(TemplateView):
                         return render(request, 'page-login.html',
                                       {'form': form})
                 else:
-                    print("else")
-
                     #messages.error(request, "Aún no has confirmado tu correo.")
                     return render(request, 'page-login.html',
                                   {'form': form})
@@ -86,27 +104,32 @@ class New_Users(FormView):
             user = form.save(commit=False)
             user.save()
             print(user.pk)
+            print(user.password)
             user_pk = User.objects.get(id=user.id)
-            print(user_pk.id)
+            print("user_pk.passwrd" + " "+ str(user_pk.password))
             role= post_values['rol']
             print("soy rol")
             print(role)
             group= Group.objects.get(pk=role)
             user.groups.add(group)
             phone = post_values['phone']
-            new_user = profileUser(user = user_pk, phone=phone)
+            activation_key = create_token()
+            new_user = profileUser(user = user_pk, phone=phone, activation_key=activation_key)
+            #user.password = activation_key
+            #user.save()
+            print("antes de guardar new_user")
             new_user.save()
 
-            activation_key = create_token()
-            while profileUser.objects.filter(activation_key=activation_key).count() > 0:
-                activation_key = create_token()
-                c = {'usuario': user.get_full_name,
-                     'key': activation_key,
-                     'host': request.META['HTTP_HOST']}
-                subject = 'Aplicación Prueba - Activación de cuenta'
-                message_template = 'success.html'
-                email = user.email
-                send_email(subject, message_template, c, email)
+
+            # while profileUser.objects.filter(activation_key=activation_key).count() > 0:
+            #     activation_key = create_token()
+            #     c = {'usuario': user.get_full_name,
+            #          'key': activation_key,
+            #          'host': request.META['HTTP_HOST']}
+            #     subject = 'Aplicación Prueba - Activación de cuenta'
+            #     message_template = 'success.html'
+            #     email = user.email
+            #     send_email(subject, message_template, c, email)
 
 
            # new_user.save()
@@ -127,6 +150,12 @@ def create_token():
     token = sha1.hexdigest()
     key = token[:12]
     return key
+
+# def first_session(request, id):
+#     user = User.objects.get(pk=id)
+#     print(user)
+#     user_profile = profileUser.objects.get(user=user) 
+
 
 
 class Update_Users(TemplateView):
