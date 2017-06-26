@@ -1,0 +1,16 @@
+
+    {% block content %}
+        <div>
+            <h2> Estimado/a {{usuario}}! </h2>
+            <br>
+            <p> Ha sido registrado en el sistema de IDBC Group, con la finalidad de mantenernos en contacto.</p>
+            <p> Para continuar, ingrese en el siguiente enlace.</p>
+            <br>
+            <a href="{% url 'login' %}">IDBC Group</a>
+        </div>
+    {% endblock %}
+
+    {% block button %}
+
+    {% endblock %}
+

@@ -5,7 +5,9 @@ import random
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
+from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect, JsonResponse
+from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
@@ -15,35 +17,39 @@ from project.models import *
 
 class Login(TemplateView):
     template_name = 'page-login.html'
+    print("hello:")
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-            print(username)
-            user_pk = User.objects.get(username=username)
-            print(user_pk.password)
+            #user_pk = User.objects.get(username=username)
+            # print(user_pk.password)
+            #
 
-            if (user_pk.password == ""):
-                user_profile = profileUser.objects.get(user=user_pk.pk)
-                user_profile_password = user_profile.activation_key
-                print("dentro de if")
-                print(user_profile_password)
-                print(password)
-                if(user_profile_password == password):
-                    print("tengo que crear la vista")
-                    return HttpResponseRedirect(reverse_lazy('change_password'))
-                # else:
-                #                     form.add_error(None, error_username)
-                # return render(request, 'page-login.html',
-                #               {'form': form})
 
             
             error_username = "Tu username/email o contraseña no son correctos."
 
             user_auth = authenticate_user(username)
+            print("esto es user_auth")
+            print(user_auth)
             if user_auth is not None:
+                print("clave")
+                passwordUser = user_auth.password
+                print(passwordUser)
+
+                if (passwordUser == ""):
+                    user_profile = profileUser.objects.get(user=user_auth.pk)
+                    print(user_profile)
+                    user_profile_password = user_profile.activation_key
+                    print("dentro de if")
+                    print(user_profile_password)
+                    print(password)
+                    if(user_profile_password == password):
+                        print("tengo que crear la vista")
+                        return HttpResponseRedirect(reverse_lazy('change_password'))
                 if user_auth.is_active:
                     user = authenticate(username=user_auth.username,
                                         password=password)
@@ -102,6 +108,8 @@ class New_Users(FormView):
         form = UserForm(post_values)
         if form.is_valid():
             user = form.save(commit=False)
+            activation_key = create_token()
+            user.set_password(activation_key)
             user.save()
             print(user.pk)
             print(user.password)
@@ -113,13 +121,19 @@ class New_Users(FormView):
             group= Group.objects.get(pk=role)
             user.groups.add(group)
             phone = post_values['phone']
-            activation_key = create_token()
             new_user = profileUser(user = user_pk, phone=phone, activation_key=activation_key)
-            #user.password = activation_key
-            #user.save()
             print("antes de guardar new_user")
             new_user.save()
 
+            c = {'usuario': user.first_name,
+                             'key': activation_key,
+                             'host': request.META['HTTP_HOST']}
+
+            from_email = 'projectidbcgroup@gmail.com'
+            email_subject = 'IDBC Group - Activación de cuenta'
+            message_template = 'emailNewUser.html'
+            email = user.email
+            send_email(email_subject, message_template, c, email)
 
             # while profileUser.objects.filter(activation_key=activation_key).count() > 0:
             #     activation_key = create_token()
@@ -132,15 +146,26 @@ class New_Users(FormView):
             #     send_email(subject, message_template, c, email)
 
 
-           # new_user.save()
-            #user.groups.add(group)
-           # key_expires = datetime.datetime.today() + datetime.timedelta(days=1)
+            # new_user.save()
+            # user.groups.add(group)
+            # key_expires = datetime.datetime.today() + datetime.timedelta(days=1)
 
-            context = {'form':form}
-            messages.success(request,"El usuario ha sido guardado exitosamente")
+            context = {'form': form}
+            messages.success(request, "El usuario ha sido guardado exitosamente")
             return render(request, 'page-new-user.html', context)
         else:
             return render(request, 'page-new-user.html', {'form': form})
+
+def send_email(subject, message_template, context, email):
+    from_email = 'IDBC Group - Activación de cuenta'
+    email_subject = subject
+    message = get_template(message_template).render(context)
+    msg = EmailMessage(email_subject, message, to=[email], from_email=from_email)
+    msg.content_subtype = 'html'
+    msg.send()
+    print("Se envió exitosamente el correo.")
+
+
 
 def create_token():
     chars = list('ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz0123456789')
@@ -240,7 +265,7 @@ class Detail_Project(TemplateView):
 #             from_email = 'equipo@clubmercado.com'
 #             email_subject = 'Club Mercado - Activación de cuenta'
 #             message = get_template('correos/registro.html').render(c)
-#             msg = EmailMessage(email_subject, message, to=[new_user.email], from_email=from_email)
+    #             msg = EmailMessage(email_subject, message, to=[new_user.email], from_email=from_email)
 #             msg.content_subtype = 'html'
 #             msg.send()
 
