@@ -19,19 +19,24 @@ urlpatterns = [
         name='project'),
 
     url(
-    r'^users',
-    Users.as_view(),
-    name='users'),
+        r'^users',
+        Users.as_view(),
+        name='users'),
 
     url(
-    r'^new-users',
-    New_Users.as_view(),
-    name='new_users'),
+        r'^new-users',
+        New_Users.as_view(),
+        name='new_users'),
 
     url(
-    r'^update-users',
-    Update_Users.as_view(),
-    name='update_users'),
+        r'^update-users/(?P<id>\w+)$',
+        Update_Users.as_view(),
+        name='update_users'),
+
+    url(
+        r'^delete-user/(?P<id>\w+)$',
+        DeleteUser,
+        name='delete_user'),
 
     url(
     r'^forgot-password',

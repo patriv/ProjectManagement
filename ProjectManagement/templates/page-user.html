@@ -29,7 +29,7 @@
         </div>
         <div class="divider"></div>
         <div class = "modal-footer background-nav-modal">
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
+            <a id="acceptDelete" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
             <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
     </div>
@@ -74,82 +74,21 @@
                 </tfoot>
 
                 <tbody>
-
+                    {% for user in users %}
                     <tr>
-                        <td>Ashton Cox</td>
-                        <td>acox</td>
-                        <td>Desarrollador</td>
-                        <td>acoxgmail.com</td>
-                        <td>0414-1233344</td>
+                        <td>{{user.user.first_name}} {{user.user.last_name}}</td>
+                        <td>{{user.user.username}}</td>
+                        <td>{{user.user.groups.all.0.name}}</td>
+                        <td>{{user.user.email}}</td>
+                        <td>{{ user.phone}}</td>
                         <td>
-                            <a class="waves-effect waves-light"><i class = "mdi-content-create"> </i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>Cedric Kelly</td>
-                        <td>ckelly</td>
-                        <td>Administrador</td>
-                        <td>ckellygmail.com</td>
-                        <td>0412-3334455</td>
-                        <td>
-                            <a class="waves-effect waves-light"><i class = "mdi-content-create"> </i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>Airi Satou</td>
-                        <td>asatou</td>
-                        <td>Consultor Funcional</td>
-                        <td>asatou@gmail.com</td>
-                        <td>0414/9876655</td>
-                        <td>
-                            <a class="waves-effect waves-light" href="{% url 'update_users'%}"><i class = "mdi-content-create"> </i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>Brielle Williamson</td>
-                        <td>bwilliamson</td>
-                        <td>Project Management</td>
-                        <td>bwilliamsongmail.com</td>
-                        <td>0416-2223333</td>
-                       <td ><a class="waves-effect waves-light"><i class = "mdi-content-create"></i></a>
-                           <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                           </a>
-                       </td>
-
-                    </tr>
-                    <tr>
-                        <td>Herrod Chandler</td>
-                        <td>hchandler</td>
-                        <td>Project Management</td>
-                        <td>hchandler</td>
-                        <td>0412-3456677</td>
-                        <td><a class="waves-effect waves-light"> <i class = "mdi-content-create"></i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td>Rhona Davidson</td>
-                        <td>rdavidson</td>
-                        <td>Consultor Funcional</td>
-                        <td>rdavidson@gmail.com </td>
-                        <td>0414-2223344</td>
-                        <td><a class="waves-effect waves-light"> <i class = "mdi-content-create"></i></a>
-                            <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                            <a class="waves-effect waves-light" href="{% url 'update_users' user.id %}"><i class = "mdi-content-create"> </i>{{ user.pk }}</a>
+                            <a class = "waves-effect waves-light modal-trigger open-AddBookDialog1" data-target="modal2" data-link-delete="{% url 'delete_user' user.pk %}" >
+                                <i class = "mdi-action-highlight-remove" id = "remove"></i>
                             </a>
                         </td>
                     </tr>
-
+                    {% endfor %}
                 </tbody>
               </table>
             </div>
@@ -175,5 +114,28 @@
     <!-- data-tables -->
     <script type="text/javascript" src="../static/js/plugins/data-tables/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="../static/js/plugins/data-tables/data-tables-script.js"></script>
+
+<script type="text/javascript">
+{% if form.errors %}
+  {% for field in form %}
+    {% for error in field.errors %}
+      Materialize.toast('{{ error|escape }}', 4000);
+    {% endfor %}
+  {% endfor %}
+  {% for error in form.non_field_errors %}
+    Materialize.toast('{{ error|escape }}', 4000);
+  {% endfor %}
+{% endif %}
+
+
+{% if messages %}
+  {% for message in messages %}
+    Materialize.toast('{{message}}',4000);
+  {% endfor %}
+{% endif %}
+</script>
+
+
+<script type="text/javascript" src="../static/js/user.js"></script>
 
 {% endblock %}

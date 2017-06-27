@@ -22,6 +22,7 @@ class UserForm(forms.ModelForm):
 	new=[]
 	for i in group:
 		new.append((i.id,i.name))
+	print(new)
 
 	rol = forms.ChoiceField(
         required=True,

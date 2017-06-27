@@ -8298,4 +8298,15 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   .picker--time .picker__box {
     margin-bottom: 5em; } }
 
+#session{
+  width: auto;
+  margin-top: 80px !important;
+  margin-bottom: 88px !important;
+}
+
+.sizeContent{
+    min-height: 633px;
+
+}
+
 /*# sourceMappingURL=materialize.css.map */

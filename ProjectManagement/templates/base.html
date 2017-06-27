@@ -71,7 +71,7 @@
     <!-- START MAIN -->
     <div id="main">
         <!-- START WRAPPER -->
-        <div class="wrapper">
+        <div class="wrapper sizeContent">
 
             <!-- START LEFT SIDEBAR NAV-->
             <aside id="left-sidebar-nav">
@@ -82,8 +82,8 @@
                                 <img src="../static/images/avatar.jpg" alt="" class="circle responsive-img valign profile-image">
                             </div>
                             <div class="col col s8 m8 l8">
-                                <a class= "white-text">{{user.first_name}}{{user.last_name }}</a>
-                                <p class="user-roal">{{ user_groups.id }}</p>
+                                <a class= "white-text">{{user.first_name}} {{user.last_name }}</a>
+                                <p class="user-roal">{{user.groups.all.0.name }}</p>
                             </div>
                         </div>
                     </li>
@@ -153,7 +153,7 @@
     <!-- jQuery Library -->
     <script type="text/javascript" src="../static/js/jquery-1.11.2.min.js"></script>
     <!--materialize js-->
-    <script type="text/javascript" src="../static/js/materialize.min.js"></script>
+{#    <script type="text/javascript" src="../static/js/materialize.min.js"></script>#}
     <script type="text/javascript" src="../static/js/materialize.js"></script>
     <!--scrollbar-->
     <script type="text/javascript" src="../static/js/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>

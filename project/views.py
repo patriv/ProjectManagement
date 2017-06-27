@@ -4,7 +4,7 @@ import random
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import *
 from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import get_template
@@ -18,7 +18,6 @@ from django.urls import reverse
 
 class Login(TemplateView):
     template_name = 'page-login.html'
-    print("hello:")
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
@@ -36,6 +35,8 @@ class Login(TemplateView):
                 if user_auth.is_active:
                     user = authenticate(username=user_auth.username,
                                         password=password)
+                    print("user login")
+                    print(user)
                     if user:
                         login(request, user)
                         return HttpResponseRedirect(reverse_lazy('project'))
@@ -44,13 +45,12 @@ class Login(TemplateView):
                         return render(request, 'page-login.html',
                                       {'form': form})
                 else:
+                    print("no active")
                     new_user = profileUser.objects.get(user=user_auth.pk)
                     print(new_user)
                     activation_key = new_user.activation_key
                     if password == activation_key:
                         print("son iguales")
-                        #login(request, new_user)
-                        #messages.success(request, "Por favor, cambie su contraseña")
                         return HttpResponseRedirect(reverse('first_session', 
                             kwargs={'activation_key': activation_key}))
                     else:
@@ -85,6 +85,14 @@ class Home(TemplateView):
 class Users(TemplateView):
     template_name = 'page-user.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(
+            Users, self).get_context_data(**kwargs)
+        user = profileUser.objects.all()
+        context['users'] = user
+        return context
+
+
 class New_Users(FormView):
     template_name = 'page-new-user.html'
     form_class = UserForm
@@ -92,9 +100,13 @@ class New_Users(FormView):
     def get_context_data(self, **kwargs):
         context = super(
             New_Users, self).get_context_data(**kwargs)
+        print("get")
         role = Group.objects.all()
-        context['roles']=role
+        print(role)
+        context['title'] = 'Agregar'
+        context['roles'] = role
         return context
+
 
     def post(self, request, *args, **kwargs):
         post_values = request.POST.copy()
@@ -118,7 +130,6 @@ class New_Users(FormView):
                     'key': activation_key,
                     'host': request.META['HTTP_HOST']}
 
-            from_email = 'projectidbcgroup@gmail.com'
             email_subject = 'IDBC Group - Activación de cuenta'
             message_template = 'emailNewUser.html'
             email = user.email
@@ -133,6 +144,49 @@ class New_Users(FormView):
             return render(request, 'page-new-user.html', context)
         else:
             return render(request, 'page-new-user.html', {'form': form})
+
+def DeleteUser(request,id):
+    user = profileUser.objects.get(pk=id)
+    print(user.user)
+    user_pk = User.objects.get(username=user.user)
+    user.delete()
+    user_pk.delete()
+    messages.success(request, "El usuario " + str(user.user.username) +" se ha eliminado exitosamente")
+    return HttpResponseRedirect(reverse_lazy('users'))
+
+#class UpdateUser(FormView):
+
+
+#     def post(self, request, *args, **kwargs):
+#         """
+#         Handles POST requests, instantiating a form instance with the passed
+#         POST variables and then checked for validity.
+#         """
+#         form = Medico_EstudiosForm(request.POST)
+#         if form.is_valid():
+#             estudio_id = kwargs['id']
+#             titulo = request.POST['titulo']
+#             fecha_graduacion = request.POST['fecha_graduacion']
+#             descripcion = request.POST['descripcion']
+#             institucion = request.POST['institucion']
+#             value = modificar_estudios(estudio_id, titulo,
+#                                        fecha_graduacion,
+#                                        descripcion, institucion)
+#             if value is True:
+#                 return HttpResponseRedirect(reverse_lazy(
+#                     'perfil_medico', kwargs={'id': request.user.pk}))
+#             else:
+#                 return render_to_response('medico/agregar_estudios.html',
+#                                           {'form': form,
+#                                            'title': 'Modificar'},
+#                                           context_instance=RequestContext(
+#                                               request))
+#         else:
+#             return render_to_response('medico/agregar_estudios.html',
+#                                       {'form': form,
+#                                        'title': 'Modificar'},
+# context_instance=RequestContext(request))
+
 
 def send_email(subject, message_template, context, email):
     from_email = 'IDBC Group - Activación de cuenta'
@@ -156,13 +210,34 @@ class First_Session(TemplateView):
     template_name = 'first_session.html'
 
     def post(self, request, *args, **kwargs):
+        print("en post")
         post_values = request.POST.copy()
         form = FirstSessionForm(post_values)
-
+        print(form.is_valid())
         if form.is_valid():
-            print("ohh")
-        return render(request, 'page-login.html',
-                              {'form': form}) 
+            activation_key = self.kwargs['activation_key']
+            user = profileUser.objects.get(activation_key=activation_key)
+            username = User.objects.get(pk = user.user.pk)
+            print(username.pk)
+            print(activation_key)
+            password = post_values['password']
+            password2 = post_values['password2']
+            print(password2)
+
+            if password == password2:
+                username.set_password(password)
+                username.is_active= 1
+                print(username.is_active)
+                print(username.password)
+                username.save()
+                messages.success(request, 'La contraseña ha sido cambiada con éxito')
+                return render(request, 'page-login.html',
+                              {'form': form})
+            else:
+                print("else")
+                form.add_error(None,'Las contraseñas no coinciden, por favor verifíque')
+                return render(request, 'first_session.html',
+                              {'form': form})
 
 
 
@@ -174,7 +249,27 @@ class First_Session(TemplateView):
 
 
 class Update_Users(TemplateView):
-    template_name = 'page-update-user.html'
+    template_name = 'page-new-user.html'
+    form_class = UserForm
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            Update_Users, self).get_context_data(**kwargs)
+
+        context['title'] = 'Modificar'
+        # print self.request.GET
+        user = profileUser.objects.get(pk=self.kwargs['id'])
+        print(user)
+        data = {'first_name': user.user.first_name,
+                 'last_name': user.user.last_name,
+                 'username': user.user.username,
+                 'rol': user.user.groups.all,
+                 'email' : user.user.email,
+                'phone': user.phone }
+        form = UserForm(initial=data)
+        print(form)
+        context['form'] = form
+        return context
 
 class Forgot_Password(TemplateView):
     template_name = 'page-forgot-password.html'
