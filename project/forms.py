@@ -27,8 +27,22 @@ class UserForm(forms.ModelForm):
         required=True,
         choices=new
     )
-
-	print(new)
 	class Meta:
 		model= User
 		fields = ('first_name','last_name','username','email')
+
+class FirstSessionForm(forms.ModelForm):
+	password2 = forms.CharField(
+		label="Repita la Contraseña: ",
+		widget=forms.PasswordInput()
+		)
+
+	password = forms.CharField(
+    	label="Contraseña: ",
+    	widget=forms.PasswordInput()
+    	)
+
+	class Meta:
+		model = User
+		fields=['password',]
+		

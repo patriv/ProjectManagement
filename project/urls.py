@@ -7,10 +7,17 @@ urlpatterns = [
         r'^$',
         Login.as_view(),
         name='login'),
+
+    url(
+        r'^first_session/(?P<activation_key>\w+)$',
+        First_Session.as_view(),
+        name='first_session'),
+
     url(
         r'^project',
         Home.as_view(),
         name='project'),
+
     url(
     r'^users',
     Users.as_view(),

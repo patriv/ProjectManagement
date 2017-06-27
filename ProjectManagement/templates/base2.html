@@ -63,73 +63,9 @@
          <!-- end header nav-->
     </header>
 
- <!-- END HEADER -->
-
-    <!-- //////////////////////////////////////////////////////////////////////////// -->
-{% block leftSidebar%}
-
-    <!-- START MAIN -->
-    <div id="main">
-        <!-- START WRAPPER -->
-        <div class="wrapper">
-
-            <!-- START LEFT SIDEBAR NAV-->
-            <aside id="left-sidebar-nav">
-                <ul id="slide-out" class="side-nav fixed leftside-navigation">
-                    <li class="user-details background-user darken-2">
-                        <div class="row">
-                            <div class="col col s4 m4 l4">
-                                <img src="../static/images/avatar.jpg" alt="" class="circle responsive-img valign profile-image">
-                            </div>
-                            <div class="col col s8 m8 l8">
-                                <a class= "white-text">{{user.first_name}}{{user.last_name }}</a>
-                                <p class="user-roal">{{ user_groups.id }}</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="bold"><a href="{% url 'project' %}" class="waves-effect waves-purple1"><i class="mdi-file-folder"></i> Portafolio de Proyecto</a>
-                    </li>
-                    <li class="bold"><a href="{% url 'users' %}" class="waves-effect waves-purple1"><i class="
-                    mdi-action-account-child "></i> Usuarios</a>
-                    </li>
-                    <li class="bold"><a href="{% url 'profile' %}" class="waves-effect waves-purple1"><i class="mdi-action-face-unlock"></i>Perfil</a>
-                    </li>
-                    <li class="bold"><a href="{% url 'role' %}" class="waves-effect  waves-purple1"><i class="mdi-action-assignment-ind"></i>Roles</a>
-                    </li>
-                    <li class="li-hover"><div class="divider"></div></li>
-                    <li class="bold"><a href="#modal1" class="waves-effect  waves-purple1 modal-trigger"><i class="mdi-action-settings-power"></i>Salir</a>
-                    </li>
-                </ul>
-
-                <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu" ></i></a>
-            </aside>
-
-            <!-- Modal logout-->
-            <div class = "modal" id = "modal1">
-                <nav class="background-nav-modal">
-                    <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
-                    <h3 class = "bold center">Cerrar Sesión</h3>
-                </nav>
-                <div class="modal-content">
-                    <p> ¿Está seguro que desea salir del sistema? </p>
-                </div>
-                <div class="divider"></div>
-                <div class = "modal-footer background-nav-modal">
-                    <a href="{% url 'logout' %}" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
-                    <a href="" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
-                </div>
-            </div>
-            <!--End  Modal logout-->
-
 
         {% block content %}
         {% endblock %}
-
-
-        </div>
-    </div>
-    {% endblock %}
-    <!-- //////////////////////////////////////////////////////////////////////////// -->
 
  {% block footer %}
   <!-- START FOOTER -->

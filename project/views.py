@@ -13,6 +13,7 @@ from django.views.generic import *
 from django.shortcuts import render
 from project.forms import *
 from project.models import *
+from django.urls import reverse
 
 
 class Login(TemplateView):
@@ -24,32 +25,14 @@ class Login(TemplateView):
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-            #user_pk = User.objects.get(username=username)
-            # print(user_pk.password)
-            #
-
-
-            
+               
             error_username = "Tu username/email o contraseña no son correctos."
 
             user_auth = authenticate_user(username)
             print("esto es user_auth")
             print(user_auth)
             if user_auth is not None:
-                print("clave")
-                passwordUser = user_auth.password
-                print(passwordUser)
-
-                if (passwordUser == ""):
-                    user_profile = profileUser.objects.get(user=user_auth.pk)
-                    print(user_profile)
-                    user_profile_password = user_profile.activation_key
-                    print("dentro de if")
-                    print(user_profile_password)
-                    print(password)
-                    if(user_profile_password == password):
-                        print("tengo que crear la vista")
-                        return HttpResponseRedirect(reverse_lazy('change_password'))
+        
                 if user_auth.is_active:
                     user = authenticate(username=user_auth.username,
                                         password=password)
@@ -61,9 +44,20 @@ class Login(TemplateView):
                         return render(request, 'page-login.html',
                                       {'form': form})
                 else:
-                    #messages.error(request, "Aún no has confirmado tu correo.")
-                    return render(request, 'page-login.html',
-                                  {'form': form})
+                    new_user = profileUser.objects.get(user=user_auth.pk)
+                    print(new_user)
+                    activation_key = new_user.activation_key
+                    if password == activation_key:
+                        print("son iguales")
+                        #login(request, new_user)
+                        #messages.success(request, "Por favor, cambie su contraseña")
+                        return HttpResponseRedirect(reverse('first_session', 
+                            kwargs={'activation_key': activation_key}))
+                    else:
+                        form.add_error(None, error_username)
+                        return render(request, 'page-login.html',
+                              {'form': form})
+
             else:
                 form.add_error(None, error_username)
                 return render(request, 'page-login.html',
@@ -103,48 +97,32 @@ class New_Users(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        print("en post")
         post_values = request.POST.copy()
         form = UserForm(post_values)
         if form.is_valid():
             user = form.save(commit=False)
             activation_key = create_token()
             user.set_password(activation_key)
+            user.is_active = 0
             user.save()
-            print(user.pk)
-            print(user.password)
             user_pk = User.objects.get(id=user.id)
-            print("user_pk.passwrd" + " "+ str(user_pk.password))
             role= post_values['rol']
-            print("soy rol")
-            print(role)
             group= Group.objects.get(pk=role)
             user.groups.add(group)
             phone = post_values['phone']
             new_user = profileUser(user = user_pk, phone=phone, activation_key=activation_key)
-            print("antes de guardar new_user")
             new_user.save()
 
             c = {'usuario': user.first_name,
-                             'key': activation_key,
-                             'host': request.META['HTTP_HOST']}
+                    'username':user.username,
+                    'key': activation_key,
+                    'host': request.META['HTTP_HOST']}
 
             from_email = 'projectidbcgroup@gmail.com'
             email_subject = 'IDBC Group - Activación de cuenta'
             message_template = 'emailNewUser.html'
             email = user.email
             send_email(email_subject, message_template, c, email)
-
-            # while profileUser.objects.filter(activation_key=activation_key).count() > 0:
-            #     activation_key = create_token()
-            #     c = {'usuario': user.get_full_name,
-            #          'key': activation_key,
-            #          'host': request.META['HTTP_HOST']}
-            #     subject = 'Aplicación Prueba - Activación de cuenta'
-            #     message_template = 'success.html'
-            #     email = user.email
-            #     send_email(subject, message_template, c, email)
-
 
             # new_user.save()
             # user.groups.add(group)
@@ -163,8 +141,6 @@ def send_email(subject, message_template, context, email):
     msg = EmailMessage(email_subject, message, to=[email], from_email=from_email)
     msg.content_subtype = 'html'
     msg.send()
-    print("Se envió exitosamente el correo.")
-
 
 
 def create_token():
@@ -175,6 +151,20 @@ def create_token():
     token = sha1.hexdigest()
     key = token[:12]
     return key
+
+class First_Session(TemplateView):
+    template_name = 'first_session.html'
+
+    def post(self, request, *args, **kwargs):
+        post_values = request.POST.copy()
+        form = FirstSessionForm(post_values)
+
+        if form.is_valid():
+            print("ohh")
+        return render(request, 'page-login.html',
+                              {'form': form}) 
+
+
 
 # def first_session(request, id):
 #     user = User.objects.get(pk=id)

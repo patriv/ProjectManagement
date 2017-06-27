@@ -1,0 +1,47 @@
+{% extends "base2.html" %}
+{% load staticfiles %} 
+
+
+{% block content %}
+   
+
+ <div class="row">
+   <div class="col s3"><p></p></div>
+    <div class="col s6 z-depth-4 card-panel center">
+      <form class="login-form" action="" method="">
+        {% csrf_token %}
+
+          <div class="input-field col s12 center">
+            <img src="../static/images/logotipo_idbc.png" alt="" class="responsive-img valign profile-image-login">
+          </div>
+       
+        <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-social-person-outline prefix"></i>
+            <input id="password" type="password" name="username">
+            <label for="password" class="center-align" >Neva Contraseña</label>
+          </div>
+        </div>
+        <div class="row margin">
+          <div class="input-field col s12">
+            <i class="mdi-action-lock-outline prefix"></i>
+            <input id="password2" type="password" name="password">
+            <label for="password2">Repita la Contraseña</label>
+          </div>
+        </div>
+        <div class="row">          
+          <div class="input-field col s12 m12 l12 ">
+              <button class="btn waves-effect waves-light col s12" type="submit" >Aceptar</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+              
+              <button class="btn waves-effect waves-light col s12"  >Cancelar</button>
+          </div>
+        </div>
+     
+      </form>
+    </div>
+  </div>
+ {%endblock%}
