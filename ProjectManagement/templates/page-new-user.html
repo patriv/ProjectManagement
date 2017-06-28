@@ -31,7 +31,11 @@
                   <div class="col s6 m6 l6">
                       <div class="card-panel">
                           <div class="col s6">
+                          {% if title == "Agregar"%}
                               <h4 class="header2">Nuevo Usuario </h4>
+                          {% else %}
+                              <h4 class="header2">Editar Usuario </h4>
+                          {% endif %}
                           </div>
                           <div class="col s6 right">
                               <br>
@@ -39,26 +43,30 @@
                           </div>
 
                           <div class="row">
+                              {% if title == "Agregar"%}
                               <form class="col s12" action="{% url 'new_users' %}" method="post">
+                              {% else %}
+                              <form class="col s12" action="{% url 'update_users' userProfile.pk %}" method="post">
+                              {% endif %}
                                   {% csrf_token %}
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-account-box prefix"></i>
-                                          <input id="first_name" type="text" class="validate" name="first_name">
+                                          {{form.first_name}}
                                           <label for="first_name">Nombre <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-account-box prefix"></i>
-                                          <input id="last_name" type="text" class="validate" name="last_name">
+                                          {{form.last_name}}
                                           <label for="last_name">Apellido <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-account-circle prefix"></i>
-                                          <input id="username" type="text" class="validate" name="username">
+                                          {{form.username}}
                                           <label for="username">Username <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
@@ -74,7 +82,7 @@
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-communication-email prefix"></i>
-                                          <input id="email4" type="email" class="validate" name="email">
+                                         {{form.email}}
                                           <label for="email">Email <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
@@ -82,7 +90,7 @@
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-hardware-phone-iphone prefix"></i>
-                                          <input type="text" id="phone" class="validate" name="phone">
+                                          {{form.phone}}
                                           <label for="phone">Teléfono</label>
                                       </div>
                                   </div>

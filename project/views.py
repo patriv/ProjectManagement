@@ -16,6 +16,9 @@ from project.models import *
 from django.urls import reverse
 
 
+
+
+
 class Login(TemplateView):
     template_name = 'page-login.html'
 
@@ -96,21 +99,28 @@ class Users(TemplateView):
 class New_Users(FormView):
     template_name = 'page-new-user.html'
     form_class = UserForm
+  
 
     def get_context_data(self, **kwargs):
         context = super(
             New_Users, self).get_context_data(**kwargs)
-        print("get")
-        role = Group.objects.all()
-        print(role)
         context['title'] = 'Agregar'
-        context['roles'] = role
         return context
 
 
     def post(self, request, *args, **kwargs):
         post_values = request.POST.copy()
         form = UserForm(post_values)
+
+        form1 = UserForm()
+
+        creator_choice=[(i.id, i.name) for i in Group.objects.all()]
+        rol = forms.ChoiceField(
+        required=True,
+        choices=creator_choice
+    )
+        form1.fields['rol'].choices = creator_choice
+
         if form.is_valid():
             user = form.save(commit=False)
             activation_key = create_token()
@@ -153,39 +163,6 @@ def DeleteUser(request,id):
     user_pk.delete()
     messages.success(request, "El usuario " + str(user.user.username) +" se ha eliminado exitosamente")
     return HttpResponseRedirect(reverse_lazy('users'))
-
-#class UpdateUser(FormView):
-
-
-#     def post(self, request, *args, **kwargs):
-#         """
-#         Handles POST requests, instantiating a form instance with the passed
-#         POST variables and then checked for validity.
-#         """
-#         form = Medico_EstudiosForm(request.POST)
-#         if form.is_valid():
-#             estudio_id = kwargs['id']
-#             titulo = request.POST['titulo']
-#             fecha_graduacion = request.POST['fecha_graduacion']
-#             descripcion = request.POST['descripcion']
-#             institucion = request.POST['institucion']
-#             value = modificar_estudios(estudio_id, titulo,
-#                                        fecha_graduacion,
-#                                        descripcion, institucion)
-#             if value is True:
-#                 return HttpResponseRedirect(reverse_lazy(
-#                     'perfil_medico', kwargs={'id': request.user.pk}))
-#             else:
-#                 return render_to_response('medico/agregar_estudios.html',
-#                                           {'form': form,
-#                                            'title': 'Modificar'},
-#                                           context_instance=RequestContext(
-#                                               request))
-#         else:
-#             return render_to_response('medico/agregar_estudios.html',
-#                                       {'form': form,
-#                                        'title': 'Modificar'},
-# context_instance=RequestContext(request))
 
 
 def send_email(subject, message_template, context, email):
@@ -240,36 +217,59 @@ class First_Session(TemplateView):
                               {'form': form})
 
 
-
-# def first_session(request, id):
-#     user = User.objects.get(pk=id)
-#     print(user)
-#     user_profile = profileUser.objects.get(user=user) 
-
-
-
 class Update_Users(TemplateView):
     template_name = 'page-new-user.html'
-    form_class = UserForm
+    form_class = UpdateUserForm
 
     def get_context_data(self, **kwargs):
         context = super(
             Update_Users, self).get_context_data(**kwargs)
 
         context['title'] = 'Modificar'
-        # print self.request.GET
         user = profileUser.objects.get(pk=self.kwargs['id'])
-        print(user)
+
         data = {'first_name': user.user.first_name,
                  'last_name': user.user.last_name,
                  'username': user.user.username,
-                 'rol': user.user.groups.all,
+                 'rol': user.user.groups.all()[0],
                  'email' : user.user.email,
                 'phone': user.phone }
         form = UserForm(initial=data)
-        print(form)
+        context['userProfile'] = user
         context['form'] = form
         return context
+
+    def post(self, request, *args, **kwargs):
+        print("en post update")
+        post_values = request.POST.copy()
+        form = UpdateUserForm(data=request.POST, instance=request.user)
+        #form.fields['username'].required = False
+        print(form)
+        print(form.is_valid())
+        if form.is_valid():
+            user_pk = kwargs['id']
+            userProfile = profileUser.objects.get(pk=user_pk)
+            print(userProfile.user)
+            user = User.objects.get(username=userProfile.user)
+            print(user)
+            user.first_name = request.POST['first_name']
+            user.last_name = request.POST['last_name']
+            user.email = request.POST['email']
+            userProfile.phone = request.POST['phone']
+            user.username = request.POST['username']
+            user.save()
+            userProfile.save()
+            role = request.POST['rol']
+            group = Group.objects.get(pk=role)
+            user.groups.remove(userProfile.user.groups.all()[0])
+            user.groups.add(group)
+            user.save()
+            messages.success(request, "El usuario ha sido modificado con éxito")
+            return HttpResponseRedirect(reverse_lazy('users'))
+
+        else:
+            return render(request, 'page-user.html',
+                              {'form': form})
 
 class Forgot_Password(TemplateView):
     template_name = 'page-forgot-password.html'
@@ -291,78 +291,3 @@ class Detail_Project(TemplateView):
 
 
 
-
-
-# class UserRegistration(TemplateView):
-#     template_name = 'signup.html'
-
-#     def get_context_data(self, **kwargs):
-#         context = super(UserRegistration, self).get_context_data(**kwargs)
-#         context['states'] = Estado.objects.all()
-#         context['formulario1'] = UserForm()
-#         context['telfform'] = CelularForm()
-#         context['formulario2'] = DireccionForm()
-#         # TEMPORAL
-#         context['mentorform'] = MentorForm()
-#         return context
-
-#     def post(self, request, *args, **kwargs):
-#         post_values = request.POST.copy()
-#         userForm = UserForm(post_values)
-#         direcForm = DireccionForm(post_values)
-#         userattrForm = CelularForm(post_values)
-
-#         # TEMPORAL
-#         userattrForm_temporal = MentorForm(post_values)
-
-#         if userForm.is_valid() and direcForm.is_valid() and userattrForm.is_valid():
-#             # User
-#             new_user = userForm.save()
-#             new_user.is_active = 0
-#             new_user.set_password(post_values['password'])
-#             new_user.save()
-
-#             # salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
-#             activation_key = "clubmercado" + str(new_user.id)
-#             key_expires = datetime.datetime.today() + datetime.timedelta(2)
-#             new_profile = UserProfile(user=new_user, activation_key=activation_key,
-#                                       key_expires=key_expires)
-#             new_profile.save()
-
-#             # Direction
-#             direction = direcForm.save()
-#             # User Attributes
-#             userattr = userattrForm.save(commit=False)
-#             userattr.user = new_user
-#             userattr.direccion = direction
-#             userattr.mentor = User.objects.get(pk=int(post_values['mentor']))  ### MENTOR
-#             userattr.save()
-#             # User Group
-#             UserGroup(user=new_user, group=Group.objects.get(id=1)).save()  ### CABLEADO
-
-#             # Notifications
-#             for x in ['1', '2', '3', '4', '5']:
-#                 Notifications(notification_id=x, sms='t', email='t', user_id=new_user.id).save()
-
-#             c = {'usuario': new_user.first_name,
-#                  'key': activation_key,
-#                  'host': request.META['HTTP_HOST']}
-#             from_email = 'equipo@clubmercado.com'
-#             email_subject = 'Club Mercado - Activación de cuenta'
-#             message = get_template('correos/registro.html').render(c)
-    #             msg = EmailMessage(email_subject, message, to=[new_user.email], from_email=from_email)
-#             msg.content_subtype = 'html'
-#             msg.send()
-
-#             return HttpResponseRedirect('../../?msg=2')
-#         else:
-#             context = {
-#                 'formulario1': userForm,
-#                 'telfform': userattrForm,
-#                 'formulario2': direcForm,
-#                 'mentorform': userattrForm_temporal,
-#                 'states': Estado.objects.all()
-
-#             }
-#             return render_to_response('signup.html', context,
-# context_instance=RequestContext(request))

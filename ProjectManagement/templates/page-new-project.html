@@ -123,15 +123,13 @@
                                       <div class="input-field col s11 m11 l11 center">
 
                                           <select name="select">
-                                              <option value="" disabled selected>Elija un rol</option>
+                                              <option value="" disabled selected>---</option>
                                               <option value="Administrador">In Progress</option>
-                                              <option value="Arquitecto de Software">Arquitecto de Software</option>
-                                              <option value="Consultor Funcional">Consultor Funcional</option>
-                                              <option value="Cliente">Cliente</option>
-                                              <option value="Desarrollador">Desarrollador</option>
-                                              <option value="Project Management">Project Management</option>
+                                              <option value="Technical Review">Technical Review</option>
+                                              <option value="Functional Review">Functional Review</option>
+                                              <option value="Cliente">Customer Acceptance</option>
                                           </select>
-                                          <label for ="rol">Status</label>
+                                          <label for ="status">Status</label>
                                       </div>
                                   </div>
                                   <div class="row">
@@ -144,7 +142,7 @@
 
                                       <div class="row ">
                                           <div class="input-field col s12 m6 l6 center">
-                                              <a class="btn  deep-purple accent-2 waves-effect waves-light " href="{% url 'users'%}">Cancelar
+                                              <a class="btn  deep-purple accent-2 waves-effect waves-light " href="{% url 'project'%}">Cancelar
                                                   <i class="mdi-content-reply right"></i>
                                               </a>
                                           </div>

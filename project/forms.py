@@ -7,30 +7,62 @@ from django.db import models
 from role.forms import *
 
 
+
 class LoginForm(forms.Form):
 	class Meta:
 		model = User
 		fields = ('username','password','email',)
 
 class UserForm(forms.ModelForm):
-	first_name = forms.CharField()
-	last_name= forms.CharField()
-	username=forms.CharField()
+	first_name = forms.TextInput(attrs={'id':"first_name",
+										'type':"text",
+										 'class':"validate"})
+	last_name= forms.TextInput(attrs={'id':"last_name",
+										'type':"text",
+										 'class':"validate"})
+	username=forms.TextInput(attrs={'id':"last_name",
+										'type':"text",
+										 'class':"validate"})
 	phone = forms.CharField(required=False)
-	email = forms.EmailField()
-	group=Group.objects.all()
-	new=[]
-	for i in group:
-		new.append((i.id,i.name))
-	print(new)
+	email = forms.EmailInput(attrs={'id':"email",
+										'type':"email",
+										 'class':"validate"})
 
-	rol = forms.ChoiceField(
+
+	rol = forms.ModelChoiceField(
         required=True,
-        choices=new
+        queryset=Group.objects.all()
     )
+
 	class Meta:
 		model= User
-		fields = ('first_name','last_name','username','email')
+		fields = ('first_name','last_name','username','email','groups',)
+
+
+class UpdateUserForm(forms.ModelForm):
+	first_name = forms.TextInput(attrs={'id':"first_name",
+										'type':"text",
+										 'class':"validate"})
+	last_name= forms.TextInput(attrs={'id':"last_name",
+										'type':"text",
+										 'class':"validate"})
+	username=forms.CharField(required= False)
+	phone = forms.CharField(required=False)
+	email = forms.EmailInput(attrs={'id':"email",
+										'type':"email",
+										 'class':"validate"})
+
+
+	rol = forms.ModelChoiceField(
+        required=True,
+        queryset=Group.objects.all()
+    )
+
+	class Meta:
+		model= User
+		fields = ('first_name','last_name','email','groups',)
+
+	
 
 class FirstSessionForm(forms.ModelForm):
 	password2 = forms.CharField(
