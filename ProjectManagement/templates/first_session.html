@@ -3,7 +3,6 @@
 
 
 {% block content %}
-   
 
  <div class="row">
    <div class="col s5"><p></p></div>
@@ -16,16 +15,21 @@
           </div>
        
         <div class="row margin">
-          <div class="input-field col s12">
-            <i class="mdi-social-person-outline prefix"></i>
-            <input id="password" type="password" name="password">
-            <label for="password" class="center-align" >Neva Contraseña</label>
+            <div class="input-field col s10">
+              <i class="mdi-social-person-outline prefix"></i>
+              <input id="password" type="password" name="password">
+              <label for="password" class="center-align" >Nueva Contraseña</label>
+
           </div>
         </div>
         <div class="row margin">
-          <div class="input-field col s12">
-            <i class="mdi-action-lock-outline prefix"></i>
-            <input id="password2" type="password" name="password2">
+          <div class="input-field col s10">
+              <i class="mdi-action-lock-outline prefix"></i>
+              <input id="password2" type="password" name="password2" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="La contraseña debe ser mayor o igual a
+              ocho caracteres y no puede ser sólo alfanumérica">
+              <span id = "show-hide-passwd" action="hide"
+                    class = "mdi-action-visibility prefix">
+              </span>
             <label for="password2">Repita la Contraseña</label>
           </div>
         </div>
@@ -69,6 +73,8 @@
    <script src="../static/js/jquery-ui.js"></script>
 
   <!-- Others-->
-  <script type="text/javascript" src="../static/js/others.js"></script>
+    <script type="text/javascript" src="../static/js/others.js"></script>
+    <script type="text/javascript" src="../static/js/showPassword.js"></script>
+    <script type="text/javascript" src="../static/js/verifyPassword.js"></script>
 
 {% endblock %}

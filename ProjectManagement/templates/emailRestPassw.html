@@ -1,0 +1,14 @@
+{% block content %}
+    <div>
+        <h2> Estimado/a {{usuario}}! </h2>
+        <br>
+        <p> Ha solicitado reestablecer su contraseña.</p>
+        <p> Ingrese al siguiente link para continuar</p>
+        <br>
+        {% block rest_link %}
+        {{ protocol }}://{{ domain }}{% url 'change_password' uidb64=uid token=token %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+

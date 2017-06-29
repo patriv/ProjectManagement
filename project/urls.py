@@ -1,6 +1,7 @@
 from django.conf.urls import url
 import django.contrib.auth.views
 from project.views import *
+from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 
 urlpatterns = [
     url(
@@ -37,6 +38,27 @@ urlpatterns = [
         r'^delete-user/(?P<id>\w+)$',
         DeleteUser,
         name='delete_user'),
+
+    url(r'^reset/password_reset$',
+        password_reset,
+        {'template_name': 'page-forgot-password.html',
+         'email_template_name' : 'emailRestPassw.html'},
+        name="password_reset"),
+
+    url(r'^reset/password_reset_done$',
+        password_reset_done,
+        {'template_name': 'templates/password_reset_done.html'},
+        name="password_reset_done"),
+
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
+        password_reset_confirm,
+        {'temaplate_name':'templates/page-change-password.html' },
+        name = "password_reset_confirm"),
+
+    url(r'^reset\done$',
+        password_reset_complete,
+        {'template_name':'templates/password_reset_complete.html'},
+        name="password_reset_complete"),
 
     url(
     r'^forgot-password',

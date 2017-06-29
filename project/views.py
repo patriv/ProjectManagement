@@ -15,10 +15,6 @@ from project.forms import *
 from project.models import *
 from django.urls import reverse
 
-
-
-
-
 class Login(TemplateView):
     template_name = 'page-login.html'
 
@@ -109,18 +105,10 @@ class New_Users(FormView):
 
 
     def post(self, request, *args, **kwargs):
+        print("en post new user")
         post_values = request.POST.copy()
         form = UserForm(post_values)
-
-        form1 = UserForm()
-
-        creator_choice=[(i.id, i.name) for i in Group.objects.all()]
-        rol = forms.ChoiceField(
-        required=True,
-        choices=creator_choice
-    )
-        form1.fields['rol'].choices = creator_choice
-
+        print(form.is_valid())
         if form.is_valid():
             user = form.save(commit=False)
             activation_key = create_token()
@@ -151,9 +139,10 @@ class New_Users(FormView):
 
             context = {'form': form}
             messages.success(request, "El usuario ha sido guardado exitosamente")
-            return render(request, 'page-new-user.html', context)
+            return HttpResponseRedirect(reverse_lazy('users'))
         else:
-            return render(request, 'page-new-user.html', {'form': form})
+            messages.success(request, 'Error al registrar usuario')
+            return HttpResponseRedirect(reverse_lazy('new_users'))
 
 def DeleteUser(request,id):
     user = profileUser.objects.get(pk=id)
@@ -187,7 +176,7 @@ class First_Session(TemplateView):
     template_name = 'first_session.html'
 
     def post(self, request, *args, **kwargs):
-        print("en post")
+
         post_values = request.POST.copy()
         form = FirstSessionForm(post_values)
         print(form.is_valid())

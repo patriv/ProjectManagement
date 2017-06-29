@@ -8,6 +8,7 @@ from role.forms import *
 
 
 
+
 class LoginForm(forms.Form):
 	class Meta:
 		model = User

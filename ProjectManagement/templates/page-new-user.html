@@ -44,9 +44,9 @@
 
                           <div class="row">
                               {% if title == "Agregar"%}
-                              <form class="col s12" action="{% url 'new_users' %}" method="post">
+                                  <form class="col s12" action="{% url 'new_users' %}" method="post">
                               {% else %}
-                              <form class="col s12" action="{% url 'update_users' userProfile.pk %}" method="post">
+                                  <form class="col s12" action="{% url 'update_users' userProfile.pk %}" method="post">
                               {% endif %}
                                   {% csrf_token %}
                                   <div class="row">
