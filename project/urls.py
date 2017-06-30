@@ -41,23 +41,23 @@ urlpatterns = [
 
     url(r'^reset/password_reset$',
         password_reset,
-        {'template_name': 'page-forgot-password.html',
-         'email_template_name' : 'emailRestPassw.html'},
+        {'template_name': 'registration/page-forgot-password.html',
+        'email_template_name': 'registration/password-reset_email.html'},
         name="password_reset"),
 
     url(r'^reset/password_reset_done$',
         password_reset_done,
-        {'template_name': 'templates/password_reset_done.html'},
+        {'template_name': 'registration/password_reset_done.html'},
         name="password_reset_done"),
 
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
         password_reset_confirm,
-        {'temaplate_name':'templates/page-change-password.html' },
+        {'temaplate_name':'registration/page-change-password.html' },
         name = "password_reset_confirm"),
 
     url(r'^reset\done$',
         password_reset_complete,
-        {'template_name':'templates/password_reset_complete.html'},
+        {'template_name':'registration/password_reset-complete.html'},
         name="password_reset_complete"),
 
     url(

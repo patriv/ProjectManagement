@@ -229,8 +229,6 @@ class Update_Users(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        print("en post update")
-        post_values = request.POST.copy()
         form = UpdateUserForm(data=request.POST, instance=request.user)
         #form.fields['username'].required = False
         print(form)
@@ -261,7 +259,27 @@ class Update_Users(TemplateView):
                               {'form': form})
 
 class Forgot_Password(TemplateView):
-    template_name = 'page-forgot-password.html'
+    template_name = 'registration/page-forgot-password.html'
+    form_class = ForgotPasswordForm
+
+    # def post(self, request, *args, **kwargs):
+    #     post_values = request.POST.copy()
+    #     form = ForgotPasswordForm(post_values)
+    #     print(form.is_valid())
+    #     if form.is_valid():
+    #         email = post_values.get('email','pvalencia@idbcgroup.com')
+
+
+    #         c = {
+    #                 'host': request.META['HTTP_HOST']}
+
+    #         email_subject = 'IDBC Group - Activación de cuenta'
+    #         message_template = 'registration/password-reset_email.html'
+    #         email = email
+    #         send_email(email_subject, message_template, c, email)
+    #         return render(request, 'registration/password_reset_done.html')
+
+
 
 class Change_Password(TemplateView):
     template_name = 'page-change-password.html'

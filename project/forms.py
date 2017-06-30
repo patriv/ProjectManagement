@@ -63,6 +63,11 @@ class UpdateUserForm(forms.ModelForm):
 		model= User
 		fields = ('first_name','last_name','email','groups',)
 
+class ForgotPasswordForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ('email',)
+
 	
 
 class FirstSessionForm(forms.ModelForm):
