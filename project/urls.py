@@ -1,7 +1,6 @@
 from django.conf.urls import url
 import django.contrib.auth.views
 from project.views import *
-from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 
 urlpatterns = [
     url(
@@ -40,35 +39,13 @@ urlpatterns = [
         name='delete_user'),
 
     url(r'^reset/password_reset$',
-        password_reset,
-        {'template_name': 'registration/page-forgot-password.html',
-        'email_template_name': 'registration/password-reset_email.html'},
+        Password_Reset.as_view(),
         name="password_reset"),
 
-    url(r'^reset/password_reset_done$',
-        password_reset_done,
-        {'template_name': 'registration/password_reset_done.html'},
-        name="password_reset_done"),
-
-    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$',
-        password_reset_confirm,
-        {'temaplate_name':'registration/page-change-password.html' },
-        name = "password_reset_confirm"),
-
-    url(r'^reset\done$',
-        password_reset_complete,
-        {'template_name':'registration/password_reset-complete.html'},
-        name="password_reset_complete"),
-
-    url(
-    r'^forgot-password',
-    Forgot_Password.as_view(),
-    name='forgot_password'),
-
-    url(
-    r'^change-password',
-    Change_Password.as_view(),
-    name='change_password'),
+    url(r'^reset/(?P<token>.+)$',
+        Password_Reset_Confirm.as_view(),
+        name='password_reset_confirm'
+        ),
 
     url(
         r'^new-project',
@@ -76,7 +53,7 @@ urlpatterns = [
         name='new_project'),
 
     url(
-        r'^profile',
+        r'^profile/(?P<id>\w+)$',
         Profile.as_view(),
         name='profile'),
 

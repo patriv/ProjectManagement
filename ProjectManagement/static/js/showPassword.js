@@ -1,5 +1,7 @@
 $(document).ready(function () {
+
     $("#show-hide-passwd").click(function(e){
+      alert("aqui");
       e.preventDefault();
       var current = $(this).attr('action');
 

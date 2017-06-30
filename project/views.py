@@ -91,7 +91,6 @@ class Users(TemplateView):
         context['users'] = user
         return context
 
-
 class New_Users(FormView):
     template_name = 'page-new-user.html'
     form_class = UserForm
@@ -102,7 +101,6 @@ class New_Users(FormView):
             New_Users, self).get_context_data(**kwargs)
         context['title'] = 'Agregar'
         return context
-
 
     def post(self, request, *args, **kwargs):
         print("en post new user")
@@ -153,7 +151,6 @@ def DeleteUser(request,id):
     messages.success(request, "El usuario " + str(user.user.username) +" se ha eliminado exitosamente")
     return HttpResponseRedirect(reverse_lazy('users'))
 
-
 def send_email(subject, message_template, context, email):
     from_email = 'IDBC Group - Activación de cuenta'
     email_subject = subject
@@ -161,7 +158,6 @@ def send_email(subject, message_template, context, email):
     msg = EmailMessage(email_subject, message, to=[email], from_email=from_email)
     msg.content_subtype = 'html'
     msg.send()
-
 
 def create_token():
     chars = list('ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz0123456789')
@@ -176,7 +172,6 @@ class First_Session(TemplateView):
     template_name = 'first_session.html'
 
     def post(self, request, *args, **kwargs):
-
         post_values = request.POST.copy()
         form = FirstSessionForm(post_values)
         print(form.is_valid())
@@ -196,7 +191,7 @@ class First_Session(TemplateView):
                 print(username.is_active)
                 print(username.password)
                 username.save()
-                messages.success(request, 'La contraseña ha sido cambiada con éxito')
+                form.add_error(None, 'La contraseña ha sido cambiada con éxito')
                 return render(request, 'page-login.html',
                               {'form': form})
             else:
@@ -204,7 +199,9 @@ class First_Session(TemplateView):
                 form.add_error(None,'Las contraseñas no coinciden, por favor verifíque')
                 return render(request, 'first_session.html',
                               {'form': form})
-
+        else:
+            return render(request, 'first_session.html',
+                          {'form': form})
 
 class Update_Users(TemplateView):
     template_name = 'page-new-user.html'
@@ -258,37 +255,117 @@ class Update_Users(TemplateView):
             return render(request, 'page-user.html',
                               {'form': form})
 
-class Forgot_Password(TemplateView):
-    template_name = 'registration/page-forgot-password.html'
-    form_class = ForgotPasswordForm
+class Password_Reset(TemplateView):
+    template_name = 'password-reset-form.html'
+    form_class = PasswordResetForm
 
-    # def post(self, request, *args, **kwargs):
-    #     post_values = request.POST.copy()
-    #     form = ForgotPasswordForm(post_values)
-    #     print(form.is_valid())
-    #     if form.is_valid():
-    #         email = post_values.get('email','pvalencia@idbcgroup.com')
+    def post(self, request, *args, **kwargs):
+        post_values = request.POST.copy()
+        form = PasswordResetForm(post_values)
+        print(form.is_valid())
+        if form.is_valid():
+            email = post_values['email']
+            print(email)
+            user = User.objects.filter(email=email).exists()
+            print(user)
+            if user:
+                print("en if")
+                username = User.objects.get(email = email)
+                print(username.is_active)
+                if username.is_active:
+                    user = profileUser.objects.get(user=username)
+                    print(user)
+                    user.activation_key = create_token()
+                    print("user.activation")
+                    print(user.activation_key)
+                    user.save()
 
+                    c = {'usuario': username.first_name,
+                        'username':username,
+                        'key': user.activation_key,
+                        'host': request.META['HTTP_HOST']
+                    }
 
-    #         c = {
-    #                 'host': request.META['HTTP_HOST']}
+                    email_subject = 'IDBC Group - Recuperación de Contraseña'
+                    message_template = 'password-reset-email.html'
+                    email = email
+                    send_email(email_subject, message_template, c, email)
+                    return render(request, 'password-reset-done.html')
+                else:
+                    form.add_error(None, 'Lo sentimos, debe activar la cuenta')
+                    return render(request, 'page-login.html',
+                                  {'form': form})
 
-    #         email_subject = 'IDBC Group - Activación de cuenta'
-    #         message_template = 'registration/password-reset_email.html'
-    #         email = email
-    #         send_email(email_subject, message_template, c, email)
-    #         return render(request, 'registration/password_reset_done.html')
+            else :
+                print("else no user")
+                form.add_error(None, 'El correo ingresado no es válido, por favor verifique')
+                return render(request, 'password-reset-form.html',
+                              {'form': form})
+        else:
+            print("form is not valid")
+            form.add_error(None, 'Ingrese un correo electrónico válido')
+            return render(request,'password-reset-form.html',
+                          {'form':form})
 
+class Password_Reset_Confirm(TemplateView):
+    template_name = 'password-reset-confirm.html'
 
+    def post(self, request, *args, **kwargs):
+        print("post reset")
+        post_values = request.POST.copy()
+        form = FirstSessionForm(post_values)
+        print(form)
+        print(form.is_valid())
+        if form.is_valid():
+            activation_key = self.kwargs['token']
+            print(activation_key)
+            user = profileUser.objects.get(activation_key=activation_key)
+            print(user)
+            username = User.objects.get(pk=user.user.pk)
+            print(username.pk)
+            print(activation_key)
+            password = post_values['password']
+            password2 = post_values['password2']
+            print(password)
+            print(password2)
+            if password == password2:
+                print("las claves son iguales")
+                username.set_password(password)
+                form.add_error(None, "Las contraseña se ha restablecido exitosamente.")
+                return render(request, 'page-login.html', {'form':form})
+            else:
+                print("else")
+                messages.success(request, 'Las contraseñas no coinceden, por favor verifique.')
+                return HttpResponseRedirect(reverse_lazy('password_reset_confirm',
+                                                         kwargs={'token': activation_key}))
+        else:
+            #form.add_error(None,'Se ha producido un error ')
+            return render(request, 'password-reset-confirm.html', {'form':form, 'token':self.kwargs['token']})
 
-class Change_Password(TemplateView):
-    template_name = 'page-change-password.html'
 
 class New_Project(TemplateView):
     template_name = 'page-new-project.html'
 
 class Profile(TemplateView):
     template_name = 'page-profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            Profile, self).get_context_data(**kwargs)
+
+        print(self.kwargs['id'])
+
+        user = profileUser.objects.get(user_id=self.kwargs['id'])
+        print(user.user.first_name)
+        data = {'first_name': user.user.first_name,
+                 'last_name': user.user.last_name,
+                 'username': user.user.username,
+                 'rol': user.user.groups.all()[0],
+                 'email' : user.user.email,
+                'phone': user.phone }
+        form = UserForm(initial=data)
+        context['form'] = form
+        return context
 
 class Update_Project(TemplateView):
     template_name = 'page-update-project.html'
@@ -297,4 +374,51 @@ class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
 
 
-
+#
+#
+#
+# class NewPassw(FormView):
+# 	template_name = 'newPassw.html'
+# 	form_class = NewPasswForm
+#
+# 	def get_context_data(self, **kwargs):
+# 		context = super(NewPassw, self).get_context_data(**kwargs)
+# 		user = User.objects.get(pk=self.kwargs['id'])
+# 		context['user'] = user
+# 		return context
+#
+# 	def post(self, request, *args, **kwargs):
+# 		form = NewPasswForm(request.POST)
+# 		if form.is_valid():
+# 			user_pk = self.kwargs['id']
+# 			user = User.objects.get(pk=user_pk)
+# 			passw = request.POST['passw']
+# 			passw1 = request.POST['passw1']
+# 			user.set_password(passw)
+# 			user.save()
+# 			return HttpResponseRedirect(reverse_lazy('index'))
+# 		else:
+# 			context = {'form': form}
+# 			return render(request, 'newPassw.html', context)
+#
+#
+# class RestartPass(CreateView):
+# 	template_name = 'restartPass.html'
+# 	form_class = EmailForm
+#
+# 	def post (self,request,*args,**kwargs):
+# 		form = EmailForm(request.POST)
+# 		if form.is_valid():
+# 			email =  request.POST['email']
+# 			user = User.objects.filter(email=email).exists()
+# 			if user is not False :
+# 				user1=User.objects.get(email = email)
+# 				return HttpResponseRedirect(reverse_lazy(
+# 					'new_passw',kwargs={'id': user1.pk}))
+# 			else:
+# 				context = {'form': form}
+# 				return render(request,'restartPass.html', context)
+# 		else:
+# 			context = {'form': form}
+# return render(request,'restartPass.html', context)
+#
