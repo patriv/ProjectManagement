@@ -213,6 +213,9 @@ class Update_Users(TemplateView):
 
         context['title'] = 'Modificar'
         user = profileUser.objects.get(pk=self.kwargs['id'])
+        print("users")
+        print(self.kwargs['id'])
+        print(user)
 
         data = {'first_name': user.user.first_name,
                  'last_name': user.user.last_name,
@@ -348,24 +351,68 @@ class New_Project(TemplateView):
 
 class Profile(TemplateView):
     template_name = 'page-profile.html'
+    form_class = UpdateProfileForm
 
     def get_context_data(self, **kwargs):
         context = super(
             Profile, self).get_context_data(**kwargs)
+        print("get")
 
         print(self.kwargs['id'])
 
         user = profileUser.objects.get(user_id=self.kwargs['id'])
-        print(user.user.first_name)
+        print(user.image_profile.url)
         data = {'first_name': user.user.first_name,
                  'last_name': user.user.last_name,
                  'username': user.user.username,
                  'rol': user.user.groups.all()[0],
                  'email' : user.user.email,
-                'phone': user.phone }
+                'phone': user.phone,
+                'image_profile': user.image_profile
+                 }
         form = UserForm(initial=data)
+        #print("form profile")
+        print(form)
         context['form'] = form
+        context['users']=user
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = UpdateProfileForm(request.POST, request.FILES)
+        #form.fields['username'].required = False
+        #print(form)
+        print(form.is_valid())
+        if form.is_valid():
+            user_pk = kwargs['id']
+            print("kwargs!!")
+            print(user_pk)
+            userProfile = profileUser.objects.get(user=user_pk)
+            print(userProfile.pk)
+            user = User.objects.get(username=userProfile.user)
+            print(user)
+            user.first_name = request.POST['first_name']
+            print(user.first_name)
+            user.last_name = request.POST['last_name']
+            userProfile.phone = request.POST['phone']
+            print("antes de request file")
+            print(request.FILES == {})
+            if (request.FILES == {}):
+                pass
+            print(request.POST)
+            userProfile.image_profile = request.FILES['image_profile']
+
+
+            print(userProfile.image_profile)
+            user.username = request.POST['username']
+            user.save()
+            userProfile.save()
+            messages.success(request, "Su perfil ha sido actualizado exitosamente")
+            return HttpResponseRedirect(reverse_lazy('users'))
+
+        else:
+            return render(request, 'page-user.html',
+                          {'form': form})
+
 
 class Update_Project(TemplateView):
     template_name = 'page-update-project.html'

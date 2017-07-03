@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load staticfiles %} 
+{% load static %}
 
 
 {% block content %}
@@ -38,50 +38,53 @@
 
                           </div>
                           </div>
-
                           <div class="row">
-                              <form class="col s6">
+                              <form  enctype="multipart/form-data"  method="post">
+                                  <div class="col s6">
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-account-box prefix"></i>
-                                          <input id="first_name" type="text" class="validate" value="John">
+                                          {{ form.first_name }}
                                           <label for="first_name">Nombre <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-account-box prefix"></i>
-                                          <input id="last_name" type="text" class="validate" value="Doe">
+                                          {{ form.last_name }}
                                           <label for="last_name">Apellido <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-account-circle prefix"></i>
-                                          <input id="username" type="text" class="validate" value="jdoe">
+                                          {{ form.username }}
                                           <label for="username">Username <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-social-group prefix"></i>
-                                          <input disabled value="Administrador" id="rol" type="text" class="validate" >
-                                          <label for ="rol">Rol </label>
+                                          <input disabled id="email" type="email" class="validate" value="{{user.groups.all.0.name }}">
+                                          <label for ="rol" class="active">Rol </label>
                                                                                    
                                       </div>
                                   </div>
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-communication-email prefix"></i>
-                                          <input disabled value = "jdoe@idbcgroup.com" id="email4" type="email" class="validate">
-                                          <label for="email4">Email </label>
+                                          <input disabled id="email" type="email" class="validate" value="{{ user.email }}">
+                                          <label for="email4" >Email </label>
+
+
                                       </div>
                                   </div>
 
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-hardware-phone-iphone prefix"></i>
-                                          <input type="text" id="phone" class="validate" value="0412-9123344">
+                                          {{ form.phone }}
+
                                           <label for="phone">Teléfono</label>
                                       </div>
                                   </div>                     
@@ -97,23 +100,24 @@
                                               </button>
                                           </div>
                                       </div>
+                                  </div>
 
-                              </form>
-                               <form class="col s6 m6 l6 center">
-                                  <img src="../static/images/avatar.jpg" alt="" class="circle responsive-img valign profile-image">
+                               <div class="col s6 m6 l6 center">
+                                   {% csrf_token %}
+                                   <img src="{{ users.image_profile.url }}">
                                   <div class="row">
                                   <div class="col s3"><p></p></div>
                                   <div class="file-field input-field col s7">
                                   <div class="btn col s3">
-                                    <span>Examinar</span>
-                                    <input type="file" accept='.jpg, .png, .jpeg'/>
+                                      <span>Examinar</span>
+                                      <input type="file" accept='.jpg, .png, .jpeg' name="image_profile" id="id_image_profile"/>
                                   </div>
-                                    <input class="file-path validate " type="text" />
-                                    
+                                      <input class="file-path validate " type="text" value="" />
                                   </div>
                                   
                                  </div>
-                              </form>
+                              </div>
+                                  </form>
                           </div>
                       </div>
                   </div>

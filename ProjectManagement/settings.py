@@ -124,9 +124,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "ProjectManagement/static"),
 )
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/static/media/'
 MEDIA_ROOT = (
-            os.path.join(BASE_DIR, "ProjectManagement/media/")
+            os.path.join(BASE_DIR, "ProjectManagement/static/media/")
 )
 
 EMAIL_USE_TLS = True

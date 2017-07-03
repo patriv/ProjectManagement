@@ -6,9 +6,6 @@ from project.models import profileUser
 from django.db import models
 from role.forms import *
 
-
-
-
 class LoginForm(forms.Form):
 	class Meta:
 		model = User
@@ -29,6 +26,7 @@ class UserForm(forms.ModelForm):
 										'type':"email",
 										 'class':"validate"})
 
+	image_profile = forms.ImageField(required=False)
 
 	rol = forms.ModelChoiceField(
         required=True,
@@ -47,7 +45,6 @@ class UserForm(forms.ModelForm):
 			msj = "Este correo ya está siendo utilizado"
 			self.add_error('email', msj)
 		return email
-
 
 class UpdateUserForm(forms.ModelForm):
 	first_name = forms.TextInput(attrs={'id':"first_name",
@@ -106,12 +103,20 @@ class FirstSessionForm(forms.ModelForm):
 			self.add_error('password2',msj)
 		return self.cleaned_data
 
-class ProfileForm(forms.Form):
+class UpdateProfileForm(forms.ModelForm):
+	first_name = forms.TextInput(attrs={'id':"first_name",
+										'type':"text",
+										 'class':"validate"})
+	last_name= forms.TextInput(attrs={'id':"last_name",
+										'type':"text",
+										 'class':"validate"})
+	#username=forms.CharField(required= False)
+	phone = forms.CharField(required=False)
+	image_profile = forms.ImageField(required=False)
+
 	class Meta:
-		model = profileUser
-		fields= ('user', 'phone', 'image_profile',)
-
-
+		model= User
+		fields = ('first_name','last_name','groups',)
 
 
 		# def clean_username(self):
