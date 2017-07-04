@@ -47,17 +47,20 @@ class UserForm(forms.ModelForm):
 		return email
 
 class UpdateUserForm(forms.ModelForm):
-	first_name = forms.TextInput(attrs={'id':"first_name",
+	first_name = forms.CharField(required = True,
+								 widget= forms.TextInput(attrs={'id':"first_name",
 										'type':"text",
-										 'class':"validate"})
-	last_name= forms.TextInput(attrs={'id':"last_name",
+										 'class':"validate"}))
+	last_name= forms.CharField(required=True,
+							   widget= forms.TextInput(attrs={'id':"last_name",
 										'type':"text",
-										 'class':"validate"})
+										 'class':"validate"}))
 	username=forms.CharField(required= False)
 	phone = forms.CharField(required=False)
-	email = forms.EmailInput(attrs={'id':"email",
+	email = forms.EmailField(required=True,
+							 widget= forms.EmailInput(attrs={'id':"email",
 										'type':"email",
-										 'class':"validate"})
+										 'class':"validate"}))
 
 
 	rol = forms.ModelChoiceField(
@@ -104,13 +107,15 @@ class FirstSessionForm(forms.ModelForm):
 		return self.cleaned_data
 
 class UpdateProfileForm(forms.ModelForm):
-	first_name = forms.TextInput(attrs={'id':"first_name",
-										'type':"text",
-										 'class':"validate"})
-	last_name= forms.TextInput(attrs={'id':"last_name",
-										'type':"text",
-										 'class':"validate"})
-	#username=forms.CharField(required= False)
+	first_name = forms.CharField(required=True,
+								 widget=forms.TextInput(attrs={'id': "first_name",
+															   'type': "text",
+															   'class': "validate"}))
+	last_name = forms.CharField(required=True,
+							   widget=forms.TextInput(attrs={'id': "last_name",
+															 'type': "text",
+															 'class': "validate"}))
+	username=forms.CharField(required= True)
 	phone = forms.CharField(required=False)
 	image_profile = forms.ImageField(required=False)
 
