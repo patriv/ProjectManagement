@@ -6,6 +6,12 @@ from project.models import Project
 
 # Create your models here.
 
+def get_name(self):
+    return self.first_name + " " + self.last_name
+
+User.add_to_class("__str__", get_name)
+
+
 class profileUser(models.Model):
         user = models.OneToOneField(User)
         phone = models.CharField(max_length=11, blank=True)
@@ -13,7 +19,7 @@ class profileUser(models.Model):
         activation_key = models.CharField(max_length=40, blank=True)
         key_expires = models.DateTimeField(auto_now_add=True)
         load_photo = models.BooleanField(default=False)
-        user = models.ManyToManyField(Project)
+        project = models.ManyToManyField(Project)
 
         def __str__(self):
                 return self.user.first_name + "" + self.user.last_name

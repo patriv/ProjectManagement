@@ -33,16 +33,22 @@ class New_Project(FormView):
         print("en post project")
         post_values = request.POST.copy()
         form = NewProjectForm(post_values)
-        print(form)
-        print(form.is_valid())
         if form.is_valid():
             project = form.save(commit=False)
             project.name = post_values['name']
             print(project.name)
             project.code = codeProject(project.name)
-            #project.start_date = post_values['start_date']
-            print(project.code)
+            project.start_date = post_values['start_date']
+            project.end_date = post_values['end_date']
+            project.status = post_values['status']
+            project.description = post_values['description']
+            print(project.start_date)
             project.save()
+            messages.success(request, "El projecto ha sido guardado exitosamente")
+            return HttpResponseRedirect(reverse_lazy('new_project'))
+        else:
+            form.add_error(None, "Error al registrar el proyecto")
+            return HttpResponseRedirect(reverse_lazy('new_project'))
 
 
 

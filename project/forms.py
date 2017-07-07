@@ -2,6 +2,9 @@
 #-*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User, Group
+from django.forms import DateField
+
+from ProjectManagement import settings
 from project.models import *
 from django.db import models
 
@@ -18,10 +21,45 @@ class NewProjectForm(forms.ModelForm):
         	]
     )
 
-    #start_date = forms.DateField()
-    #end_date = forms.DateField(required=False)
+	cliente = User.objects.all().filter(groups__name="Cliente")
 
+	client = forms.ModelChoiceField(
+		queryset= cliente,
+		widget=forms.Select(attrs={'id':"drop",
+								   'tabindex':"1",
+								   'class': "chosen-select browser-default"
+								   })
+	)
 
+	company_querySet = User.objects.exclude(groups__name= "Cliente")
+	print(company_querySet)
+
+	company = forms.ModelChoiceField(
+		queryset=company_querySet,
+		widget=forms.Select(attrs={'id':"drop",
+								   'tabindex' : "1",
+									'class' : "chosen-select browser-default"
+		})
+	)
+
+	start_date = DateField(input_formats=settings.DATE_INPUT_FORMATS,
+						   widget= forms.DateTimeInput(attrs={'id':"start",
+															  'type':"date",
+															  'class':"datepicker"
+						   }))
+
+	end_date = DateField(input_formats=settings.DATE_INPUT_FORMATS,
+					   widget=forms.DateTimeInput(attrs={'id': "end",
+														 'type': "date",
+														 'class': "datepicker"
+														 }))
+
+	description = forms.CharField(required=False,
+								  widget= forms.Textarea(attrs={'class':"materialize-textarea",
+										 'id':"textarea",
+										 'maxlength':"120",
+										 'length':"120"
+	 								}))
 	class Meta:
 		model = Project
 		fields = ('name',)

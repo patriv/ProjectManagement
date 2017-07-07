@@ -132,7 +132,6 @@ class New_Users(FormView):
             # user.groups.add(group)
             # key_expires = datetime.datetime.today() + datetime.timedelta(days=1)
 
-            context = {'form': form}
             messages.success(request, "El usuario ha sido guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('users'))
         else:
@@ -381,8 +380,8 @@ class Profile(TemplateView):
         if form.is_valid():
             user_pk = kwargs['id']
             userProfile = profileUser.objects.get(user=user_pk)
-            print(userProfile.pk)
-            user = User.objects.get(username=userProfile.user)
+            print(userProfile.user.id)
+            user = User.objects.get(pk=userProfile.user_id)
             print(user)
             user.first_name = request.POST['first_name']
             print(user.first_name)

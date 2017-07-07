@@ -5,6 +5,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class Project(models.Model):
 	STATUS = (
 		('In Progress', 'In Progress'),
@@ -14,14 +15,12 @@ class Project(models.Model):
 		)
 
 	code = models.CharField(primary_key = True, max_length=8, blank=False)
-	name = models.CharField(max_length = 12, blank=False)
+	name = models.CharField(max_length = 20, blank=False)
 	description = models.CharField(max_length=120, blank=True)
-	start_date = models.DateField(auto_now_add=True)
-	end_date = models.DateField(auto_now_add=True)
+	start_date = models.DateField(null=True)
+	end_date = models.DateField(null=True)
 	status= models.CharField(max_length= 10, choices=STATUS)
 	
 class Documents(models.Model):
-    file = models.FileField(upload_to='files/')
-    id_project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
-    		    
+	file = models.FileField(upload_to='files/')
+	id_project = models.ForeignKey(Project, on_delete=models.CASCADE)

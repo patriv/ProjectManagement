@@ -11,15 +11,17 @@ function drawBarColors() {
 
       var options = {
         title: 'Proyectos IDBC Group',
-        chartArea: {width: '50%'},
-        colors: ['#b0120a', '#01579b'],
+        chartArea: {width: '80%'},
+        colors: ['#E6B0B8', '#965a89'],
         hAxis: {
           title: 'Duración',
           minValue: new Date(2015, 0, 1)
         },
         vAxis: {
           title: 'Proyectos'
-        }
+        },
+
+          legend: {alignment:'left', position: "bottom", heigth: '200px' }
       };
       var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
 
