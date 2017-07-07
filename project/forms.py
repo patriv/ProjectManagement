@@ -1,15 +1,30 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# from django import forms
-# from django.contrib.auth.models import User, Group
-# from project.models import profileUser
-# from django.db import models
-# from role.forms import *
+#-*- coding: utf-8 -*-
+from django import forms
+from django.contrib.auth.models import User, Group
+from project.models import *
+from django.db import models
 
-# class LoginForm(forms.Form):
-# 	class Meta:
-# 		model = User
-# 		fields = ('username','password','email',)
+class NewProjectForm(forms.ModelForm):
+
+	status = forms.ChoiceField(
+        required=True,
+        choices=[
+        	('--','---'),
+            ('In Progres', 'In Progress'),
+			('Technical Review', 'Technical Review'),
+			('Functional Review', 'Functional Review'),
+			('Customer Accepance','Customer Acceptance')
+        	]
+    )
+
+    #start_date = forms.DateField()
+    #end_date = forms.DateField(required=False)
+
+
+	class Meta:
+		model = Project
+		fields = ('name',)
 
 # class UserForm(forms.ModelForm):
 # 	first_name = forms.TextInput(attrs={'id':"first_name",
@@ -122,25 +137,3 @@
 # 	class Meta:
 # 		model= User
 # 		fields = ('first_name','last_name','groups',)
-
-
-# 		# def clean_username(self):
-# # 		username = self.cleaned_data.get('username')
-# # 		if User.objects.filter(username=username).count() != 0:
-# # 			raise forms.ValidationError(u'Este nombre de usuario ya está siendo utilizado.')
-# # 		return username
-# #
-# #
-# #
-# #
-# # 	def save(self, commit=True):
-# # 		user = super(UserForm, self).save(commit=False)
-# # 		user.email = self.cleaned_data['email']
-# # 		user.username = self.cleaned_data['username']
-# # 		user.first_name = self.cleaned_data['first_name']
-# # 		user.last_name = self.cleaned_data['last_name']
-# # 		user.is_active = 1
-# # 		password = self.cleaned_data['passw']
-# # 		user.set_password(password)
-# # 		user.save()
-# # return user

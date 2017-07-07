@@ -43,12 +43,13 @@
                               <span class="right"><span class="red-text"> *</span> Denota campo requerido</span>
                           </div>
                           <div class="row">
-                              <form class="col s12">
+                              <form class="col s12" action="{% url 'new_project'%}" method="post">
+                               {% csrf_token %}
                                   <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-editor-format-align-left prefix"></i>
-                                          <input id="first_name" type="text" class="validate">
-                                          <label for="first_name">Nombre <span class="red-text"> *</span></label>
+                                          <input id="name" type="text" class="validate" name="name">
+                                          <label for="name">Nombre <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                  <!--AUTOCOMPLETE-->
@@ -103,7 +104,7 @@
                                       </div>
                                       <div class="input-date-picker col s11">
                                           <label for="start">Fecha de Inicio</label>
-                                          <input id="start" type="date" class="datepicker">
+                                          <input id="start" type="date" class="datepicker" name="start_date">
                                       </div>
                                   </div>
                                   <div class="row">
@@ -112,7 +113,7 @@
                                       </div>
                                       <div class="input-date-picker col s11">
                                           <label for="end">Fecha Fin (Estimada)</label>
-                                          <input id="end" type="date" class="datepicker">
+                                          <input id="end" type="date" class="datepicker" name="end_date">
                                       </div>
                                   </div>
                                   <div class="row">
@@ -122,13 +123,7 @@
                                       </div>
                                       <div class="input-field col s11 m11 l11 center">
 
-                                          <select name="select">
-                                              <option value="" disabled selected>---</option>
-                                              <option value="Administrador">In Progress</option>
-                                              <option value="Technical Review">Technical Review</option>
-                                              <option value="Functional Review">Functional Review</option>
-                                              <option value="Cliente">Customer Acceptance</option>
-                                          </select>
+                                          {{form.status}}
                                           <label for ="status">Status</label>
                                       </div>
                                   </div>
