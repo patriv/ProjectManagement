@@ -1521,3 +1521,7 @@ background-size: cover;
 .image{
   width: 350px;
 }
+
+#new_project{
+  margin-top: -94px;
+}

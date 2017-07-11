@@ -21,7 +21,14 @@
     </div>
   </div>
 </div>
-<!--Title end-->
+<div class="row">
+    <div class = "col s12 m12 l11">
+         <p class="right"><a class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2" id="new_project"
+                         data-position="bottom" data-delay="50" data-tooltip="Nuevo Proyecto" href = "{% url 'new_project' %}"><i class="mdi-content-add"></i></a></p>
+    </div>
+</div>
+
+    <!--Title end-->
 
 <!--Modal-->
  <div class = "modal" id = "modal2">
@@ -44,32 +51,25 @@
         <div class="container">
             <div class="section">
                 <div class="section">
+
                     <div class="row">
-                         <div class = "col s12 m12 l7">
-                             <p class="right"><a class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2"
-                                                 data-position="bottom" data-delay="50" data-tooltip="Nuevo Proyecto" href = "{% url 'new_project' %}"><i class="mdi-content-add"></i></a></p>
-                         </div>
-                    </div>
-                    <div class="row">
-                        <div class = "col s12 m12 l7">
+                        <div class = "col s12 m12 l10">
                             <div id="chart_div"></div>
                         </div>
 
-                         <div class="col s12 m12 l5" id ="detail" style="display: none;">
-                             <div class="col s8 m8 l8"> <p></p></div>
-                             <div class="col s4 m4 l4">
+                         <div class="col s12 m12 l2" id ="detail" style="display: none;">
+
+                             <div class="col s4 m4 l12 center">
                                  <a class="center tooltipped" data-position="left" data-delay="50" data-tooltip="Detallar Proyecto" href="{% url 'detail_project' %}"><i class="mdi-action-visibility prefix" id="visible"></i></a>
                                  <a class="center tooltipped" data-position="top" data-delay="50" data-tooltip="Editar Proyecto" href="{% url 'update_project' %}"><i class="mdi-content-create prefix"></i></a>
                                  <a class="waves-effect waves-light modal-trigger center tooltipped chat-collapse"
                                     data-position="right" data-delay="50" data-tooltip="Eliminar Proyecto" href="#modal2"><i class="mdi-action-highlight-remove prefix" id="remove"></i></a>
                              </div>
                              <div class="row">
-                                 <div class="col s12 m12 l6 center">
+                                 <div class="col s12 m12 l12 center">
                                      <p>Agruppa</p>
                                      <p>Cliente Responsable</p>
                                      <p>Inicio: 01/03/2017</p>
-                                 </div>
-                                 <div class="col s12 m12 l6 center">
                                      <p>Status: In progress</p>
                                      <p>Responsable de la empresa</p>
                                      <p>Fin (Estimada): 01/08/2017</p>
