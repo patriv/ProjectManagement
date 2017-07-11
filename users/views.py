@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import random
+import json
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import *
 from django.core.mail import EmailMessage
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
@@ -97,6 +98,7 @@ class New_Users(FormView):
         context = super(
             New_Users, self).get_context_data(**kwargs)
         context['title'] = 'Agregar'
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -117,6 +119,29 @@ class New_Users(FormView):
             phone = post_values['phone']
             new_user = profileUser(user = user_pk, phone=phone, activation_key=activation_key)
             new_user.save()
+            proj1 = request.POST.get('project',None)
+            print(proj1)
+            proj2 = proj1.split(', ')
+            print("esto es split")
+            print(proj2)
+            for i in proj2:
+                proj = Project.objects.filter(name=i).exists()
+                print(proj)
+                if proj:
+                    print('el proyecto '+ str(i) + ' existe')
+                    proj_exist= Project.objects.get(name=i)
+                    print(proj_exist.pk)
+                    new_user.project.add(proj_exist.pk)
+                else:
+                    if i != '':
+                        print('el proyecto '+ str(i) + ' no existe')
+                        code = codeProject(i)
+                        print(code)
+                        new_project = Project(code=code, name=i)
+                        new_project.save()
+                        proj_exist = Project.objects.get(name=i)
+                        new_user.project.add(proj_exist.pk)
+
 
             c = {'usuario': user.first_name,
                     'username':user.username,
@@ -141,7 +166,7 @@ class New_Users(FormView):
 def DeleteUser(request,id):
     user = profileUser.objects.get(pk=id)
     print(user.user)
-    user_pk = User.objects.get(username=user.user)
+    user_pk = User.objects.get(pk=user.user.pk)
     user.delete()
     user_pk.delete()
     messages.success(request, "El usuario " + str(user.user.username) +" se ha eliminado exitosamente")
@@ -409,3 +434,18 @@ class Profile(TemplateView):
 def codeProject(name):
     name = ''.join(name)
     return name[:3]
+
+def get_projects(request):
+    q = request.GET.get('term', '')
+    projects = Project.objects.filter(name__icontains = q )[:20]
+    print(projects)
+    results = []
+    for project in projects:
+        project_json = {}
+        project_json['id'] = project.code
+        project_json['label'] = project.name
+        project_json['value'] = project.name
+        results.append(project_json)
+    print(results)
+    return JsonResponse(results, safe=False)
+

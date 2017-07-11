@@ -53,7 +53,6 @@ urlpatterns = [
         get_projects,
         name='get_project'),
 
-
     url(
     r'^logout',
     django.contrib.auth.views.logout,

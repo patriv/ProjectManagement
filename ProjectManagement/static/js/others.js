@@ -82,9 +82,25 @@
       });
   } );
 
-// function nombre(fic,i) {
-//   // como se llama en el div ---> onchange="nombre(this.value,i-1)
-//   fic = fic.split('\\');
+//    $.ajax({
+//                url: form.attr("data-forgot-url"),
+//                data: {
+//                    project: project
+//                },
+//                type: 'POST',
+//                dataType: 'json',
+//                success: function (data) {
+//                    var emailExist = data.username_exists;
+//                    if ((emailExist) === false) {
+//                        alert("aquiii")
+//
+//                    }
+//                }
+//            });
+//
+// // function nombre(fic,i) {
+// //   // como se llama en el div ---> onchange="nombre(this.value,i-1)
+// //   fic = fic.split('\\');
 //   alert(fic[fic.length-1]);
 //   var input = "#input-"+i;
 //   alert(input);
