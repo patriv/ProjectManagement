@@ -28,10 +28,15 @@ class UserForm(forms.ModelForm):
 
 	image_profile = forms.ImageField(required=False)
 
+	project = forms.CharField(widget = forms.TextInput(attrs = {'type':"text",
+	 								'id':"autocomplete",
+	 								 'class':"autocomplete"}))
 	rol = forms.ModelChoiceField(
         required=True,
         queryset=Group.objects.all()
     )
+
+
 
 	class Meta:
 		model= User

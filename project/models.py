@@ -19,7 +19,12 @@ class Project(models.Model):
 	description = models.CharField(max_length=120, blank=True)
 	start_date = models.DateField(null=True)
 	end_date = models.DateField(null=True)
-	status= models.CharField(max_length= 10, choices=STATUS)
+	status= models.CharField(max_length= 20, choices=STATUS)
+
+	def __str__(self):
+		return self.name
+
+
 	
 class Documents(models.Model):
 	file = models.FileField(upload_to='files/')

@@ -23,3 +23,8 @@ class profileUser(models.Model):
 
         def __str__(self):
                 return self.user.first_name + "" + self.user.last_name
+
+# class Project_user(models.Model):
+#     user = models.ForeignKey(profileUser)
+#     project_name = models.ForeignKey(Project) 
+#         

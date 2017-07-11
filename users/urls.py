@@ -47,6 +47,13 @@ urlpatterns = [
         Profile.as_view(),
         name='profile'),
 
+
+    url(
+        r'^get_project$',
+        get_projects,
+        name='get_project'),
+
+
     url(
     r'^logout',
     django.contrib.auth.views.logout,

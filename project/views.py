@@ -33,6 +33,7 @@ class New_Project(FormView):
         print("en post project")
         post_values = request.POST.copy()
         form = NewProjectForm(post_values)
+        print(form.is_valid())
         if form.is_valid():
             project = form.save(commit=False)
             project.name = post_values['name']
