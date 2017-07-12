@@ -12,6 +12,7 @@ from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
+from project.models import Project, Project_user
 from users.forms import *
 from users.models import *
 from django.urls import reverse
@@ -119,6 +120,9 @@ class New_Users(FormView):
             phone = post_values['phone']
             new_user = profileUser(user = user_pk, phone=phone, activation_key=activation_key)
             new_user.save()
+            new_user_pk= profileUser.objects.get(id=new_user.pk)
+            print('new_user ')
+            print(new_user_pk.pk)
             proj1 = request.POST.get('project',None)
             print(proj1)
             proj2 = proj1.split(', ')
@@ -131,7 +135,8 @@ class New_Users(FormView):
                     print('el proyecto '+ str(i) + ' existe')
                     proj_exist= Project.objects.get(name=i)
                     print(proj_exist.pk)
-                    new_user.project.add(proj_exist.pk)
+                    project_user = Project_user(project=proj_exist, user = new_user_pk)
+                    project_user.save()
                 else:
                     if i != '':
                         print('el proyecto '+ str(i) + ' no existe')
@@ -140,8 +145,8 @@ class New_Users(FormView):
                         new_project = Project(code=code, name=i)
                         new_project.save()
                         proj_exist = Project.objects.get(name=i)
-                        new_user.project.add(proj_exist.pk)
-
+                        project_user = Project_user(project=proj_exist, user=new_user_pk)
+                        project_user.save()
 
             c = {'usuario': user.first_name,
                     'username':user.username,

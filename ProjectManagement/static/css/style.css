@@ -1525,3 +1525,9 @@ background-size: cover;
 #new_project{
   margin-top: -94px;
 }
+
+.drop{
+  left: 44px;
+  width: 92%;
+}
+

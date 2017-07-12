@@ -25,132 +25,7 @@
         </div>
     </div>
 
-    <!--Modal new task-->
-    <div class = "modal modal_form" id = "new_task">
-        <nav class="background-nav-modal">
-            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
-            <h3 class = "bold center">Tareas</h3>
-        </nav>
-        <div class="col s6 ">
-            <br>
-            <span class="right required-modal"><span class="red-text "> *</span> Denota campo requerido</span>
-        </div>
-        <div class="modal-content ">
-            <div class="container">
-                <div class="section">
-                    <div class="row">
-                        <div class="col s2"><p></p></div>
-                        <div class="col s8">
-                            <div class="row">
-
-                            </div>
-                             <form class="col s12">
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-editor-format-align-left prefix"></i>
-                                          <input id="first_name" type="text" class="validate">
-                                          <label for="first_name">Nombre <span class="red-text"> *</span></label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-action-account-circle prefix"></i>
-                                          <input id="first_name" type="text" class="validate">
-                                          <label for="first_name">Responsable <span class="red-text"> *</span></label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="col s1">
-                                        <i class="mdi-action-event prefix"></i>
-                                          
-                                      </div>
-                                      <div class="input-date-picker col s10">
-                                        <label for="start">Fecha de Inicio <span class="red-text"> *</span></label>
-                                        <input id="start" type="date" class="datepicker">
-                                      </div>
-                                 </div>
-                                 <div class="row">
-                                     <div class="col s1">
-                                         <i class="mdi-action-event prefix"></i>
-                                     </div>
-                                     <div class="input-date-picker col s10">
-                                         <label for="start">Fecha Fin <span class="red-text"> *</span></label>
-                                         <input id="start" type="date" class="datepicker">
-                                     </div>
-                                 </div>
-                                  <div class="row">
-                                        <div class="col s12">
-                                            <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requerida por <span class="red-text"> *</span></label>
-                                        </div>
-
-                                     
-                                     <div class="side-by-side clearfix ">
-                                        <div class="col s1"><p></p></div>
-                                        <div class="input-field col s11 ">
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
-                                            <option value=""></option>
-                                            <option>Tarea1</option>
-                                            <option>Tarea2</option>
-                                            <option>Tarea3</option>
-                                            <option>Tarea4</option>
-                                          </select>
-
-                                        </div>
-                                      </div>
-                                  
-                                  </div>
-                                 <div class="row">
-                                        <div class="col s12">
-                                            <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requiere de <span class="red-text"> *</span></label>
-                                        </div>
-
-                                     
-                                     <div class="side-by-side clearfix ">
-                                        <div class="col s1"><p></p></div>
-                                        <div class="input-field col s11">
-
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
-                                            <option value=""></option>
-                                            <option>Tarea1</option>
-                                            <option>Tarea2</option>
-                                            <option>Tarea3</option>
-                                            <option>Tarea4</option>
-                                          </select>
-
-                                        </div>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-editor-format-align-left prefix"></i>
-                                          <input id="status" type="text" class="validate">
-                                          <label for="status">Status <span class="red-text"> *</span></label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-action-description prefix"></i>
-                                          <textarea id="description" type="text" class="materialize-textarea"  length="120" maxlength="120"></textarea>
-                                          <label for="description">Descripción <span class="red-text"> *</span></label>
-                                      </div>
-                                  </div>
-                             </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class = "modal-footer background-nav-modal">
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
-        </div>
-    </div>
-    <!--End modal new task-->
-
-    <!--Modal update task-->
+        <!--Modal update task-->
     <div class = "modal modal_form" id = "update_task">
         <nav class="background-nav-modal">
             <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
@@ -453,7 +328,7 @@
                     <div class = "row">
                         <div class="col s2 m2 l1">
                             <p><a class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2 modal-trigger"
-                                 data-position="bottom" data-delay="50" data-tooltip="Nueva Tarea" href = "#new_task">
+                                 data-position="bottom" data-delay="50" data-tooltip="Nueva Tarea" href = "{% url 'new_task' %}">
                                 <i class="mdi-content-add"></i></a></p>
                         </div>
                     </div>
@@ -485,16 +360,17 @@
     <aside id="right-sidebar-nav">
         <ul id="slide-out" class="side-nav fixed right-aligned rightside-navigation">
             <li class="li-hover">
-               <h3 class="center">Restan</h3>
-               <h3 class="center">25 <br>Días</h3>
+               <h4 class="center">Restan</h4>
+               <h4 class="center">25 <br>Días</h4>
             </li>
             <li class="li-hover"><div class="divider"></div></li>
             <li class="li-hover">
             <li class="li-hover">
                <p class="center">Fecha Inicio: 03 march, 2017</p>
+                <p class="center">Fecha Fin: 03 jun, 2017</p>
             </li>
             <li class="li-hover">
-               <p class="center">Fecha Fin: 03 jun, 2017</p>
+
             </li>
             <ul class="chat-collapsible" data-collapsible="expandable">
                 <li>

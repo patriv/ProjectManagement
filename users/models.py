@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.contrib.auth.models import User,Group
 from django.db import models
-from project.models import Project
+
 
 # Create your models here.
 
@@ -19,7 +19,7 @@ class profileUser(models.Model):
         activation_key = models.CharField(max_length=40, blank=True)
         key_expires = models.DateTimeField(auto_now_add=True)
         load_photo = models.BooleanField(default=False)
-        project = models.ManyToManyField(Project)
+        #project = models.ManyToManyField(Project)
 
         def __str__(self):
                 return self.user.first_name + "" + self.user.last_name

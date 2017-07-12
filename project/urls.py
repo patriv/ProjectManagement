@@ -24,5 +24,12 @@ urlpatterns = [
         r'^detail-project',
         Detail_Project.as_view(),
         name='detail_project'),
+
+    url(
+        r'^new-task',
+        New_Task.as_view(),
+        name='new_task'),
+
+
 ]
 

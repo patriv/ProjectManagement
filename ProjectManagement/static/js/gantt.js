@@ -3,10 +3,10 @@ google.charts.setOnLoadCallback(drawBarColors);
 
 function drawBarColors() {
     var data = google.visualization.arrayToDataTable([
-        ['Proyecto', 'Estimada', 'Real'],
-        ['Agruppa', new Date(2017, 3, 12), new Date(2017, 2, 9)],
-        ['Club Mercado', new Date(2017, 4, 20), new Date(2017, 5, 25)],
-        ['Directo', new Date(2017, 5, 15), new Date(2017, 5, 10)]
+        ['Proyecto', 'Real', 'Estimada'],
+        ['Agruppa', 50, 20],
+        ['Club Mercado', 70, 50],
+        ['Directo', 60, 62]
     ]);
 
     var options = {
@@ -14,33 +14,50 @@ function drawBarColors() {
         titlePosition: 'out',
 
         chartArea: {width: '70%'},
-        colors: ['#E6B0B8', '#965a89'],
+        colors: ['#965a89', '#E6B0B8'],
         hAxis: {
-            title: 'Duración',
-            minValue: new Date(2015, 0, 1)
+            title: 'Duración (días)',
+            minValue: 0
         },
         vAxis: {
             title: 'Proyectos'
         },
         height: 280,
-        legend: {alignment:'center', position: "top" }
+        legend: {alignment:'center', position: "top", maxLines: 3},
+        bar: { groupWidth: '75%' }
+
     };
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
 
 
     function selectHandler() {
-        var selectedItem = chart.getSelection()[0];
+        //var selectedItem = chart.getSelection()[0];
+        //alert(selectedItem);
+        //var selec = selectedItem.row.getSelection()[0];
 
-        if (selectedItem) {
-            var value = data.getValue(selectedItem.row, selectedItem.column);
+        // if (selectedItem) {
+        //     var value = data.getValue(selectedItem.row, selectedItem.column);
+        //     alert("ha seleccionado" + value);
+        //
+        //     document.getElementById('detail').style.display = 'block';
+        //     document.getElementById('table_task').style.display = 'block';
+        //     $('#table_task').addClass("min-tabla");
+        //     $('#filas').style.width = '136px';
+        var selection=chart.getSelection()[0];
+        //var selection1 = fila.;
+        if (selection){
+            alert('You selected ' + data.getValue(selection.row, 0));
+            info = data.getValue(selection.row,0);
+            var chart_div = document.getElementById('detail');
+            //document.getElementById('detail').innerHTML = data.getValue(selection.row,0);
 
             document.getElementById('detail').style.display = 'block';
             document.getElementById('table_task').style.display = 'block';
-            $('#table_task').addClass("min-tabla");
-            $('#filas').style.width = '136px';
 
         }
-    }
+
+        }
+
     // Listen for the 'select' event, and call my function selectHandler() when
     // the user selects something on the chart.
     google.visualization.events.addListener(chart, 'select', selectHandler);

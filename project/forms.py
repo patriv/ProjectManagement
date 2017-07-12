@@ -15,9 +15,7 @@ class NewProjectForm(forms.ModelForm):
         choices=[
         	('--','---'),
             ('In Progres', 'In Progress'),
-			('Technical Review', 'Technical Review'),
-			('Functional Review', 'Functional Review'),
-			('Customer Accepance','Customer Acceptance')
+			('Done', 'Done')
         	]
     )
 
