@@ -277,6 +277,7 @@ class Update_Users(TemplateView):
         if form.is_valid():
             user_pk = kwargs['id']
             userProfile = profileUser.objects.get(pk=user_pk)
+
             print(userProfile.user)
             user = User.objects.get(pk=userProfile.user.pk)
             print(user)
@@ -296,6 +297,9 @@ class Update_Users(TemplateView):
             print(proj1)
             proj2 = proj1.split(', ')
             print(proj2)
+            #user_proj = Project_user.objects.all().filter(user_id=user_pk)
+            #print(user_proj)
+    
 
             for i in proj2:
                 proj = Project.objects.filter(name=i).exists()
@@ -304,9 +308,12 @@ class Update_Users(TemplateView):
                     print('el proyecto '+ str(i) + ' existe')
                     proj_exist= Project.objects.get(name=i)
                     print(proj_exist.pk)
-                    user_proj = Project_user.objects.filter(user_id=user_pk)
-                    print(user_proj)
-                    
+                    project_user=Project_user.objects.filter(user=user_pk, project=proj_exist.pk).exists()
+                    print("existe el par "+str(project_user))
+                    if not project_user:
+                        new_project_user = Project_user(user=userProfile, project=proj_exist)
+                        new_project_user.save()
+                                                         
 
                     #project_user = Project_user(project=proj_exist, user = new_user_pk)
                     #project_user.save()
@@ -318,8 +325,8 @@ class Update_Users(TemplateView):
                         new_project = Project(code=code, name=i)
                         new_project.save()
                         proj_exist = Project.objects.get(name=i)
-                        #project_user = Project_user(project=proj_exist, user=new_user_pk)
-                        #project_user.save()
+                        project_user = Project_user(project=proj_exist, user=userProfile)
+                        project_user.save()
 
 
 
