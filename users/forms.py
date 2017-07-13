@@ -67,6 +67,9 @@ class UpdateUserForm(forms.ModelForm):
 										'type':"email",
 										 'class':"validate"}))
 
+	project = forms.CharField(widget=forms.TextInput(attrs={'type': "text",
+															'id': "autocomplete",
+															'class': "autocomplete"}))
 
 	rol = forms.ModelChoiceField(
         required=True,
@@ -76,6 +79,15 @@ class UpdateUserForm(forms.ModelForm):
 	class Meta:
 		model= User
 		fields = ('first_name','last_name','email','groups',)
+
+	def clean_email(self):
+		print("Clean email")
+		email = self.cleaned_data.get('email')
+		if User.objects.filter(email=email).count() != 0:
+			print("dentro del if")
+			msj = "Este correo ya está siendo utilizado"
+			self.add_error('email', msj)
+		return email
 
 class PasswordResetForm(forms.ModelForm):
 	class Meta:

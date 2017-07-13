@@ -24,12 +24,13 @@ class Project(models.Model):
 	def __str__(self):
 		return self.name
 
-
-
 class Project_user(models.Model):
 	user = models.ForeignKey(profileUser)
 	project = models.ForeignKey(Project)
 	is_resp = models.BooleanField(default=False)
+
+	def __str__(self):
+		return self.project.code
 
 
 

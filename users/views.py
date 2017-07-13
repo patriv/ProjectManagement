@@ -239,6 +239,20 @@ class Update_Users(TemplateView):
 
         context['title'] = 'Modificar'
         user = profileUser.objects.get(pk=self.kwargs['id'])
+        print("pk del usuario")
+        print(user.pk)
+        project_code = Project_user.objects.all().filter(user_id=user)
+        print("proyecto")
+        print(project_code)
+        x = []
+        for i in project_code:
+            proj = Project.objects.get(code=i)
+            x.append(proj.name)
+        print(x)
+        proj_ass = ", ".join(x)
+        print(proj_ass)
+
+
         print("users")
         print(self.kwargs['id'])
         print(user)
@@ -248,9 +262,11 @@ class Update_Users(TemplateView):
                  'username': user.user.username,
                  'rol': user.user.groups.all()[0],
                  'email' : user.user.email,
-                'phone': user.phone }
+                'phone': user.phone,
+                'project': proj_ass}
         form = UserForm(initial=data)
         context['userProfile'] = user
+        context['project'] = proj_ass
         context['form'] = form
         return context
 
@@ -263,7 +279,7 @@ class Update_Users(TemplateView):
             user_pk = kwargs['id']
             userProfile = profileUser.objects.get(pk=user_pk)
             print(userProfile.user)
-            user = User.objects.get(username=userProfile.user)
+            user = User.objects.get(pk=userProfile.user.pk)
             print(user)
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
@@ -441,16 +457,19 @@ def codeProject(name):
     return name[:3]
 
 def get_projects(request):
-    q = request.GET.get('term', '')
-    projects = Project.objects.filter(name__icontains = q )[:20]
-    print(projects)
-    results = []
-    for project in projects:
-        project_json = {}
-        project_json['id'] = project.code
-        project_json['label'] = project.name
-        project_json['value'] = project.name
-        results.append(project_json)
-    print(results)
-    return JsonResponse(results, safe=False)
+    print("en get project")
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        print(q)
+        projects = Project.objects.filter(name__icontains = q )[:20]
+        print(projects)
+        results = []
+        for project in projects:
+            project_json = {}
+            project_json['id'] = project.code
+            project_json['label'] = project.name
+            project_json['value'] = project.name
+            results.append(project_json)
+        print(results)
+        return JsonResponse(results, safe=False)
 

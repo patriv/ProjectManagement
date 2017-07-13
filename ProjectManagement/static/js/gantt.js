@@ -49,7 +49,7 @@ function drawBarColors() {
             alert('You selected ' + data.getValue(selection.row, 0));
             info = data.getValue(selection.row,0);
             var chart_div = document.getElementById('detail');
-            //document.getElementById('detail').innerHTML = data.getValue(selection.row,0);
+            document.getElementById('detail').innerHTML = data.getValue(selection.row,0);
 
             document.getElementById('detail').style.display = 'block';
             document.getElementById('table_task').style.display = 'block';

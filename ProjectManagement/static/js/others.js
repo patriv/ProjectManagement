@@ -42,7 +42,7 @@
     function extractLast( term ) {
       return split( term ).pop();
     }
- 
+
     $( "#autocomplete" )
       // don't navigate away from the field on tab when selecting an item
       .on( "keydown", function( event ) {
@@ -52,15 +52,19 @@
         }
       })
       .autocomplete({
+
         source: function( request, response ) {
-          $.getJSON( "get_project", {
+            var path = window.location.href.split('/');
+            var url= path[0]+"/"+path[1]+"/"+path[2]+"/"+"get_project";
+          $.getJSON( url, {
             term: extractLast( request.term )
           }, response );
         },
         search: function() {
           // custom minLength
           var term = extractLast( this.value );
-          if ( term.length < 2 ) {
+
+          if ( term.length < 1 ) {
             return false;
           }
         },
