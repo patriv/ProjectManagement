@@ -304,8 +304,9 @@ class Update_Users(TemplateView):
                     print('el proyecto '+ str(i) + ' existe')
                     proj_exist= Project.objects.get(name=i)
                     print(proj_exist.pk)
-                    user_proj = Project_user.objects.filter(project_id=proj_exist.pk)
+                    user_proj = Project_user.objects.filter(user_id=user_pk)
                     print(user_proj)
+                    
 
                     #project_user = Project_user(project=proj_exist, user = new_user_pk)
                     #project_user.save()
