@@ -252,7 +252,6 @@ class Update_Users(TemplateView):
         proj_ass = ", ".join(x)
         print(proj_ass)
 
-
         print("users")
         print(self.kwargs['id'])
         print(user)
@@ -293,6 +292,36 @@ class Update_Users(TemplateView):
             user.groups.remove(userProfile.user.groups.all()[0])
             user.groups.add(group)
             user.save()
+            proj1 = request.POST.get('project', None)
+            print(proj1)
+            proj2 = proj1.split(', ')
+            print(proj2)
+
+            for i in proj2:
+                proj = Project.objects.filter(name=i).exists()
+                print(proj)
+                if proj:
+                    print('el proyecto '+ str(i) + ' existe')
+                    proj_exist= Project.objects.get(name=i)
+                    print(proj_exist.pk)
+                    user_proj = Project_user.objects.filter(project_id=proj_exist.pk)
+                    print(user_proj)
+
+                    #project_user = Project_user(project=proj_exist, user = new_user_pk)
+                    #project_user.save()
+                else:
+                    if i != '':
+                        print('el proyecto '+ str(i) + ' no existe')
+                        code = codeProject(i)
+                        print(code)
+                        new_project = Project(code=code, name=i)
+                        new_project.save()
+                        proj_exist = Project.objects.get(name=i)
+                        #project_user = Project_user(project=proj_exist, user=new_user_pk)
+                        #project_user.save()
+
+
+
             messages.success(request, "El usuario ha sido modificado con éxito")
             return HttpResponseRedirect(reverse_lazy('users'))
 
