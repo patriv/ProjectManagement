@@ -9,6 +9,11 @@ urlpatterns = [
         name='login'),
 
     url(
+        r'^login',
+        user_login,
+        name='home'),
+
+    url(
         r'^first_session/(?P<activation_key>\w+)$',
         First_Session.as_view(),
         name='first_session'),

@@ -20,19 +20,24 @@ from django.urls import reverse
 class Login(TemplateView):
     template_name = 'page-login.html'
 
-    def post(self, request, *args, **kwargs):
+def user_login(request):
+    if request.user.is_authenticated():
+        print("autenticado")
+        return HttpResponseRedirect(reverse_lazy('logout'))
+
+    if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
-               
+
             error_username = "Tu username/email o contraseña no son correctos."
 
             user_auth = authenticate_user(username)
             print("esto es user_auth")
             print(user_auth)
             if user_auth is not None:
-        
+
                 if user_auth.is_active:
                     user = authenticate(username=user_auth.username,
                                         password=password)
@@ -52,20 +57,22 @@ class Login(TemplateView):
                     activation_key = new_user.activation_key
                     if password == activation_key:
                         print("son iguales")
-                        return HttpResponseRedirect(reverse('first_session', 
-                            kwargs={'activation_key': activation_key}))
+                        return HttpResponseRedirect(reverse('first_session',
+                                                            kwargs={'activation_key': activation_key}))
                     else:
                         form.add_error(None, error_username)
                         return render(request, 'page-login.html',
-                              {'form': form})
+                                      {'form': form})
 
             else:
+
                 form.add_error(None, error_username)
                 return render(request, 'page-login.html',
                               {'form': form})
-        else:
-            context = {'form': form}
-            return render(request, 'page-login.html', context)
+    else:
+        form = LoginForm()
+    context = {'form': form}
+    return render(request, 'page-login.html', context)
 
 def authenticate_user(username=None):
     try:

@@ -13,8 +13,8 @@ class Project(models.Model):
 		('Done', 'Done')
 		)
 
-	code = models.CharField(primary_key = True, max_length=8, blank=False)
-	name = models.CharField(max_length = 20, blank=False)
+	code = models.CharField(primary_key = True, max_length=8, blank=False, unique=True)
+	name = models.CharField(max_length = 20, blank=False, unique=True)
 	description = models.CharField(max_length=120, blank=True)
 	start_date = models.DateField(null=True)
 	end_date = models.DateField(null=True)
