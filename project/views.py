@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import random
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import *
@@ -91,10 +90,21 @@ class Detail_Project(TemplateView):
 class New_Task(TemplateView):
     template_name = 'new_work.html'
 
-
 def codeProject(name):
     name = ''.join(name)
     return name[:3]
+
+def ValidateName(request):
+    print("aquiii")
+    name = request.POST.get('name', None)
+    data = {
+        'name_exists': Project.objects.filter(name=name).exists()
+    }
+    print(data)
+    if data['name_exists']:
+        data['error'] = 'El nombre del proyecto ya existe'
+
+    return JsonResponse(data)
 
 
 

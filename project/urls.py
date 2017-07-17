@@ -30,6 +30,11 @@ urlpatterns = [
         New_Task.as_view(),
         name='new_task'),
 
+    url(
+        r'^ajax/name',
+        ValidateName,
+        name='validate_name'),
+
 
 ]
 

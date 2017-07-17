@@ -62,6 +62,16 @@ class NewProjectForm(forms.ModelForm):
 		model = Project
 		fields = ('name',)
 
+
+	def clean_name(self):
+		print("Clean name project")
+		name = self.cleaned_data.get('name')
+		if Project.objects.filter(name=name).count() != 0:
+			print("dentro del if")
+			msj = "El nombre de proyecto ya existe, por favor verifique"
+			self.add_error('name', msj)
+		return name
+
 # class UserForm(forms.ModelForm):
 # 	first_name = forms.TextInput(attrs={'id':"first_name",
 # 										'type':"text",
