@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User, Group
-from users.models import profileUser
+from users.models import ProfileUser
 from django.db import models
 from role.forms import *
 
@@ -26,7 +26,7 @@ class UserForm(forms.ModelForm):
 										'type':"email",
 										 'class':"validate"})
 
-	image_profile = forms.ImageField(required=False)
+	imageProfile = forms.ImageField(required=False)
 
 	project = forms.CharField(widget = forms.TextInput(attrs = {'type':"text",
 	 								'id':"autocomplete",

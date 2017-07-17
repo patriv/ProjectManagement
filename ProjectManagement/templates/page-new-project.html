@@ -89,7 +89,7 @@
                                       </div>
                                       <div class="input-date-picker col s11">
                                           <label for="start">Fecha de Inicio</label>
-                                          {{ form.start_date }}
+                                          {{ form.startDate }}
                                       </div>
                                   </div>
                                   <div class="row">
@@ -98,7 +98,7 @@
                                       </div>
                                       <div class="input-date-picker col s11">
                                           <label for="end">Fecha Fin (Estimada)</label>
-                                          {{ form.end_date }}
+                                          {{ form.endDate }}
                                       </div>
                                   </div>
                                   <div class="row">
@@ -155,9 +155,8 @@
 
 
     <script src="../static/js/chosen/chosen.jquery.js" type="text/javascript"></script>
-     <script src="../static/js/chosen/prism.js" type="text/javascript" charset="utf-8"></script>
-   <!--  <script src="../static/js/chosen/init.js" type="text/javascript" charset="utf-8"></script> -->
-
+    <script src="../static/js/chosen/prism.js" type="text/javascript" charset="utf-8"></script>
+   <script src="../static/js/chosen/init.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
     {% if form.errors %}
         {% for field in form %}

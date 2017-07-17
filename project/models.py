@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 #from django.contrib.auth.models import User,Group
 from django.db import models
-from users.models import profileUser
+from users.models import ProfileUser
 
 # Create your models here.
 
@@ -16,24 +16,23 @@ class Project(models.Model):
 	code = models.CharField(primary_key = True, max_length=8, blank=False, unique=True)
 	name = models.CharField(max_length = 20, blank=False, unique=True)
 	description = models.CharField(max_length=120, blank=True)
-	start_date = models.DateField(null=True)
-	end_date = models.DateField(null=True)
+	startDate = models.DateField(null=True)
+	endDate = models.DateField(null=True)
 	status= models.CharField(max_length= 20, choices=STATUS)
-	users= models.ManyToManyField(profileUser, through='Project_user')
+	users= models.ManyToManyField(ProfileUser, through='ProjectUser')
 
 	def __str__(self):
 		return self.name
 
-class Project_user(models.Model):
-	user = models.ForeignKey(profileUser)
+class ProjectUser(models.Model):
+	user = models.ForeignKey(ProfileUser)
 	project = models.ForeignKey(Project)
-	is_resp = models.BooleanField(default=False)
+	isResponsable = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.project.code
 
 
-
 class Documents(models.Model):
 	file = models.FileField(upload_to='files/')
-	id_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	fk_documents_project = models.ForeignKey(Project, on_delete=models.CASCADE)

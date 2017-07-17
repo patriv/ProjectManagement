@@ -3,7 +3,7 @@ import django.contrib.auth.views
 from project.views import *
 
 urlpatterns = [
- 
+
 
     url(
         r'^project',

@@ -5,4 +5,4 @@ from users.models import *
 
 # Register your models here.
 
-admin.site.register(profileUser)
+admin.site.register(ProfileUser)

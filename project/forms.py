@@ -40,13 +40,13 @@ class NewProjectForm(forms.ModelForm):
 		})
 	)
 
-	start_date = DateField(input_formats=settings.DATE_INPUT_FORMATS,
+	startDate = DateField(input_formats=settings.DATE_INPUT_FORMATS,
 						   widget= forms.DateTimeInput(attrs={'id':"start",
 															  'type':"date",
 															  'class':"datepicker"
 						   }))
 
-	end_date = DateField(input_formats=settings.DATE_INPUT_FORMATS,
+	endDate = DateField(input_formats=settings.DATE_INPUT_FORMATS,
 					   widget=forms.DateTimeInput(attrs={'id': "end",
 														 'type': "date",
 														 'class': "datepicker"

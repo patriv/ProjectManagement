@@ -12,17 +12,17 @@ def get_name(self):
 User.add_to_class("__str__", get_name)
 
 
-class profileUser(models.Model):
-        user = models.OneToOneField(User)
+class ProfileUser(models.Model):
+        fk_profileUser_user = models.OneToOneField(User)
         phone = models.CharField(max_length=11, blank=True)
-        image_profile = models.ImageField(upload_to='images/', blank=True)
-        activation_key = models.CharField(max_length=40, blank=True)
+        imageProfile = models.ImageField(upload_to='images/', blank=True)
+        activationKey = models.CharField(max_length=40, blank=True)
         key_expires = models.DateTimeField(auto_now_add=True)
-        load_photo = models.BooleanField(default=False)
+        loadPhoto = models.BooleanField(default=False)
         #project = models.ManyToManyField(Project)
 
         def __str__(self):
-                return self.user.first_name + "" + self.user.last_name
+                return self.fk_profileUser_user.first_name + "" + self.fk_profileUser_user.last_name
 
 # class Project_user(models.Model):
 #     user = models.ForeignKey(profileUser)

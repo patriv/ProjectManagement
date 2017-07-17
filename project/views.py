@@ -28,7 +28,7 @@ class New_Project(FormView):
         print("get")
         context['title'] = 'Agregar'
         return context
-    
+
     def post(self, request, *args, **kwargs):
         print("en post project")
         post_values = request.POST.copy()
@@ -38,37 +38,48 @@ class New_Project(FormView):
             project = form.save(commit=False)
             project.name = post_values['name']
             print(project.name)
-            project.code = codeProject(project.name)
-            project.start_date = post_values['start_date']
-            project.end_date = post_values['end_date']
+            code = codeProject(project.name)
+            print("esto es code")
+            print(code)
+            code_exist = Project.objects.filter(code=code).exists()
+            print(code_exist)
+            if code_exist:
+                length = len(code)
+                code = code + project.name[length]
+                print("new code")
+                print(code)
+                project.code=code
+            else:
+                project.code = code
+            project.startDate = post_values['startDate']
+            project.endDate = post_values['endDate']
             project.status = post_values['status']
             project.description = post_values['description']
-            print(project.start_date)
+            print(project.startDate)
             auth_cliente = post_values['client']
             auth_emp = post_values['company']
             print("comany")
             print(auth_emp)
             # id de responsable de la empresa
-            profile_emp = profileUser.objects.get(user_id = auth_emp)
+            profile_emp = ProfileUser.objects.get(fk_profileUser_user_id = auth_emp)
             print(profile_emp.pk)
             # id del cliente
-            profile_client = profileUser.objects.get(user_id = auth_cliente)
+            profile_client = ProfileUser.objects.get(fk_profileUser_user = auth_cliente)
             print(profile_client.id)
             project.save()
             new_project= Project.objects.get(code = project.code)
             print(new_project)
             # relacion cliente proyecto
-            project_user_client = Project_user(user= profile_client, project=new_project)
+            project_user_client = ProjectUser(user= profile_client, project=new_project)
             #relacion empresa proyecto
-            project_user_emp = Project_user(user= profile_emp, project=new_project, is_resp= True)
+            project_user_emp = ProjectUser(user= profile_emp, project=new_project, isResponsable= True)
             project_user_client.save()
             project_user_emp.save()
             messages.success(request, "El projecto ha sido guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('new_project'))
         else:
-            form.add_error(None, "Error al registrar el proyecto")
+            messages.success(request, "Error al registrar el proyecto")
             return HttpResponseRedirect(reverse_lazy('new_project'))
-
 
 
 class Update_Project(TemplateView):

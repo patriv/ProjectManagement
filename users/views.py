@@ -12,7 +12,7 @@ from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
-from project.models import Project, Project_user
+from project.models import Project, ProjectUser
 from users.forms import *
 from users.models import *
 from django.urls import reverse
@@ -52,13 +52,13 @@ def user_login(request):
                                       {'form': form})
                 else:
                     print("no active")
-                    new_user = profileUser.objects.get(user=user_auth.pk)
+                    new_user = ProfileUser.objects.get(fk_profileUser_user=user_auth.pk)
                     print(new_user)
-                    activation_key = new_user.activation_key
+                    activation_key = new_user.activationKey
                     if password == activation_key:
                         print("son iguales")
                         return HttpResponseRedirect(reverse('first_session',
-                                                            kwargs={'activation_key': activation_key}))
+                                                            kwargs={'activationKey': activation_key}))
                     else:
                         form.add_error(None, error_username)
                         return render(request, 'page-login.html',
@@ -93,14 +93,14 @@ class Users(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(
             Users, self).get_context_data(**kwargs)
-        user = profileUser.objects.all()
+        user = ProfileUser.objects.all()
         context['users'] = user
         return context
 
 class New_Users(FormView):
     template_name = 'page-new-user.html'
     form_class = UserForm
-  
+
 
     def get_context_data(self, **kwargs):
         context = super(
@@ -125,9 +125,9 @@ class New_Users(FormView):
             group= Group.objects.get(pk=role)
             user.groups.add(group)
             phone = post_values['phone']
-            new_user = profileUser(user = user_pk, phone=phone, activation_key=activation_key)
+            new_user = ProfileUser(fk_profileUser_user = user_pk, phone=phone, activationKey=activation_key)
             new_user.save()
-            new_user_pk= profileUser.objects.get(id=new_user.pk)
+            new_user_pk= ProfileUser.objects.get(id=new_user.pk)
             print('new_user ')
             print(new_user_pk.pk)
             proj1 = request.POST.get('project',None)
@@ -142,7 +142,7 @@ class New_Users(FormView):
                     print('el proyecto '+ str(i) + ' existe')
                     proj_exist= Project.objects.get(name=i)
                     print(proj_exist.pk)
-                    project_user = Project_user(project=proj_exist, user = new_user_pk)
+                    project_user = ProjectUser(project=proj_exist, user = new_user_pk)
                     project_user.save()
                 else:
                     if i != '':
@@ -152,7 +152,7 @@ class New_Users(FormView):
                         new_project = Project(code=code, name=i)
                         new_project.save()
                         proj_exist = Project.objects.get(name=i)
-                        project_user = Project_user(project=proj_exist, user=new_user_pk)
+                        project_user = ProjectUser(project=proj_exist, user=new_user_pk)
                         project_user.save()
 
             c = {'usuario': user.first_name,
@@ -176,12 +176,12 @@ class New_Users(FormView):
             return HttpResponseRedirect(reverse_lazy('new_users'))
 
 def DeleteUser(request,id):
-    user = profileUser.objects.get(pk=id)
-    print(user.user)
-    user_pk = User.objects.get(pk=user.user.pk)
+    user = ProfileUser.objects.get(pk=id)
+    print(user.fk_profileUser_user)
+    user_pk = User.objects.get(pk=user.fk_profileUser_user.pk)
     user.delete()
     user_pk.delete()
-    messages.success(request, "El usuario " + str(user.user.username) +" se ha eliminado exitosamente")
+    messages.success(request, "El usuario " + str(user.fk_profileUser_user.username) +" se ha eliminado exitosamente")
     return HttpResponseRedirect(reverse_lazy('users'))
 
 def send_email(subject, message_template, context, email):
@@ -209,9 +209,9 @@ class First_Session(TemplateView):
         form = FirstSessionForm(post_values)
         print(form.is_valid())
         if form.is_valid():
-            activation_key = self.kwargs['activation_key']
-            user = profileUser.objects.get(activation_key=activation_key)
-            username = User.objects.get(pk = user.user.pk)
+            activation_key = self.kwargs['activationKey']
+            user = ProfileUser.objects.get(activationKey=activation_key)
+            username = User.objects.get(pk = user.fk_profileUser_user.pk)
             print(username.pk)
             print(activation_key)
             password = post_values['password']
@@ -224,7 +224,7 @@ class First_Session(TemplateView):
                 print(username.is_active)
                 print(username.password)
                 username.save()
-                form.add_error(None, 'La contraseña ha sido cambiada con éxito')
+                form.add_error(None, 'La contraseña ha sido cambiada exitosamente')
                 return render(request, 'page-login.html',
                               {'form': form})
             else:
@@ -245,10 +245,10 @@ class Update_Users(TemplateView):
             Update_Users, self).get_context_data(**kwargs)
 
         context['title'] = 'Modificar'
-        user = profileUser.objects.get(pk=self.kwargs['id'])
+        user = ProfileUser.objects.get(pk=self.kwargs['id'])
         print("pk del usuario")
         print(user.pk)
-        project_code = Project_user.objects.all().filter(user_id=user)
+        project_code = ProjectUser.objects.all().filter(user_id=user)
         print("proyecto")
         print(project_code)
         x = []
@@ -263,11 +263,11 @@ class Update_Users(TemplateView):
         print(self.kwargs['id'])
         print(user)
 
-        data = {'first_name': user.user.first_name,
-                 'last_name': user.user.last_name,
-                 'username': user.user.username,
-                 'rol': user.user.groups.all()[0],
-                 'email' : user.user.email,
+        data = {'first_name': user.fk_profileUser_user.first_name,
+                 'last_name': user.fk_profileUser_user.last_name,
+                 'username': user.fk_profileUser_user.username,
+                 'rol': user.fk_profileUser_user.groups.all()[0],
+                 'email' : user.fk_profileUser_user.email,
                 'phone': user.phone,
                 'project': proj_ass}
         form = UserForm(initial=data)
@@ -283,10 +283,10 @@ class Update_Users(TemplateView):
         print(form.is_valid())
         if form.is_valid():
             user_pk = kwargs['id']
-            userProfile = profileUser.objects.get(pk=user_pk)
+            userProfile = ProfileUser.objects.get(pk=user_pk)
 
-            print(userProfile.user)
-            user = User.objects.get(pk=userProfile.user.pk)
+            print(userProfile.fk_profileUser_user)
+            user = User.objects.get(pk=userProfile.fk_profileUser_user.pk)
             print(user)
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
@@ -297,7 +297,7 @@ class Update_Users(TemplateView):
             userProfile.save()
             role = request.POST['rol']
             group = Group.objects.get(pk=role)
-            user.groups.remove(userProfile.user.groups.all()[0])
+            user.groups.remove(userProfile.fk_profileUser_user.groups.all()[0])
             user.groups.add(group)
             user.save()
             proj1 = request.POST.get('project', None)
@@ -306,7 +306,7 @@ class Update_Users(TemplateView):
             print(proj2)
             #user_proj = Project_user.objects.all().filter(user_id=user_pk)
             #print(user_proj)
-    
+
 
             for i in proj2:
                 proj = Project.objects.filter(name=i).exists()
@@ -315,12 +315,11 @@ class Update_Users(TemplateView):
                     print('el proyecto '+ str(i) + ' existe')
                     proj_exist= Project.objects.get(name=i)
                     print(proj_exist.pk)
-                    project_user=Project_user.objects.filter(user=user_pk, project=proj_exist.pk).exists()
+                    project_user=ProjectUser.objects.filter(user=user_pk, project=proj_exist.pk).exists()
                     print("existe el par "+str(project_user))
                     if not project_user:
-                        new_project_user = Project_user(user=userProfile, project=proj_exist)
+                        new_project_user = ProjectUser(user=userProfile, project=proj_exist)
                         new_project_user.save()
-                                                         
 
                     #project_user = Project_user(project=proj_exist, user = new_user_pk)
                     #project_user.save()
@@ -332,12 +331,9 @@ class Update_Users(TemplateView):
                         new_project = Project(code=code, name=i)
                         new_project.save()
                         proj_exist = Project.objects.get(name=i)
-                        project_user = Project_user(project=proj_exist, user=userProfile)
+                        project_user = ProjectUser(project=proj_exist, user=userProfile)
                         project_user.save()
-
-
-
-            messages.success(request, "El usuario ha sido modificado con éxito")
+            messages.success(request, "El usuario ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('users'))
 
         else:
@@ -362,16 +358,16 @@ class Password_Reset(TemplateView):
                 username = User.objects.get(email = email)
                 print(username.is_active)
                 if username.is_active:
-                    user = profileUser.objects.get(user=username)
+                    user = ProfileUser.objects.get(user=username)
                     print(user)
-                    user.activation_key = create_token()
+                    user.activationKey = create_token()
                     print("user.activation")
-                    print(user.activation_key)
+                    print(user.activationKey)
                     user.save()
 
                     c = {'usuario': username.first_name,
                         'username':username,
-                        'key': user.activation_key,
+                        'key': user.activationKey,
                         'host': request.META['HTTP_HOST']
                     }
 
@@ -408,9 +404,9 @@ class Password_Reset_Confirm(TemplateView):
         if form.is_valid():
             activation_key = self.kwargs['token']
             print(activation_key)
-            user = profileUser.objects.get(activation_key=activation_key)
+            user = ProfileUser.objects.get(activationKey=activation_key)
             print(user)
-            username = User.objects.get(pk=user.user.pk)
+            username = User.objects.get(pk=user.fk_profileUser_user.pk)
             print(username.pk)
             print(activation_key)
             password = post_values['password']
@@ -431,7 +427,6 @@ class Password_Reset_Confirm(TemplateView):
             #form.add_error(None,'Se ha producido un error ')
             return render(request, 'password-reset-confirm.html', {'form':form, 'token':self.kwargs['token']})
 
-
 class Profile(TemplateView):
     template_name = 'page-profile.html'
     form_class = UpdateProfileForm
@@ -443,7 +438,7 @@ class Profile(TemplateView):
 
         print(self.kwargs['id'])
 
-        user = profileUser.objects.get(user_id=self.kwargs['id'])
+        user = ProfileUser.objects.get(user_id=self.kwargs['id'])
         #print(user)
         #if not user:
          #   data = {
@@ -451,13 +446,13 @@ class Profile(TemplateView):
            #     'last_name' : User.last_name
             #}
         #else:
-        data = {'first_name': user.user.first_name,
-                 'last_name': user.user.last_name,
-                 'username': user.user.username,
-                 'rol': user.user.groups.all()[0],
-                 'email' : user.user.email,
+        data = {'first_name': user.fk_profileUser_user.first_name,
+                 'last_name': user.fk_profileUser_user.last_name,
+                 'username': user.fk_profileUser_user.username,
+                 'rol': user.fk_profileUser_user.groups.all()[0],
+                 'email' : user.fk_profileUser_user.email,
                 'phone': user.phone,
-                'image_profile': user.image_profile
+                'imageProfile': user.imageProfile
                  }
         form = UserForm(initial=data)
         context['form'] = form
@@ -469,7 +464,7 @@ class Profile(TemplateView):
         print(form.is_valid())
         if form.is_valid():
             user_pk = kwargs['id']
-            userProfile = profileUser.objects.get(user=user_pk)
+            userProfile = ProfileUser.objects.get(user=user_pk)
             print(userProfile.user.id)
             user = User.objects.get(pk=userProfile.user_id)
             print(user)
@@ -480,10 +475,10 @@ class Profile(TemplateView):
             if (request.FILES == {}):
                 pass
             else:
-                userProfile.image_profile = request.FILES['image_profile']
-                userProfile.load_photo = True
+                userProfile.imageProfile = request.FILES['imageProfile']
+                userProfile.loadPhoto = True
 
-            print(userProfile.image_profile)
+            print(userProfile.imageProfile)
             user.username = request.POST['username']
             user.save()
             userProfile.save()
@@ -494,7 +489,6 @@ class Profile(TemplateView):
         else:
             return render(request, 'page-profile.html',
                           {'form': form})
-
 
 def codeProject(name):
     name = ''.join(name)
