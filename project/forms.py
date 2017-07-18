@@ -72,6 +72,9 @@ class NewProjectForm(forms.ModelForm):
 			self.add_error('name', msj)
 		return name
 
+	def clean_endDate(self):
+		print("clean de fecha final")
+
 # class UserForm(forms.ModelForm):
 # 	first_name = forms.TextInput(attrs={'id':"first_name",
 # 										'type':"text",

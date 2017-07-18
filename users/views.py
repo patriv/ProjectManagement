@@ -438,7 +438,7 @@ class Profile(TemplateView):
 
         print(self.kwargs['id'])
 
-        user = ProfileUser.objects.get(user_id=self.kwargs['id'])
+        user = ProfileUser.objects.get(fk_profileUser_user_id=self.kwargs['id'])
         #print(user)
         #if not user:
          #   data = {

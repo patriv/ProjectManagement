@@ -80,7 +80,6 @@ class New_Project(FormView):
             messages.success(request, "Error al registrar el proyecto")
             return HttpResponseRedirect(reverse_lazy('new_project'))
 
-
 class Update_Project(TemplateView):
     template_name = 'page-update-project.html'
 
@@ -95,12 +94,10 @@ def codeProject(name):
     return name[:3]
 
 def ValidateName(request):
-    print("aquiii")
     name = request.POST.get('name', None)
     data = {
         'name_exists': Project.objects.filter(name=name).exists()
     }
-    print(data)
     if data['name_exists']:
         data['error'] = 'El nombre del proyecto ya existe'
 
