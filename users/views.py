@@ -511,3 +511,14 @@ def get_projects(request):
         print(results)
         return JsonResponse(results, safe=False)
 
+def ValidateUser(request):
+    email = request.POST.get('email', None)
+    username = request.POST.get('username', None)
+    data = {
+        'email_exists': User.objects.filter(email=email).exists(),
+        'username_exists': User.objects.filter(username=username).exists()
+    }
+    
+    return JsonResponse(data)
+
+

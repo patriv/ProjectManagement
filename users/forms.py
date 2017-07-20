@@ -18,13 +18,12 @@ class UserForm(forms.ModelForm):
 	last_name= forms.TextInput(attrs={'id':"last_name",
 										'type':"text",
 										 'class':"validate"})
-	username=forms.TextInput(attrs={'id':"last_name",
-										'type':"text",
-										 'class':"validate"})
+	username=forms.CharField(required=True)
 	phone = forms.CharField(required=False)
-	email = forms.EmailInput(attrs={'id':"email",
-										'type':"email",
-										 'class':"validate"})
+	email = forms.EmailField(required=True,
+							 widget= forms.EmailInput(attrs={'id':"email",
+							 	'type':"email",
+							 	'class':"validate"}))
 
 	imageProfile = forms.ImageField(required=False)
 

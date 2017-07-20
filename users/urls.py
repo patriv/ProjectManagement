@@ -64,5 +64,11 @@ urlpatterns = [
         'next_page': 'login'
     },
     name='logout'),
+
+
+    url(
+        r'^ajax/validateUser',
+        ValidateUser,
+        name='validate_user'),
 ]
 
