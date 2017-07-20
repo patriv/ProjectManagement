@@ -67,13 +67,24 @@ class NewProjectForm(forms.ModelForm):
 		print("Clean name project")
 		name = self.cleaned_data.get('name')
 		if Project.objects.filter(name=name).count() != 0:
-			print("dentro del if")
 			msj = "El nombre de proyecto ya existe, por favor verifique"
 			self.add_error('name', msj)
 		return name
 
 	def clean_endDate(self):
 		print("clean de fecha final")
+		endDate = self.cleaned_data.get('endDate')
+		print(endDate)
+		startDate = self.cleaned_data.get('startDate')
+		print(startDate)
+		print("quiene es menor")
+		print(endDate < startDate)
+
+		if (endDate < startDate):
+			print("fecha final es menor")
+			msj = "La fecha de culminación no puede ser anterior a la de inicio"
+			self.add_error('endDate', msj)
+		return endDate
 
 # class UserForm(forms.ModelForm):
 # 	first_name = forms.TextInput(attrs={'id':"first_name",
