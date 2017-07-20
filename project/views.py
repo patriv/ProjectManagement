@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import random
+import json
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import *
@@ -102,6 +103,24 @@ def ValidateName(request):
         data['error'] = 'El nombre del proyecto ya existe'
 
     return JsonResponse(data)
+
+
+def BarProgress(request):
+    proj = Project.objects.all()
+    print(proj)
+    array = ([
+      ['Proyecto', 'Estimada', 'Real']      
+    ]);
+    
+    x =[p.name for p in proj]
+
+    for i in x:
+        x = Project.objects.filter(name=i).exists()
+        print(x)
+
+        array.append([i,200,100])
+    
+    return JsonResponse(array, safe=False)
 
 
 

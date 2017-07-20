@@ -35,6 +35,11 @@ urlpatterns = [
         ValidateName,
         name='validate_name'),
 
+    url(
+        r'^bar',
+        BarProgress,
+        name='bar'),
+
 
 ]
 

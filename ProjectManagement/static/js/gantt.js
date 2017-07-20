@@ -1,13 +1,24 @@
 google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(drawBarColors);
+alert("oohhh");
+var datos = $.ajax({
+        url:'bar',
+        type:'POST',
+        cache: false,
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+        dataType:'json',
+        async:false
+      }).responseText;
 
+datos = JSON.parse(datos);
+alert("soy datos");
+alert(datos);
 function drawBarColors() {
-    var data = google.visualization.arrayToDataTable([
-        ['Proyecto', 'Real', 'Estimada'],
-        ['Agruppa', 50, 20],
-        ['Club Mercado', 70, 50],
-        ['Directo', 60, 62]
-    ]);
+    var djangoData = '/bar/';
+    alert(djangoData);
+    var data = google.visualization.arrayToDataTable(datos);
+
+    //data.addRows({{ array|safe }});
 
     var options = {
         title: 'Proyectos IDBC Group',
