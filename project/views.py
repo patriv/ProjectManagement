@@ -99,19 +99,16 @@ def ValidateName(request):
     data = {
         'name_exists': Project.objects.filter(name=name).exists()
     }
-    if data['name_exists']:
-        data['error'] = 'El nombre del proyecto ya existe'
 
     return JsonResponse(data)
-
 
 def BarProgress(request):
     proj = Project.objects.all()
     print(proj)
     array = ([
-      ['Proyecto', 'Estimada', 'Real']      
-    ]);
-    
+        ['Proyecto', 'Estimada', 'Real']
+    ])
+
     x =[p.name for p in proj]
 
     for i in x:
@@ -119,8 +116,42 @@ def BarProgress(request):
         print(x)
 
         array.append([i,200,100])
-    
+    print(array)
+
     return JsonResponse(array, safe=False)
+
+def ShowDetails(request):
+    nameProject = request.GET.get('nameProject', None)
+
+    data = {'project': Project.objects.filter(name=nameProject).exists()}
+
+    if data['project']:
+        project = Project.objects.get(name=nameProject)
+        print("Este es project " + str(project.code))
+        projectUser = ProjectUser.objects.filter(project_id = project.code)
+        print("projectUser " + str(projectUser))
+        for i in projectUser:
+            profileUser = ProfileUser.objects.get(id=i.user_id)
+            user = User.objects.get(id=profileUser.fk_profileUser_user_id)
+            print( user.groups.all()[0])
+            if i.isResponsable:
+                print("Soy responsable" + str(i.isResponsable))
+                data['responsable']=user.get_full_name()
+            else:
+                print("en else")
+                group = user.groups.all()[0]
+                print(group)
+                print( str(group) == 'Cliente')
+                if str(user.groups.all()[0]) == "Cliente":
+                    data['client'] = user.get_full_name()
+
+
+        data['name']= project.name
+        data['start'] = project.startDate
+        data['end'] = project.endDate
+        data['status'] = project.status
+        #print(data['client'])
+        return JsonResponse(data)
 
 
 

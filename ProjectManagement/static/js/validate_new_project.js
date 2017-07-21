@@ -21,14 +21,12 @@ $(document).ready(function () {
     });
 
     $("#end").change(function () {
-        var date_end = $(this).val();
-        alert(date_end);
-        var date_start = $("#start").val();
-        alert(date_end);
-        alert(date_end < date_start);
-        if (date_end < date_start){
+        var date_end = $(this).val().split('-');
+        var date_start = $("#start").val().split('-');
+        var start = new Date(date_start[0],date_start[1],date_start[2]);
+        var end = new Date(date_end[0],date_end[1],date_end[2]);
+        if (end < start) {
             Materialize.toast('La fecha de culminación del proyecto no puede ser anterior a la de inicio.',4000);
-
         }
     })
 });

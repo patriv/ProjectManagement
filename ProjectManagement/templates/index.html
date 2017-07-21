@@ -53,29 +53,31 @@
                 <div class="section">
 
                     <div class="row">
-                        <div class = "col s10 m10 l10">
+                        <div class = "col s10 m10 l12">
                             <div id="chart_div"></div>
                         </div>
 
-                         <div class="col s12 m12 l2" id ="detail" style="display: none;">
 
-                             <div class="col s4 m4 l12 center">
-                                 <a class="center tooltipped" data-position="left" data-delay="50" data-tooltip="Detallar Proyecto" href="{% url 'detail_project' %}"><i class="mdi-action-visibility prefix" id="visible"></i></a>
-                                 <a class="center tooltipped" data-position="top" data-delay="50" data-tooltip="Editar Proyecto" href="{% url 'update_project' %}"><i class="mdi-content-create prefix"></i></a>
-                                 <a class="waves-effect waves-light modal-trigger center tooltipped chat-collapse"
-                                    data-position="top" data-delay="50" data-tooltip="Eliminar Proyecto" href="#modal2"><i class="mdi-action-highlight-remove prefix" id="remove"></i></a>
-                             </div>
-                             <div class="row">
-                                 <div class="col s12 m12 l12 center">
-                                     <p>Agruppa</p>
-                                     <p>Cliente Responsable</p>
-                                     <p>Inicio: 01/03/2017</p>
-                                     <p>Status: In progress</p>
-                                     <p>Responsable de la empresa</p>
-                                     <p>Fin (Estimada): 01/08/2017</p>
-                                 </div>
-                             </div>
-                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m12 l12" id ="detail" style="display: none;">
+                    <div class="col s4 m4 l6 ">
+                        <a class="center tooltipped" data-position="left" data-delay="50" data-tooltip="Detallar Proyecto" href="{% url 'detail_project' %}"><i class="mdi-action-visibility prefix" id="visible"></i></a>
+                        <a class="center tooltipped" data-position="top" data-delay="50" data-tooltip="Editar Proyecto" href="{% url 'update_project' %}"><i class="mdi-content-create prefix"></i></a>
+                        <a class="waves-effect waves-light modal-trigger center tooltipped chat-collapse" data-position="top" data-delay="50" data-tooltip="Eliminar Proyecto" href="#modal2"><i class="mdi-action-highlight-remove prefix" id="remove"></i></a>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m12 l6 center">
+                            <p class="strong" id="project"></p>
+                            Fecha Inicio: <p id ="start"> </p>
+                            Fecha de Culminación (Estimada): <p id ="end"></p>
+                            Cliente Responsable: <p id="client"></p>
+                            Responsable de la empresa: <p id ="employ"></p>
+                            Status: <p id="status"></p>
+                        </div>
                     </div>
                 </div>
             </div>

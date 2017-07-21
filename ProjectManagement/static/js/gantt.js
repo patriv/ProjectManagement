@@ -1,24 +1,55 @@
 google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(drawBarColors);
-alert("oohhh");
 var datos = $.ajax({
-        url:'bar',
-        type:'POST',
-        cache: false,
-        headers: { "X-CSRFToken": getCookie("csrftoken") },
-        dataType:'json',
-        async:false
-      }).responseText;
+    url:'bar',
+    type:'POST',
+    cache: false,
+    headers: { "X-CSRFToken": getCookie("csrftoken") },
+    dataType:'json',
+    async:false
+}).responseText;
 
 datos = JSON.parse(datos);
-alert("soy datos");
-alert(datos);
-function drawBarColors() {
-    var djangoData = '/bar/';
-    alert(djangoData);
-    var data = google.visualization.arrayToDataTable(datos);
 
-    //data.addRows({{ array|safe }});
+function datailProject(name) {
+
+    var nameProject = name;
+
+    var path = window.location.href.split('/');
+
+    var url = path[0]+"/"+path[1]+"/"+path[2]+"/ajax/detailProject/";
+
+    $.ajax({
+        url: url,
+        origin: 'http://127.0.0.1:8000',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},
+        data: {
+            nameProject: nameProject
+        },
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            if (data.project) {
+                $("#project").text(data.name);
+                $("#start").text(data.start);
+                $("#end").text(data.end);
+                $("#employ").text(data.responsable);
+                $("#client").text(data.client);
+                $("#status").text(data.status);
+
+            }
+            else {
+                alert("error");
+            }
+        },
+        error: function (data) {
+            alert("Lo sentimos, hay problemas con el servidor. Intente más tarde.");
+        }
+    });
+}
+
+function drawBarColors() {
+    var data = google.visualization.arrayToDataTable(datos);
 
     var options = {
         title: 'Proyectos IDBC Group',
@@ -42,22 +73,11 @@ function drawBarColors() {
 
 
     function selectHandler() {
-        //var selectedItem = chart.getSelection()[0];
-        //alert(selectedItem);
-        //var selec = selectedItem.row.getSelection()[0];
-
-        // if (selectedItem) {
-        //     var value = data.getValue(selectedItem.row, selectedItem.column);
-        //     alert("ha seleccionado" + value);
-        //
-        //     document.getElementById('detail').style.display = 'block';
-        //     document.getElementById('table_task').style.display = 'block';
-        //     $('#table_task').addClass("min-tabla");
-        //     $('#filas').style.width = '136px';
         var selection=chart.getSelection()[0];
-        //var selection1 = fila.;
+
         if (selection){
             alert('You selected ' + data.getValue(selection.row, 0));
+            datailProject(data.getValue(selection.row, 0));
             info = data.getValue(selection.row,0);
             var chart_div = document.getElementById('detail');
             //document.getElementById('detail').innerHTML = data.getValue(selection.row,0);
@@ -67,7 +87,7 @@ function drawBarColors() {
 
         }
 
-        }
+    }
 
     // Listen for the 'select' event, and call my function selectHandler() when
     // the user selects something on the chart.

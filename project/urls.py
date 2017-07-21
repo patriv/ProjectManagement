@@ -36,6 +36,11 @@ urlpatterns = [
         name='validate_name'),
 
     url(
+        r'^ajax/detailProject',
+        ShowDetails,
+        name='show_project'),
+
+    url(
         r'^bar',
         BarProgress,
         name='bar'),

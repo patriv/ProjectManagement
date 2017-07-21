@@ -7,3 +7,4 @@ from project.models import *
 
 admin.site.register(Project)
 admin.site.register(Documents)
+admin.site.register(ProjectUser)
