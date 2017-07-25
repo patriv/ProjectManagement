@@ -18,6 +18,16 @@ from django.urls import reverse
 class Home(TemplateView):
     template_name = 'index.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(
+            Home, self).get_context_data(**kwargs)
+        print("get")
+        project = Project.objects.all()
+        print(project)
+        context['project'] = project
+        print(context)
+        return context
+
 class New_Project(FormView):
     template_name = 'page-new-project.html'
     form_class = NewProjectForm
@@ -51,8 +61,13 @@ class New_Project(FormView):
                 project.code=code
             else:
                 project.code = code
-            project.startDate = post_values['startDate']
-            project.endDate = post_values['endDate']
+            a = post_values['startDate'].split('-')
+            startDate = a[2]+'-'+a[1]+'-'+a[0]
+            project.startDate = startDate
+            b = post_values['endDate'].split('-')
+            endDate = b[2] + '-' + b[1] + '-' + b[0]
+            project.startDate = startDate
+            project.endDate = endDate
             project.status = post_values['status']
             project.description = post_values['description']
             print(project.startDate)
@@ -84,8 +99,21 @@ class New_Project(FormView):
 class Update_Project(TemplateView):
     template_name = 'page-update-project.html'
 
+
+
+
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            Detail_Project, self).get_context_data(**kwargs)
+        print("get de detail")
+        project = Project.objects.get(code=self.kwargs['pk'])
+        print(project)
+        context['project'] = project
+        return context
+
 
 class New_Task(TemplateView):
     template_name = 'new_work.html'
@@ -145,13 +173,19 @@ def ShowDetails(request):
                 if str(user.groups.all()[0]) == "Cliente":
                     data['client'] = user.get_full_name()
 
-
         data['name']= project.name
         data['start'] = project.startDate
         data['end'] = project.endDate
         data['status'] = project.status
+        if data['status'] == '':
+            data['status'] = "Sin status"
         #print(data['client'])
         return JsonResponse(data)
+
+def getCode(request):
+    nameProject= request.GET.get('nameProject',None)
+    data ={'code' : Project.objects.get(name=nameProject).code}
+    return JsonResponse(data)
 
 
 

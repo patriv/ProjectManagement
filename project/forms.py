@@ -14,7 +14,7 @@ class NewProjectForm(forms.ModelForm):
         required=True,
         choices=[
         	('--','---'),
-            ('In Progres', 'In Progress'),
+            ('In Progress', 'In Progress'),
 			('Done', 'Done')
         	]
     )

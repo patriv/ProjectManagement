@@ -253,9 +253,9 @@
     <!--start container-->
     <div class="container">
         <div class="section">
-            <h2 class="header bold">Agruppa</h2>
+            <h2 class="header bold">{{ project.name}}</h2>
             <h4 class="bold">Cliente Responsable: Luis González</h4>
-            <h5>Aquí va la descripción del Proyecto Agruppa</h5>
+            <h5>{{ project.description }}</h5>
             <br>
             <div class="row">
                  <div class = "col s10 m10 l9 center">
@@ -270,8 +270,8 @@
             <div id="table-datatables">
                 <div class="row">
                     <div class="col s9 m9 l9">
-                        <h3 class="header bold">Tareas</h3>
-                        <table id="data-table-simple" class="responsive-table display centered striped" cellspacing="0">
+                        <h3 class="header bold ">Tareas</h3>
+                        <table id="data-table-project" class="responsive-table display centered striped tableProject" cellspacing="0">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -369,7 +369,6 @@
                 <a class="btn  deep-purple accent-2 waves-effect waves-light" href="#">Cancelar</a>
             </div>
 
-
             <div class="col l2"><p></p></div>
             <div class="col s4 m4 l3">
                 <a class="btn right disabled" href="#">Cerrar Proyecto</a>
@@ -456,9 +455,8 @@
   <script src="../static/js/chosen/init.js" type="text/javascript" charset="utf-8"></script>
 
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript" src="../static/js/gantt.js"></script>
+  <script type="text/javascript" src="../static/js/diagram.js"></script>
   <script type="text/javascript" src="../static/js/moreDocument.js"></script>
-
 
 
 {% endblock %}

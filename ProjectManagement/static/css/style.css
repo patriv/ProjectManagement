@@ -1455,12 +1455,28 @@ footer.page-footer {
 
 #remove{
   color:red;
+  font-size: 30px;
 }
 
 #visible{
   color:black;
 }
 
+.icon-project{
+  font-size: 30px;
+  margin-top: 20px;
+}
+
+#project{
+  font-size: 50px;
+  margin-left: 20px;
+}
+
+#stat{
+  font-size: 30px;
+  margin-left: 15px;
+
+}
 
 #login{
 background: url(../images/background.png) no-repeat center center fixed;
@@ -1532,5 +1548,9 @@ background-size: cover;
 }
 
 #accion{
-  width:65px;
+  width:104px;
+}
+
+#data-table-project_wrapper{
+  margin-left: 60px;
 }

@@ -1,6 +1,8 @@
 $(document).ready(function(){
     $('#data-table-simple').DataTable();
-    
+    $('#data-table-project').DataTable();
+
+
     var table = $('#data-table-row-grouping').DataTable({
         "columnDefs": [
             { "visible": false, "targets": 2 }

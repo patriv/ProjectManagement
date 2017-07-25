@@ -21,7 +21,7 @@ urlpatterns = [
         name='update_project'),
 
     url(
-        r'^detail-project',
+        r'^detail-project/(?P<pk>\w+)$',
         Detail_Project.as_view(),
         name='detail_project'),
 
@@ -45,6 +45,10 @@ urlpatterns = [
         BarProgress,
         name='bar'),
 
+    url(
+        r'^ajax/kwargs',
+        getCode,
+        name='kwargs'),
 
 ]
 

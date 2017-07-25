@@ -23,8 +23,8 @@ $(document).ready(function () {
     $("#end").change(function () {
         var date_end = $(this).val().split('-');
         var date_start = $("#start").val().split('-');
-        var start = new Date(date_start[0],date_start[1],date_start[2]);
-        var end = new Date(date_end[0],date_end[1],date_end[2]);
+        var start = new Date(date_start[2],date_start[1],date_start[0]);
+        var end = new Date(date_end[2],date_end[1],date_end[0]);
         if (end < start) {
             Materialize.toast('La fecha de culminación del proyecto no puede ser anterior a la de inicio.',4000);
         }
