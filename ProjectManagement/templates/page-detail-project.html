@@ -253,8 +253,8 @@
     <!--start container-->
     <div class="container">
         <div class="section">
-            <h2 class="header bold">{{ project.name}}</h2>
-            <h4 class="bold">Cliente Responsable: Luis González</h4>
+            <h2 class="header bold"><b>{{ project.name}}</b></h2>
+            <h4 class="bold"><b>Cliente Responsable:</b> {{client}}</h4>
             <h5>{{ project.description }}</h5>
             <br>
             <div class="row">
@@ -390,8 +390,8 @@
             <li class="li-hover"><div class="divider"></div></li>
             <li class="li-hover">
             <li class="li-hover">
-               <p class="center">Fecha Inicio: 03 march, 2017</p>
-                <p class="center">Fecha Fin: 03 jun, 2017</p>
+               <p class="center">Fecha Inicio: {{project.startDate}}</p>
+                <p class="center">Fecha Fin: {{project.endDate}}</p>
             </li>
             <li class="li-hover">
 

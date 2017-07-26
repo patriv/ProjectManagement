@@ -111,7 +111,23 @@ class Detail_Project(TemplateView):
         print("get de detail")
         project = Project.objects.get(code=self.kwargs['pk'])
         print(project)
+        projectUser = ProjectUser.objects.filter(project_id=project.code)
+        print(projectUser)
+        for i in projectUser:
+            profileUser = ProfileUser.objects.get(id = i.user_id)
+            user = User.objects.get(id=profileUser.fk_profileUser_user_id)
+            print(user)
+            #print(user.groups.all()[0])
+            group = user.groups.all()[0]
+            print(group)
+            print( str(group) == 'Cliente')
+            if str(user.groups.all()[0]) == "Cliente":
+                print("si, soy un cliente")
+                client = user.get_full_name()
+                print(client)
+                   
         context['project'] = project
+        context['client'] = client
         return context
 
 
@@ -150,6 +166,7 @@ def BarProgress(request):
 
 def ShowDetails(request):
     nameProject = request.GET.get('nameProject', None)
+    print(nameProject)
 
     data = {'project': Project.objects.filter(name=nameProject).exists()}
 
@@ -161,7 +178,6 @@ def ShowDetails(request):
         for i in projectUser:
             profileUser = ProfileUser.objects.get(id=i.user_id)
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
-            print( user.groups.all()[0])
             if i.isResponsable:
                 print("Soy responsable" + str(i.isResponsable))
                 data['responsable']=user.get_full_name()
@@ -171,15 +187,20 @@ def ShowDetails(request):
                 print(group)
                 print( str(group) == 'Cliente')
                 if str(user.groups.all()[0]) == "Cliente":
+                    print("si, soy un cliente")
                     data['client'] = user.get_full_name()
+                    print(data['client'])
+                print("saliendo del if" + str(project.name))
 
         data['name']= project.name
+        print(data['name'])
         data['start'] = project.startDate
+        print(data['start'])
         data['end'] = project.endDate
         data['status'] = project.status
         if data['status'] == '':
             data['status'] = "Sin status"
-        #print(data['client'])
+        print(JsonResponse(data))
         return JsonResponse(data)
 
 def getCode(request):
