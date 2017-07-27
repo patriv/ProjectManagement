@@ -76,7 +76,6 @@ function drawBarColors() {
         var selection=chart.getSelection()[0];
 
         if (selection){
-            alert('You selected ' + data.getValue(selection.row, 0));
             datailProject(data.getValue(selection.row, 0));
             info = data.getValue(selection.row,0);
             var chart_div = document.getElementById('detail');

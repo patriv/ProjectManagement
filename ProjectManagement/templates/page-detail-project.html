@@ -255,10 +255,14 @@
         <div class="section">
             <h2 class="header bold"><b>{{ project.name}}</b></h2>
             <h4 class="bold"><b>Cliente Responsable:</b> {{client}}</h4>
-            <h5>{{ project.description }}</h5>
+            <div class="row">
+            <div class="col l9">
+            <span>{{project.description}}</span>
+            </div>
+            </div>
             <br>
             <div class="row">
-                 <div class = "col s10 m10 l9 center">
+                 <div class = "col s9 m9 l9 center">
                      <div id="gantt_chart"></div>
                  </div>
             </div>
@@ -271,7 +275,7 @@
                 <div class="row">
                     <div class="col s9 m9 l9">
                         <h3 class="header bold ">Tareas</h3>
-                        <table id="data-table-project" class="responsive-table display centered striped tableProject" cellspacing="0">
+                        <table id="data-table-simple" class="responsive-table display centered striped tableProject" cellspacing="0">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -384,8 +388,7 @@
     <aside id="right-sidebar-nav">
         <ul id="slide-out" class="side-nav fixed right-aligned rightside-navigation">
             <li class="li-hover">
-               <h4 class="center">Restan</h4>
-               <h4 class="center">25 <br>Días</h4>
+               <h4 class="center">Restan<br>{{resta}} <br>Días</h4>
             </li>
             <li class="li-hover"><div class="divider"></div></li>
             <li class="li-hover">
@@ -405,9 +408,10 @@
                     <div class="collapsible-body recent-activity">
                         <div class="recent-activity-list  row">
                             <div class="col s9 recent-activity-list-text">
-                                <div>Pedro Pérez</div>
-                                <div>María González</div>
-                                <div>José Sánchez</div>
+                            
+                              {%for i in projectUser%}
+                                <div>{{i.user}}</div>
+                              {% endfor %}
                             </div>
                         </div>
                     </div>

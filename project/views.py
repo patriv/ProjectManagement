@@ -101,7 +101,6 @@ class Update_Project(TemplateView):
 
 
 
-
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
 
@@ -110,24 +109,27 @@ class Detail_Project(TemplateView):
             Detail_Project, self).get_context_data(**kwargs)
         print("get de detail")
         project = Project.objects.get(code=self.kwargs['pk'])
-        print(project)
+
+        resta = project.endDate - project.startDate
+        print("soy la resta" + str(resta))
+        if project.startDate == None or project.endDate== None:
+            project.startDate = 'No Disponible'
+            project.endDate = 'No Disponible'
         projectUser = ProjectUser.objects.filter(project_id=project.code)
-        print(projectUser)
         for i in projectUser:
+            print(i.user_id)
             profileUser = ProfileUser.objects.get(id = i.user_id)
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
             print(user)
-            #print(user.groups.all()[0])
             group = user.groups.all()[0]
-            print(group)
-            print( str(group) == 'Cliente')
             if str(user.groups.all()[0]) == "Cliente":
-                print("si, soy un cliente")
                 client = user.get_full_name()
-                print(client)
+
                    
         context['project'] = project
         context['client'] = client
+        context['projectUser'] = projectUser
+        context['resta'] = resta
         return context
 
 
@@ -195,8 +197,11 @@ def ShowDetails(request):
         data['name']= project.name
         print(data['name'])
         data['start'] = project.startDate
-        print(data['start'])
+        if data['start']== None:
+            data['start'] = 'No disponible'
         data['end'] = project.endDate
+        if data['end'] == None:
+            data['end'] = 'No disponible'
         data['status'] = project.status
         if data['status'] == '':
             data['status'] = "Sin status"

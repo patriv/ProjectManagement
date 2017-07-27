@@ -22,9 +22,5 @@ class ProfileUser(models.Model):
         #project = models.ManyToManyField(Project)
 
         def __str__(self):
-                return self.fk_profileUser_user.first_name + "" + self.fk_profileUser_user.last_name
+                return self.fk_profileUser_user.first_name + " " + self.fk_profileUser_user.last_name
 
-# class Project_user(models.Model):
-#     user = models.ForeignKey(profileUser)
-#     project_name = models.ForeignKey(Project) 
-#         
