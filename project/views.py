@@ -2,6 +2,7 @@
 import hashlib
 import random
 import json
+import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import *
@@ -110,8 +111,11 @@ class Detail_Project(TemplateView):
         print("get de detail")
         project = Project.objects.get(code=self.kwargs['pk'])
 
-        resta = project.endDate - project.startDate
-        print("soy la resta" + str(resta))
+        now = datetime.datetime.now()
+        print("soy now" + str(now.date()))
+        print("end date" + str(project.endDate))
+        resta = project.endDate - now.date()
+
         if project.startDate == None or project.endDate== None:
             project.startDate = 'No Disponible'
             project.endDate = 'No Disponible'
@@ -129,7 +133,7 @@ class Detail_Project(TemplateView):
         context['project'] = project
         context['client'] = client
         context['projectUser'] = projectUser
-        context['resta'] = resta
+        context['resta'] = resta.days
         return context
 
 
