@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'materialize_forms',
     'project.apps.ProjectConfig',
     'users.apps.UsersConfig',
+    'task.apps.TaskConfig',
 ]
 
 MIDDLEWARE = [

@@ -93,7 +93,7 @@
             </div>
 
             <div class="section" id="table_task" style="display: none;">
-                <h3 class="header bold"> Tareas de Agruppa</h3>
+                <h3 class="header bold"> Tareas</h3>
                 <div class="row">
                     <div class="col s12 m12 l12">
                         <table id="data-table-simple" class="responsive-table display centered striped" cellspacing="0">
@@ -169,4 +169,23 @@
     <script type="text/javascript" src="../static/js/loader.js"></script>
     <script type="text/javascript" src="../static/js/gantt.js"></script>
     <script type="text/javascript" src="../static/js/kwargs.js"></script>
+
+    <script type="text/javascript">
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                Materialize.toast('{{ error|escape }}', 4000);
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            Materialize.toast('{{ error|escape }}', 4000);
+        {% endfor %}
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            Materialize.toast('{{message}}',4000);
+        {% endfor %}
+    {% endif %}
+</script>
 {% endblock %}

@@ -20,7 +20,7 @@ class NewProjectForm(forms.ModelForm):
     )
 
 	cliente = User.objects.all().filter(groups__name="Cliente")
-	print(cliente)
+	
 	client = forms.ModelChoiceField(
 		queryset= cliente,
 		widget=forms.Select(attrs={'id':"drop",
@@ -31,7 +31,7 @@ class NewProjectForm(forms.ModelForm):
 	)
 
 	company_querySet = User.objects.exclude(groups__name= "Cliente")
-	print(company_querySet)
+	
 
 	company = forms.ModelChoiceField(
 		queryset=company_querySet,
@@ -65,7 +65,7 @@ class NewProjectForm(forms.ModelForm):
 
 
 	def clean_name(self):
-		print("Clean name project")
+		
 		name = self.cleaned_data.get('name')
 		if Project.objects.filter(name=name).count() != 0:
 			msj = "El nombre de proyecto ya existe, por favor verifique"
@@ -73,16 +73,10 @@ class NewProjectForm(forms.ModelForm):
 		return name
 
 	def clean_endDate(self):
-		print("clean de fecha final")
+		
 		endDate = self.cleaned_data.get('endDate')
-		print(endDate)
 		startDate = self.cleaned_data.get('startDate')
-		print(startDate)
-		print("quiene es menor")
-		print(endDate < startDate)
-
 		if (endDate < startDate):
-			print("fecha final es menor")
 			msj = "La fecha de culminación no puede ser anterior a la de inicio"
 			self.add_error('endDate', msj)
 		return endDate
@@ -102,9 +96,10 @@ class UpdateProjectForm(forms.ModelForm):
     )
 
 	cliente = User.objects.all().filter(groups__name="Cliente")
-	print(cliente)
+	
 	client = forms.ModelChoiceField(
 		queryset= cliente,
+		required=False,
 		widget=forms.Select(attrs={'id':"drop",
 								   'tabindex' : "1",
 									'class' : "chosen-select browser-default",
@@ -113,7 +108,7 @@ class UpdateProjectForm(forms.ModelForm):
 	)
 
 	company_querySet = User.objects.exclude(groups__name= "Cliente")
-	print(company_querySet)
+	
 
 	company = forms.ModelChoiceField(
 		queryset=company_querySet,
