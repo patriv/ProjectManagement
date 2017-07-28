@@ -20,13 +20,14 @@ class NewProjectForm(forms.ModelForm):
     )
 
 	cliente = User.objects.all().filter(groups__name="Cliente")
-
+	print(cliente)
 	client = forms.ModelChoiceField(
 		queryset= cliente,
 		widget=forms.Select(attrs={'id':"drop",
-								   'tabindex':"1",
-								   'class': "chosen-select browser-default"
-								   })
+								   'tabindex' : "1",
+									'class' : "chosen-select browser-default",
+									'value': "pvalencia"
+	})
 	)
 
 	company_querySet = User.objects.exclude(groups__name= "Cliente")
@@ -40,14 +41,14 @@ class NewProjectForm(forms.ModelForm):
 		})
 	)
 
-	startDate = DateField(input_formats=settings.DATE_INPUT_FORMATS,
-						   widget= forms.DateTimeInput(attrs={'id':"start",
+	startDate = forms.CharField(
+						   widget= forms.TextInput(attrs={'id':"start",
 															  'type':"date",
 															  'class':"datepicker"
 						   }))
 
-	endDate = DateField(input_formats=settings.DATE_INPUT_FORMATS,
-					   widget=forms.DateTimeInput(attrs={'id': "end",
+	endDate = forms.CharField(
+					   widget=forms.TextInput(attrs={'id': "end",
 														 'type': "date",
 														 'class': "datepicker"
 														 }))
@@ -85,6 +86,65 @@ class NewProjectForm(forms.ModelForm):
 			msj = "La fecha de culminación no puede ser anterior a la de inicio"
 			self.add_error('endDate', msj)
 		return endDate
+
+
+class UpdateProjectForm(forms.ModelForm):
+
+	name = forms.CharField()
+
+	status = forms.ChoiceField(
+        required=True,
+        choices=[
+        	('--','---'),
+            ('In Progress', 'In Progress'),
+			('Done', 'Done')
+        	]
+    )
+
+	cliente = User.objects.all().filter(groups__name="Cliente")
+	print(cliente)
+	client = forms.ModelChoiceField(
+		queryset= cliente,
+		widget=forms.Select(attrs={'id':"drop",
+								   'tabindex' : "1",
+									'class' : "chosen-select browser-default",
+									'value': "pvalencia"
+	})
+	)
+
+	company_querySet = User.objects.exclude(groups__name= "Cliente")
+	print(company_querySet)
+
+	company = forms.ModelChoiceField(
+		queryset=company_querySet,
+		widget=forms.Select(attrs={'id':"drop",
+								   'tabindex' : "1",
+									'class' : "chosen-select browser-default"
+		})
+	)
+
+	startDate = forms.CharField(
+						   widget= forms.TextInput(attrs={'id':"start",
+															  'type':"date",
+															  'class':"datepicker"
+						   }))
+
+	endDate = forms.CharField(
+						   widget= forms.TextInput(
+						   	attrs={'id': "end",
+						     		 'type': "date",
+								 'class': "datepicker"
+							 }))
+
+	description = forms.CharField(required=False,
+								  widget= forms.Textarea(attrs={'class':"materialize-textarea",
+										 'id':"textarea",
+										 'maxlength':"120",
+										 'length':"120"
+	 								}))
+	class Meta:
+		model = Project
+		fields = ('description',)
 
 # class UserForm(forms.ModelForm):
 # 	first_name = forms.TextInput(attrs={'id':"first_name",

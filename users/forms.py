@@ -27,7 +27,7 @@ class UserForm(forms.ModelForm):
 
 	imageProfile = forms.ImageField(required=False)
 
-	project = forms.CharField(widget = forms.TextInput(attrs = {'type':"text",
+	project = forms.CharField(required = False, widget = forms.TextInput(attrs = {'type':"text",
 	 								'id':"autocomplete",
 	 								 'class':"autocomplete"}))
 	rol = forms.ModelChoiceField(

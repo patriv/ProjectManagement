@@ -98,7 +98,153 @@ class New_Project(FormView):
             return HttpResponseRedirect(reverse_lazy('new_project'))
 
 class Update_Project(TemplateView):
-    template_name = 'page-update-project.html'
+    template_name = 'page-new-project.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            Update_Project, self).get_context_data(**kwargs)
+        print("get de update project")
+        context['title'] ='Modificar'
+        project = Project.objects.get(code=self.kwargs['pk'])
+        print(project.startDate)
+        startDate = project.startDate
+        projectUser = ProjectUser.objects.filter(project_id=project.code)
+        for i in projectUser:
+            print("dentro de for")
+            print(i.user_id)
+            profileUser = ProfileUser.objects.get(id = i.user_id)
+            user = User.objects.get(id=profileUser.fk_profileUser_user_id)
+            print(user)
+            if i.isResponsable:
+                print("Soy responsable" + str(i.isResponsable))
+                responsable=user.username
+            else:
+                group = user.groups.all()[0]
+                if str(user.groups.all()[0]) == "Cliente":
+                    client = user
+        print("soy cliente " + str(client))
+        print("soy responsable " + str(responsable))
+
+
+        data = {'name':project,
+                'client':client.username,
+                'company': responsable,
+                'startDate': startDate,
+                'endDate': project.endDate,
+                'status': project.status,
+                'description':project.description
+        }
+        print(data)
+
+        form = NewProjectForm(initial=data)
+        context['form'] = form
+        return context
+
+    def post(self, request, *args, **kwargs):
+        print("post de update project")
+        post_values = request.POST.copy()
+        form = UpdateProjectForm(post_values)
+        print(form)
+        print("es valdo??" + str(form.is_valid()))
+        if form.is_valid():
+            project_pk = kwargs['pk']
+            project = Project.objects.get(pk = project_pk)
+            print(project.code)
+            # caso 1: mismo codigo diferente responsable
+            old_responsable = ProjectUser.objects.filter(project = project, isResponsable=True).exists()
+            print(old_responsable)
+
+            project.name=post_values['name']
+         
+            print("este es el nuevo project" + str(project))
+            
+            auth_cliente = post_values['client']
+            auth_emp = post_values['company']
+            print("comany")
+            print(auth_emp)
+            print("client" + str(auth_cliente))
+            # id de responsable de la empresa
+            profile_emp = ProfileUser.objects.get(fk_profileUser_user_id = auth_emp)
+            print(profile_emp.pk)
+            userProject = ProjectUser.objects.filter(user_id=profile_emp.pk, project=project)
+            print(userProject)
+            if userProject:
+                # caso de que exista la relacion entre usuario y proyecto pero no es responsable
+                for i in userProject:
+                    if i.isResponsable == False:
+                        print("is false")
+                        print(i.id)
+                        relation = ProjectUser.objects.get(id=i.id)
+                        print(relation)
+                        if old_responsable:
+                            old_responsable = ProjectUser.objects.get(project = project, isResponsable=True)
+                            old_responsable.isResponsable = False
+                            old_responsable.save()
+                        relation.isResponsable = True
+                        relation.save()
+                    else:
+                        print("sigue siendo el mismo cliente")
+                        pass
+             
+            else:
+                if old_responsable:
+                    old_responsable = ProjectUser.objects.get(project = project, isResponsable=True)
+                    old_responsable.isResponsable = False
+                    old_responsable.save()
+                project_user_emp = ProjectUser(user= profile_emp, project=project, isResponsable= True)
+                print(project_user_emp)
+                project_user_emp.save()
+
+            # id del cliente
+
+            profile_client = ProfileUser.objects.get(fk_profileUser_user = auth_cliente)
+            old_client = ProjectUser.objects.filter(user=profile_client.pk, project=project)
+            print("viejo cliente " + str(old_client))
+            if not old_client:
+                print("no existe")
+                newRelationClient = ProjectUser(project_id = project.code, user_id=profile_client.id, isResponsable=False)
+                #print("nueva relacion con cliente "+str(newRelationClient) )   
+                projectUser = ProjectUser.objects.filter(project_id=project.code)
+                for i in projectUser:
+                    print(i.user_id)
+                    profileUser = ProfileUser.objects.get(id = i.user_id)
+                    user = User.objects.get(id=profileUser.fk_profileUser_user_id)
+                    print(user)
+                    group = user.groups.all()[0]
+                    if str(user.groups.all()[0]) == "Cliente":
+                        deleteClient = ProjectUser.objects.get(user_id=profileUser)
+                        print("me van a eliminar " +str(deleteClient.user_id))
+                        deleteClient.delete()
+
+
+            
+            a = post_values['startDate'].split('-')
+            startDate = a[2]+'-'+a[1]+'-'+a[0]
+            print(startDate)
+            project.startDate =startDate
+            b = post_values['endDate'].split('-')
+            endDate = b[2]+'-'+b[1]+'-'+b[0]
+            project.endDate = endDate
+            project.description = post_values['description']
+            
+       
+            # relacion cliente proyecto
+            #project_user_client = ProjectUser(user= profile_client, project=new_project)
+            #relacion empresa proyecto
+            
+            #project_user_client.save()
+            #project_user_emp.save()
+
+            project.save()
+            newRelationClient.save()
+            # new_project = Project.objects.get(name=project.name)
+            # print(new_project.code)
+            # new_code = codeProject(project.name)
+            # print("este es el new " +str(new_code))
+            # if (project.code != new_code):
+            #     new_project.code=new_code
+            # new_project.save()
+        return render(request, 'page-new-project.html')
 
 
 
@@ -108,12 +254,9 @@ class Detail_Project(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(
             Detail_Project, self).get_context_data(**kwargs)
-        print("get de detail")
         project = Project.objects.get(code=self.kwargs['pk'])
 
         now = datetime.datetime.now()
-        print("soy now" + str(now.date()))
-        print("end date" + str(project.endDate))
         resta = project.endDate - now.date()
 
         if project.startDate == None or project.endDate== None:
@@ -125,6 +268,7 @@ class Detail_Project(TemplateView):
             profileUser = ProfileUser.objects.get(id = i.user_id)
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
             print(user)
+
             group = user.groups.all()[0]
             if str(user.groups.all()[0]) == "Cliente":
                 client = user.get_full_name()

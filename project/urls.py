@@ -16,7 +16,7 @@ urlpatterns = [
         name='new_project'),
 
     url(
-        r'^update-project',
+        r'^update-project/(?P<pk>\w+)$',
         Update_Project.as_view(),
         name='update_project'),
 
