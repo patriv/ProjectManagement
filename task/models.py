@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from users.models import ProfileUser
+from project.models import Project
 
 # Create your models here.
 
@@ -21,3 +22,7 @@ class Task(models.Model):
 	status= models.CharField(max_length= 20, choices=STATUS)
 	users= models.ForeignKey(ProfileUser, blank=False)
 	dependency = models.ForeignKey("Task", blank = True)
+	project = models.ForeignKey(Project)
+
+	def __str__(self):
+		return self.name

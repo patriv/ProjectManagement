@@ -284,9 +284,6 @@ class Detail_Project(TemplateView):
         return context
 
 
-class New_Task(TemplateView):
-    template_name = 'new_work.html'
-
 def codeProject(name):
     name = ''.join(name)
     return name[:3]

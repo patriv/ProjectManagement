@@ -45,7 +45,7 @@
                           </div>
 
                           <div class="row">
-                                  <form class="col s12" action="">
+                                  <form class="col s12" action="" method="POST">
 
                                   {% csrf_token %}
                                   <div class="row">
@@ -56,12 +56,18 @@
                                       </div>
                                   </div>
                                  <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-action-account-circle prefix"></i>
-                                          <input id="first_name" type="text" class="validate">
-                                          <label for="first_name">Responsable <span class="red-text"> *</span></label>
-                                      </div>
+                                  <div class="col s1 m1 l1">
+                                    <i class="mdi-action-account-circle prefix"></i>
                                   </div>
+                                   <div class="s3 m3 l3"><label for="">Responsable <span class="red-text"> *</span></label>
+                                   </div>
+                                       <div class="side-by-side clearfix ">
+                                        <div class="col s1 m1"><p></p></div>
+                                        <div class="col s11 m11 l11">
+                                            {{ form.user }}
+                                        </div>
+                                      </div>
+                                  </div>  
                                  <div class="row">
                                       <div class="col s1">
                                         <i class="mdi-action-event prefix"></i>
@@ -69,7 +75,7 @@
                                       </div>
                                       <div class="input-date-picker col s10">
                                         <label for="start">Fecha de Inicio <span class="red-text"> *</span></label>
-                                        <input id="start" type="date" class="datepicker">
+                                        {{form.startDate}}
                                       </div>
                                  </div>
                                  <div class="row">
@@ -77,20 +83,20 @@
                                          <i class="mdi-action-event prefix"></i>
                                      </div>
                                      <div class="input-date-picker col s10">
-                                         <label for="start">Fecha Fin <span class="red-text"> *</span></label>
-                                         <input id="start" type="date" class="datepicker">
+                                         <label for="start">Fecha de Culminación <span class="red-text"> *</span></label>
+                                         {{form.endDate}}
                                      </div>
                                  </div>
                                   <div class="row">
                                         <div class="col s12">
                                             <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requerida por <span class="red-text"> *</span></label>
+                                            <label for="start">Requerida por</label>
                                         </div>
 
                                      <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11 ">
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
+                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
                                             <option value=""></option>
                                             <option>Tarea1</option>
                                             <option>Tarea2</option>
@@ -105,7 +111,7 @@
                                  <div class="row">
                                         <div class="col s12">
                                             <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requiere de <span class="red-text"> *</span></label>
+                                            <label for="start">Requiere de</label>
                                         </div>
 
 
@@ -113,13 +119,7 @@
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11">
 
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
-                                            <option value=""></option>
-                                            <option>Tarea1</option>
-                                            <option>Tarea2</option>
-                                            <option>Tarea3</option>
-                                            <option>Tarea4</option>
-                                          </select>
+                                           {{form.dependence}}
 
                                         </div>
                                       </div>
@@ -127,21 +127,14 @@
                                  <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-editor-format-align-left prefix"></i>
-                                          <select class="drop">
-                                              <option value="">---</option>
-                                              <option> In Progres</option>
-                                              <option>Technical Review</option>
-                                              <option>Functional Review</option>
-                                              <option>Customer Accepance</option>
-                                              <option>Done</option>
-                                          </select>
+                                          {{form.status}}
                                           <label for="status">Status <span class="red-text"> *</span></label>
                                       </div>
                                   </div>
                                  <div class="row">
                                       <div class="input-field col s12">
                                           <i class="mdi-action-description prefix"></i>
-                                          <textarea id="description" type="text" class="materialize-textarea"  length="120" maxlength="120"></textarea>
+                                          {{form.description}}
                                           <label for="description">Descripción <span class="red-text"> *</span></label>
                                       </div>
                                       <div class="row ">
@@ -200,5 +193,6 @@
 
   <!-- Others-->
   <script type="text/javascript" src="../static/js/others.js"></script>
+  
    
 {% endblock %}

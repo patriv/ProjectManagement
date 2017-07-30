@@ -49,124 +49,7 @@
     </div>
 
         <!--Modal update task-->
-    <div class = "modal modal_form" id = "update_task">
-        <nav class="background-nav-modal">
-            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
-            <h3 class = "bold center">Tareas</h3>
-        </nav>
-        <div class="modal-content ">
-
-            <div class="container">
-                <div class="section">
-                    <div class="row">
-                        <div class="col s2"><p></p></div>
-                        <div class="col s8">
-                             <form class="col s12">
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-editor-format-align-left prefix"></i>
-                                          <input id="first_name" type="text" class="validate" value="Login">
-                                          <label for="first_name">Nombre</label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-action-account-circle prefix"></i>
-                                          <input id="first_name" type="text" class="validate">
-                                          <label for="first_name">Responsable</label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="col s1">
-                                        <i class="mdi-action-event prefix"></i>
-                                          
-                                      </div>
-                                      <div class="input-date-picker col s10">
-                                        <label for="start">Fecha de Inicio</label>
-                                        <input id="start" type="date" class="datepicker">
-                                      </div>
-                                 </div>
-                                 <div class="row">
-                                     <div class="col s1">
-                                         <i class="mdi-action-event prefix"></i>
-                                     </div>
-                                     <div class="input-date-picker col s10">
-                                         <label for="start">Fecha Fin</label>
-                                         <input id="start" type="date" class="datepicker">
-                                     </div>
-                                 </div>
-                                  <div class="row">
-                                        <div class="col s12">
-                                            <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requerida por</label>
-                                        </div>
-
-                                     
-                                     <div class="side-by-side clearfix ">
-                                        <div class="col s1"><p></p></div>
-                                        <div class="input-field col s11 ">
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
-                                            <option value=""></option>
-                                            <option>Tarea1</option>
-                                            <option>Tarea2</option>
-                                            <option>Tarea3</option>
-                                            <option>Tarea4</option>
-                                          </select>
-
-                                        </div>
-                                      </div>
-                                  
-                                  </div>
-                                 <div class="row">
-                                        <div class="col s12">
-                                            <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requiere de</label>
-                                        </div>
-
-                                     
-                                     <div class="side-by-side clearfix ">
-                                        <div class="col s1"><p></p></div>
-                                        <div class="input-field col s11">
-
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
-                                            <option value=""></option>
-                                            <option>Tarea1</option>
-                                            <option>Tarea2</option>
-                                            <option>Tarea3</option>
-                                            <option>Tarea4</option>
-                                          </select>
-
-                                        </div>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-editor-format-align-left prefix"></i>
-                                          <input id="status" type="text" class="validate">
-                                          <label for="status">Status</label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-action-description prefix"></i>
-                                          <textarea id="description" type="text" class="materialize-textarea"  length="120" maxlength="120"></textarea>
-                                          <label for="description">Descripción</label>
-                                      </div>
-                                  </div>
-                             </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class = "modal-footer background-nav-modal">
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
-        </div>
-    </div>
-    <!--End modal update task-->
-
+  
     <!--Modal People-->
     <div class = "modal" id = "new_people">
         <nav class="background-nav-modal">
@@ -253,7 +136,7 @@
     <!--start container-->
     <div class="container">
         <div class="section">
-            <h2 class="header bold"><b>{{ project.name}}</b></h2>
+            <h2 class="header bold" id = "project"><b>{{ project.name}}</b></h2>
             <h4 class="bold"><b>Cliente Responsable:</b> {{client}}</h4>
             <div class="row">
             <div class="col l9">
@@ -321,7 +204,7 @@
                                   </select>
                                 </td>
                                 <td>
-                                    <a class="waves-effect waves-light modal-trigger" href="{% url 'new_task' %}"><i class = "mdi-content-create"></i></a>
+                                    <a class="waves-effect waves-light modal-trigger" href=""><i class = "mdi-content-create"></i></a>
                                     <a class = "waves-effect waves-light modal-trigger" href = ""><i class = "mdi-action-visibility" id = ""></i></a>
                                     <a class = "waves-effect waves-light modal-trigger" href = "#modal2"><i class = "mdi-action-highlight-remove" id = "remove"></i></a>
 
@@ -345,7 +228,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a class="waves-effect waves-light modal-trigger" href="{% url 'new_task' %}"><i class = "mdi-content-create"></i></a>
+                                    <a class="waves-effect waves-light modal-trigger" href=""><i class = "mdi-content-create"></i></a>
                                     <a class = "waves-effect waves-light modal-trigger" href = "#modal3"> <i class = "mdi-action-visibility" id = ""></i></a>
                                     <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i></a>
 
@@ -356,8 +239,8 @@
                     </div>
                     <div class = "row">
                         <div class="col s2 m2 l1">
-                            <p><a class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2 modal-trigger"
-                                 data-position="bottom" data-delay="50" data-tooltip="Nueva Tarea" href = "{% url 'new_task' %}">
+                            <p><a onclick="kwargsTask($('#project').text())" class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2 modal-trigger"
+                                 data-position="bottom" data-delay="50" data-tooltip="Nueva Tarea" >
                                 <i class="mdi-content-add"></i></a></p>
                         </div>
                     </div>
@@ -461,6 +344,8 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript" src="../static/js/diagram.js"></script>
   <script type="text/javascript" src="../static/js/moreDocument.js"></script>
+
+  <script type="text/javascript" src="../static/js/kwargsTask.js"></script>
 
 
 {% endblock %}
