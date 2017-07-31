@@ -66,7 +66,7 @@ class UpdateUserForm(forms.ModelForm):
 										'type':"email",
 										 'class':"validate"}))
 
-	project = forms.CharField(widget=forms.TextInput(attrs={'type': "text",
+	project = forms.CharField(required = False, widget=forms.TextInput(attrs={'type': "text",
 															'id': "autocomplete",
 															'class': "autocomplete"}))
 

@@ -108,11 +108,11 @@ class Update_Project(TemplateView):
         context['title'] ='Modificar'
         project = Project.objects.get(code=self.kwargs['pk'])
         print(project.startDate)
-        
-        
+
+
         if project.startDate == None:
             startDate = ''
-        else: 
+        else:
             startDate = project.startDate.strftime("%d-%m-%Y")
         if project.endDate == None:
             endDate = ''
@@ -120,14 +120,14 @@ class Update_Project(TemplateView):
             endDate = project.endDate.strftime("%d-%m-%Y")
 
         projectUser = ProjectUser.objects.filter(project_id=project.code)
-        
+
         for i in projectUser:
             print("dentro de for")
             print(i.user_id)
             profileUser = ProfileUser.objects.get(id = i.user_id)
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
             print(user)
-            
+
             if i.isResponsable:
                 print("Soy responsable" + str(i.isResponsable))
                 responsable=user.username
@@ -173,9 +173,9 @@ class Update_Project(TemplateView):
 
             project.name=post_values['name']
             project.status = post_values['status']
-         
+
             print("este es el nuevo project" + str(project))
-            
+
             auth_cliente = post_values['client']
             auth_emp = post_values['company']
             print("comany")
@@ -203,7 +203,7 @@ class Update_Project(TemplateView):
                     else:
                         print("sigue siendo el mismo cliente")
                         pass
-             
+
             else:
                 if old_responsable:
                     old_responsable = ProjectUser.objects.get(project = project, isResponsable=True)
@@ -213,7 +213,7 @@ class Update_Project(TemplateView):
                 print(project_user_emp)
                 project_user_emp.save()
 
-        
+
             profile_client = ProfileUser.objects.get(fk_profileUser_user = auth_cliente)
             old_client = ProjectUser.objects.filter(user=profile_client.pk, project=project)
             print("viejo cliente " + str(old_client))
@@ -239,10 +239,10 @@ class Update_Project(TemplateView):
             b = post_values['endDate'].split('-')
             endDate = b[2]+'-'+b[1]+'-'+b[0]
             project.endDate = endDate
-            project.description = post_values['description']       
-       
+            project.description = post_values['description']
+
             project.save()
-            
+
             messages.success(request, "El proyecto ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('project'))
         else:
@@ -276,7 +276,7 @@ class Detail_Project(TemplateView):
             if str(user.groups.all()[0]) == "Cliente":
                 client = user.get_full_name()
 
-                   
+
         context['project'] = project
         context['client'] = client
         context['projectUser'] = projectUser
@@ -324,9 +324,9 @@ def BarProgress(request):
             days=sum(duration)
             array.append([project.name,days,100])
             duration = []
-                
+
             print(duration)
-        
+
     print(array)
 
     return JsonResponse(array, safe=False)
@@ -351,7 +351,7 @@ def ShowDetails(request):
                 print("Soy responsable" + str(i.isResponsable))
                 data['responsable']=user.get_full_name()
                 print('soy responsableee' + str(data['responsable']))
-                
+
             else:
                 print("en else")
                 group = user.groups.all()[0]
@@ -360,7 +360,7 @@ def ShowDetails(request):
                 if str(user.groups.all()[0]) == "Cliente":
                     print("si, soy un cliente")
                     data['client'] = user.get_full_name()
-                    
+
 
         data['name']= project.name
         print(data['name'])

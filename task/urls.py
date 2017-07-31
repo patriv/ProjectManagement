@@ -7,5 +7,5 @@ urlpatterns = [
         r'^new-task/(?P<pk>\w+)$',
         New_Task.as_view(),
         name='new_task'),
-    
+
 ]

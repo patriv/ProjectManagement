@@ -20,7 +20,7 @@ class NewProjectForm(forms.ModelForm):
     )
 
 	cliente = User.objects.all().filter(groups__name="Cliente")
-	
+
 	client = forms.ModelChoiceField(
 		queryset= cliente,
 		widget=forms.Select(attrs={'id':"drop",
@@ -31,7 +31,7 @@ class NewProjectForm(forms.ModelForm):
 	)
 
 	company_querySet = User.objects.exclude(groups__name= "Cliente")
-	
+
 
 	company = forms.ModelChoiceField(
 		queryset=company_querySet,
@@ -65,7 +65,7 @@ class NewProjectForm(forms.ModelForm):
 
 
 	def clean_name(self):
-		
+
 		name = self.cleaned_data.get('name')
 		if Project.objects.filter(name=name).count() != 0:
 			msj = "El nombre de proyecto ya existe, por favor verifique"
@@ -73,7 +73,7 @@ class NewProjectForm(forms.ModelForm):
 		return name
 
 	def clean_endDate(self):
-		
+
 		endDate = self.cleaned_data.get('endDate')
 		startDate = self.cleaned_data.get('startDate')
 		if (endDate < startDate):
@@ -96,7 +96,7 @@ class UpdateProjectForm(forms.ModelForm):
     )
 
 	cliente = User.objects.all().filter(groups__name="Cliente")
-	
+
 	client = forms.ModelChoiceField(
 		queryset= cliente,
 		required=False,
@@ -108,7 +108,7 @@ class UpdateProjectForm(forms.ModelForm):
 	)
 
 	company_querySet = User.objects.exclude(groups__name= "Cliente")
-	
+
 
 	company = forms.ModelChoiceField(
 		queryset=company_querySet,

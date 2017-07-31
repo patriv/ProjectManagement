@@ -93,7 +93,10 @@ class Users(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(
             Users, self).get_context_data(**kwargs)
+        print("get users")
         user = ProfileUser.objects.all()
+        for i in user:
+            print(i.phone)
         context['users'] = user
         return context
 
@@ -278,16 +281,11 @@ class Update_Users(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = UpdateUserForm(data=request.POST, instance=request.user)
-        #form.fields['username'].required = False
-        print(form)
-        print(form.is_valid())
         if form.is_valid():
             user_pk = kwargs['id']
             userProfile = ProfileUser.objects.get(pk=user_pk)
-
             print(userProfile.fk_profileUser_user)
             user = User.objects.get(pk=userProfile.fk_profileUser_user.pk)
-            print(user)
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
             user.email = request.POST['email']
@@ -301,38 +299,58 @@ class Update_Users(TemplateView):
             user.groups.add(group)
             user.save()
             proj1 = request.POST.get('project', None)
-            print(proj1)
-            proj2 = proj1.split(', ')
-            print(proj2)
-            #user_proj = Project_user.objects.all().filter(user_id=user_pk)
-            #print(user_proj)
+            print("soy proje 1" + str(proj1))
+            if proj1 == '':
+                oldProject = ProjectUser.objects.filter(user_id=userProfile)
+                oldProject.delete()
+            else:
+                proj2 = proj1.split(', ')
+                print("Soy el proyecto con split "+str(proj2))
+                allProject = ProjectUser.objects.filter(user_id=userProfile)
+                print(allProject)
+                for z in proj2:
+                    for m in allProject:
+                        count_exist = proj2.count(m.project.name)
+                        print(count_exist)
+                        if count_exist == 0:
+                            print("el proyecto "+ str(m.project.name) + " no existe")
+                            print()
+                            p = Project.objects.get(code= m)
+                            print(p)
+                            deleteProject = ProjectUser.objects.get(user_id = userProfile, project_id=p.code)
+                            print(deleteProject)
+                            deleteProject.delete()
 
 
-            for i in proj2:
-                proj = Project.objects.filter(name=i).exists()
-                print(proj)
-                if proj:
-                    print('el proyecto '+ str(i) + ' existe')
-                    proj_exist= Project.objects.get(name=i)
-                    print(proj_exist.pk)
-                    project_user=ProjectUser.objects.filter(user=user_pk, project=proj_exist.pk).exists()
-                    print("existe el par "+str(project_user))
-                    if not project_user:
-                        new_project_user = ProjectUser(user=userProfile, project=proj_exist)
-                        new_project_user.save()
+                for i in proj2:
+                    project_pk = Project.objects.get(name = i)
+                    print(project_pk)
+
+                    # Reviso los proyectos que introduce el usuario en el campo, si no existe se crea la tupla
+                    proj = Project.objects.filter(name=i).exists()
+                    print(proj)
+                    if proj:
+                        print('el proyecto '+ str(i) + ' existe')
+                        proj_exist= Project.objects.get(name=i)
+                        print(proj_exist.pk)
+                        project_user=ProjectUser.objects.filter(user=user_pk, project=proj_exist.pk).exists()
+                        print("existe el par "+str(project_user))
+                        if not project_user:
+                            new_project_user = ProjectUser(user=userProfile, project=proj_exist)
+                            new_project_user.save()
 
                     #project_user = Project_user(project=proj_exist, user = new_user_pk)
                     #project_user.save()
-                else:
-                    if i != '':
-                        print('el proyecto '+ str(i) + ' no existe')
-                        code = codeProject(i)
-                        print(code)
-                        new_project = Project(code=code, name=i)
-                        new_project.save()
-                        proj_exist = Project.objects.get(name=i)
-                        project_user = ProjectUser(project=proj_exist, user=userProfile)
-                        project_user.save()
+                    else:
+                        if i != '':
+                            print('el proyecto '+ str(i) + ' no existe')
+                            code = codeProject(i)
+                            print(code)
+                            new_project = Project(code=code, name=i)
+                            new_project.save()
+                            proj_exist = Project.objects.get(name=i)
+                            project_user = ProjectUser(project=proj_exist, user=userProfile)
+                            project_user.save()
             messages.success(request, "El usuario ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('users'))
 
@@ -518,7 +536,7 @@ def ValidateUser(request):
         'email_exists': User.objects.filter(email=email).exists(),
         'username_exists': User.objects.filter(username=username).exists()
     }
-    
+
     return JsonResponse(data)
 
 

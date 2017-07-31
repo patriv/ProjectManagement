@@ -21,7 +21,7 @@ class NewTaskForm(forms.ModelForm):
 
 	responsable_querySet = User.objects.all()
 	print(responsable_querySet)
-	
+
 	user = forms.ModelChoiceField(
 		queryset= responsable_querySet,
 		widget=forms.Select(attrs={'id':"drop",
@@ -49,7 +49,7 @@ class NewTaskForm(forms.ModelForm):
 								 							 'class':"chosen-select browser-default",
 								 							 'tabindex':"4",
 								 							 'multiple':"True"
-								 							
+
 								 							  }))
 
 	description = forms.CharField(required=False,

@@ -2,7 +2,6 @@ $(document).ready(function () {
 
     $("#email").change(function () {
         var email = $(this).val();
-        alert(email);
         $.ajax({
             url: 'ajax/validateUser',
             data: {
@@ -23,7 +22,6 @@ $(document).ready(function () {
 
    $("#id_username").change(function () {
         var username = $(this).val();
-        alert(username);
         $.ajax({
             url: 'ajax/validateUser',
             data: {

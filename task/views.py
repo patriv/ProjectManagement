@@ -39,16 +39,16 @@ class New_Task(FormView):
         		sequence = Task.objects.all().order_by("-code")[0].code
         		sequenceSplit = sequence.split('-')
         		sequenceNum = int(sequenceSplit[1]) + 1
-        	
+
         		if len(str(sequenceNum)) == 1:
         			task.code = project + '-00'+ str(sequenceNum)
         		elif len(str(sequenceNum)) == 2:
         			task.code = project + '-0'+str(sequenceNum)
         		else:
         			task.code = project + '-'+str(sequenceNum)
-        		
-        	task.project = Project.objects.get(code=project)      
-        	
+
+        	task.project = Project.objects.get(code=project)
+
         	task.name = post_values['name']
         	user = post_values['user']
         	task.users = ProfileUser.objects.get(id = user)
@@ -58,7 +58,7 @@ class New_Task(FormView):
         	b = post_values['endDate'].split('-')
         	endDate = b[2] + '-' + b[1] + '-' + b[0]
         	task.endDate = endDate
-        	
+
 
         	#FALTA LA DEPENDENCIA
         	dependence = post_values['dependence']
