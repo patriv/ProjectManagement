@@ -65,7 +65,7 @@ class New_Task(FormView):
 
 
         	#FALTA LA DEPENDENCIA
-        	dependence = post_values['dependence']
+        	dependence = post_values['dependency']
         	print(dependence)
         	task.dependency=Task.objects.get(code = dependence)
         	print(task.dependency)

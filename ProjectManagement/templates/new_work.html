@@ -121,7 +121,7 @@
                                         
                                         <select name = "dependency" id="id_dependency"  data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
                                           {% for t in task %}
-                                            <option >{{t.name}}</option>
+                                            <option value="{{t.code}}" >{{t.name}}</option>
                                             
                                           {% endfor %}
                                           </select>  
