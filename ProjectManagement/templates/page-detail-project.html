@@ -239,7 +239,7 @@
                     </div>
                     <div class = "row">
                         <div class="col s2 m2 l1">
-                            <p><a onclick="kwargsTask($('#project').text())" class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2 modal-trigger"
+                            <p><a href="{% url 'new_task' project.pk%}" class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2 modal-trigger"
                                  data-position="bottom" data-delay="50" data-tooltip="Nueva Tarea" >
                                 <i class="mdi-content-add"></i></a></p>
                         </div>

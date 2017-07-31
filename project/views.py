@@ -14,6 +14,7 @@ from django.views.generic import *
 from django.shortcuts import render
 from project.forms import *
 from project.models import *
+from task.models import *
 from django.urls import reverse
 
 class Home(TemplateView):
@@ -67,7 +68,6 @@ class New_Project(FormView):
             project.startDate = startDate
             b = post_values['endDate'].split('-')
             endDate = b[2] + '-' + b[1] + '-' + b[0]
-            project.startDate = startDate
             project.endDate = endDate
             project.status = post_values['status']
             project.description = post_values['description']
@@ -304,12 +304,29 @@ def BarProgress(request):
     ])
 
     x =[p.name for p in proj]
-
+    duration = []
     for i in x:
-        x = Project.objects.filter(name=i).exists()
-        print(x)
-
-        array.append([i,200,100])
+        project = Project.objects.get(name=i)
+        print(project)
+        tasksCount = Task.objects.filter(project_id=project.code).count()
+        if tasksCount == 0:
+            days = 0
+            array.append([i,days,100])
+        else:
+            tasks = Task.objects.filter(project_id=project.code)
+            print("soy tareas" + str(tasks))
+            for task in tasks:
+                print(task)
+                days = task.endDate - task.startDate
+                print("soy los dias "+str(days.days))
+                print(duration)
+                duration.append(days.days)
+            days=sum(duration)
+            array.append([project.name,days,100])
+            duration = []
+                
+            print(duration)
+        
     print(array)
 
     return JsonResponse(array, safe=False)

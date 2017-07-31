@@ -21,7 +21,7 @@ class Task(models.Model):
 	endDate = models.DateField(null=True)
 	status= models.CharField(max_length= 20, choices=STATUS)
 	users= models.ForeignKey(ProfileUser, blank=False)
-	dependency = models.ForeignKey("Task", blank = True)
+	dependency = models.ForeignKey("Task", null=True)
 	project = models.ForeignKey(Project)
 
 	def __str__(self):

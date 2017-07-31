@@ -42,7 +42,9 @@ class NewTaskForm(forms.ModelForm):
 														 'type': "date",
 														 'class': "datepicker"
 														 }))
-	dependence = forms.CharField(required= False,
+	dependence_querySet = Task.objects.all()
+	dependence = forms.ModelChoiceField(queryset=dependence_querySet,
+								required= False,
 								 widget=forms.Select(attrs={'data-placeholder':"Elija una tarea",
 								 							 'class':"chosen-select browser-default",
 								 							 'tabindex':"4",
