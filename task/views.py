@@ -18,8 +18,11 @@ class New_Task(FormView):
         context = super(
             New_Task, self).get_context_data(**kwargs)
         print("get")
+        project = Project.objects.get(code=self.kwargs['pk'])
+        task = Task.objects.filter(project=project)
 
         context['title'] = 'Agregar'
+        context['task'] = task
         return context
 
     def post(self, request, *args, **kwargs):
@@ -27,6 +30,7 @@ class New_Task(FormView):
         post_values = request.POST.copy()
         form = NewTaskForm(post_values)
         print(form.is_valid())
+        print(form)
         if form.is_valid():
         	project=self.kwargs['pk']
         	print(project)

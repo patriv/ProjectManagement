@@ -43,14 +43,7 @@ class NewTaskForm(forms.ModelForm):
 														 'class': "datepicker"
 														 }))
 	dependence_querySet = Task.objects.all()
-	dependence = forms.ModelChoiceField(queryset=dependence_querySet,
-								required= False,
-								 widget=forms.Select(attrs={'data-placeholder':"Elija una tarea",
-								 							 'class':"chosen-select browser-default",
-								 							 'tabindex':"4",
-								 							 'multiple':"True"
 
-								 							  }))
 
 	description = forms.CharField(required=False,
 								  widget= forms.Textarea(attrs={'class':"materialize-textarea",
@@ -60,4 +53,4 @@ class NewTaskForm(forms.ModelForm):
 	 								}))
 	class Meta:
 		model = Task
-		fields = ('name',)
+		fields = ('name','dependency',)

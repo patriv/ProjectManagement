@@ -306,26 +306,9 @@ class Update_Users(TemplateView):
             else:
                 proj2 = proj1.split(', ')
                 print("Soy el proyecto con split "+str(proj2))
-                allProject = ProjectUser.objects.filter(user_id=userProfile)
-                print(allProject)
-                for z in proj2:
-                    for m in allProject:
-                        count_exist = proj2.count(m.project.name)
-                        print(count_exist)
-                        if count_exist == 0:
-                            print("el proyecto "+ str(m.project.name) + " no existe")
-                            print()
-                            p = Project.objects.get(code= m)
-                            print(p)
-                            deleteProject = ProjectUser.objects.get(user_id = userProfile, project_id=p.code)
-                            print(deleteProject)
-                            deleteProject.delete()
-
-
+              
                 for i in proj2:
-                    project_pk = Project.objects.get(name = i)
-                    print(project_pk)
-
+  
                     # Reviso los proyectos que introduce el usuario en el campo, si no existe se crea la tupla
                     proj = Project.objects.filter(name=i).exists()
                     print(proj)
@@ -351,6 +334,22 @@ class Update_Users(TemplateView):
                             proj_exist = Project.objects.get(name=i)
                             project_user = ProjectUser(project=proj_exist, user=userProfile)
                             project_user.save()
+
+                allProject = ProjectUser.objects.filter(user_id=userProfile)
+                print(allProject)
+                
+                for m in allProject:
+                    count_exist = proj2.count(m.project.name)
+                    print(count_exist)
+                    if count_exist == 0:
+                        print("el proyecto "+ str(m.project.name) + " no existe")
+                        print()
+                        p = Project.objects.get(code= m)
+                        print(p)
+                        deleteProject = ProjectUser.objects.get(user_id = userProfile, project_id=p.code)
+                        print(deleteProject)
+                        deleteProject.delete()
+
             messages.success(request, "El usuario ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('users'))
 

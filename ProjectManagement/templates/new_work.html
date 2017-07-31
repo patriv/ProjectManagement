@@ -118,8 +118,13 @@
                                      <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11">
-
-                                           {{form.dependence}}
+                                        
+                                        <select name = "dependency" id="id_dependency"  data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
+                                          {% for t in task %}
+                                            <option >{{t.name}}</option>
+                                            
+                                          {% endfor %}
+                                          </select>  
 
                                         </div>
                                       </div>
