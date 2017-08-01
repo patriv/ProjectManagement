@@ -10,7 +10,7 @@ urlpatterns = [
 
 
     url(
-        r'^ajax/gantt',
+        r'^ajax/gantt/',
         Gantt,
         name='gantt'),
 

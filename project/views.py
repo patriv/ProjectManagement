@@ -260,7 +260,17 @@ class Detail_Project(TemplateView):
         project = Project.objects.get(code=self.kwargs['pk'])
 
         now = datetime.datetime.now()
-        resta = project.endDate - now.date()
+        print(project.endDate)
+        if (project.endDate == None):
+            project.endDate = "----"
+            context['resta']= project.endDate
+        else:
+            resta = project.endDate - now.date()
+            context['resta'] = resta.days
+
+        if (project.description == ''):
+            project.description = 'Descripción no disponible'
+
 
         if project.startDate == None or project.endDate== None:
             project.startDate = 'No Disponible'
@@ -280,13 +290,11 @@ class Detail_Project(TemplateView):
         context['project'] = project
         context['client'] = client
         context['projectUser'] = projectUser
-        context['resta'] = resta.days
+
         return context
 
 
         
-
-
 def codeProject(name):
     name = ''.join(name)
     return name[:3]

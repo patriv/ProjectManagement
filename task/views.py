@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import *
+from psycopg2._psycopg import Date
+
 from task.forms import *
 
 # Create your views here.
@@ -83,16 +85,29 @@ class New_Task(FormView):
 			messages.success(request, "Error al registrar el proyecto")
 			return HttpResponseRedirect(reverse_lazy('new_project'))
 
-def Gantt(request, **kwargs):
-	task1 = kwargs.pop('project_id', None)
-	print(task1)
-	nameProject = request.GET.get('name')
-	task = Task.objects.filter(project=nameProject).exists()
-	data ={'data':task}
-	print(nameProject)
-	array = ([
-		['Proyecto', 'Estimada', 'Real']
-	])
+def Gantt(request):
+	project = request.GET.get('project',None)
+	print(project)
+
+
+	project_pk = Project.objects.get(code=project)
+	print(project_pk.code)
+	tasks = Task.objects.filter(project=project_pk)
+	print(tasks)
+	#print(request.user.id) Con esto obtengo el id user log
+	array = []
+	for task in tasks:
+		#print(task)
+		task_pk = Task.objects.get(name = task)
+		duration = task.endDate - task.startDate
+		print(duration.days)
+		print(type(task.endDate))
+		array.append([task.code,task.name,task.startDate, task.endDate, duration.days, 100, None ])
+		print(task_pk.code)
+
+	# array = ([
+	# 	['Proyecto', 'Estimada', 'Real']
+	# ])
 
 	# x =[p.name for p in proj]
 	# duration = []
@@ -119,6 +134,7 @@ def Gantt(request, **kwargs):
 	# 		print(duration)
 
 	print(array)
+
 
 	return JsonResponse(array, safe=False)
 
