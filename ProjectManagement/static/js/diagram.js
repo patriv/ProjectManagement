@@ -1,5 +1,18 @@
 google.charts.load('current', {'packages':['gantt']});
 google.charts.setOnLoadCallback(drawChart);
+var path = window.location.href.split('/');
+var url= path[0]+"/"+path[1]+"/"+path[2]+"/"+"ajax/gantt";
+var datos = $.ajax({
+    url: url,
+    type:'POST',
+    cache: false,
+    headers: { "X-CSRFToken": getCookie("csrftoken") },
+    dataType:'json',
+    async:false
+}).responseText;
+alert(datos);
+
+//datos = JSON.parse(datos);
 
 function drawChart() {
     var data = new google.visualization.DataTable();
@@ -36,7 +49,7 @@ function drawChart() {
         ['Basketball', 'Tarea 11', 'sports',
             new Date(2014, 9, 28), new Date(2015, 5, 20), null, 86, null],
         ['Hockey', 'Tarea 12', 'sports',
-            new Date(2014, 9, 8), new Date(2015, 5, 21), null, 89, null]
+            new Date(2014, 9, 8), new Date(2015, 5, 21), null, 89, 'Basketball']
     ]);
 
     var options = {

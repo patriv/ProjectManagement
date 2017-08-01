@@ -1,5 +1,6 @@
 google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(drawBarColors);
+
 var datos = $.ajax({
     url:'bar',
     type:'POST',

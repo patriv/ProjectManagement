@@ -284,6 +284,9 @@ class Detail_Project(TemplateView):
         return context
 
 
+        
+
+
 def codeProject(name):
     name = ''.join(name)
     return name[:3]

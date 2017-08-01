@@ -15,13 +15,13 @@ class Task(models.Model):
 		('Customer Acceptance', 'Customer Acceptance')
 		)
 	code = models.CharField(primary_key = True, max_length=8, blank=False)
-	name = models.CharField(max_length = 20, blank=False, unique=True)
+	name = models.CharField(max_length = 20, blank=False)
 	description = models.CharField(max_length=120, blank=True)
 	startDate = models.DateField(null=True)
 	endDate = models.DateField(null=True)
 	status= models.CharField(max_length= 20, choices=STATUS)
 	users= models.ForeignKey(ProfileUser, blank=False)
-	dependency = models.ForeignKey("Task", null=True)
+	dependency = models.ForeignKey("Task", blank=True)
 	project = models.ForeignKey(Project)
 
 	def __str__(self):

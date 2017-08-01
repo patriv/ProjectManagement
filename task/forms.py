@@ -51,6 +51,16 @@ class NewTaskForm(forms.ModelForm):
 										 'maxlength':"120",
 										 'length':"120"
 	 								}))
+
+	# def __init__(self, *args, **kwargs):
+	# 	task = kwargs.pop('task', None)
+	# 	print(task)
+
+	# 	super(NewTaskForm, self).__init__(*args, **kwargs)
+		
+	# 	if task:
+	# 		self.fields['dependency'].initial = task[0]['dependency']
 	class Meta:
 		model = Task
 		fields = ('name','dependency',)
+		widgets = {'dependency':forms.Select(attrs={})}

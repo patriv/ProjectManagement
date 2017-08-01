@@ -112,6 +112,7 @@
                                         <div class="col s12">
                                             <i class="mdi-content-content-paste prefix"></i>
                                             <label for="start">Requiere de</label>
+                                            
                                         </div>
 
 
@@ -119,12 +120,13 @@
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11">
                                         
-                                        <select name = "dependency" id="id_dependency"  data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
+                                        <select name = "dependency" id="id_dependency" required="False" data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
+                                           <option value="">--</option>>
                                           {% for t in task %}
                                             <option value="{{t.code}}" >{{t.name}}</option>
                                             
                                           {% endfor %}
-                                          </select>  
+                                          </select>   
 
                                         </div>
                                       </div>
@@ -157,6 +159,8 @@
                                           </div>
                                       </div>
                                  </div>
+
+
                               </form>
 
                           </div>
