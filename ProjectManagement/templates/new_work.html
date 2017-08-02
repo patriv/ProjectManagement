@@ -1,174 +1,175 @@
 {% extends "base.html" %}
-{% load staticfiles %} 
+{% load staticfiles %}
 
 {% block head %}
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <link rel="stylesheet" href="../static/css/chosen/prism.css">
-  <link rel="stylesheet" href="../static/css/chosen/chosen.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="../static/css/chosen/prism.css">
+    <link rel="stylesheet" href="../static/css/chosen/chosen.css">
 {% endblock %}
 
 {% block content %}
 
     <!--Title start-->
     <div class=" grey lighten-4">
-      <div class="container">
-        <div class="row">
-          <div class="col s12 m12 l12">
-            <h1 class="bold black-text center">Tareas</h1>
-          </div>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <h1 class="bold black-text center">Tareas</h1>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
     <!--Title end-->
 
 
-        <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
 
-   <!--start container-->
+    <!--start container-->
     <div class="container">
         <div class="section">
-          <!--DataTables Users-->
-                   <!--New Users-->
-              <div class = "row">
-                  <div class="col s3 m3 l3">
-                      <p></p>
-                  </div>
-                  <div class="col s6 m6 l6">
-                      <div class="card-panel">
-                          <div class="col s6">
-                              <h4 class="header2">Nueva Tarea </h4>
-                          </div>
-                          <div class="col s6 right">
-                              <br>
-                              <span class="right"><span class="red-text"> *</span> Denota campo requerido</span>
-                          </div>
+            <!--DataTables Users-->
+            <!--New Users-->
+            <div class = "row">
+                <div class="col s3 m3 l3">
+                    <p></p>
+                </div>
+                <div class="col s6 m6 l6">
+                    <div class="card-panel">
+                        <div class="col s6">
+                            <h4 class="header2">Nueva Tarea </h4>
+                        </div>
+                        <div class="col s6 right">
+                            <br>
+                            <span class="right"><span class="red-text"> *</span> Denota campo requerido</span>
+                        </div>
 
-                          <div class="row">
-                                  <form class="col s12" action="" method="POST">
+                        <div class="row">
+                            <form class="col s12" action="" method="POST">
+                                <input type="hidden" id="dependencia" name='dependencia' value="">
 
-                                  {% csrf_token %}
-                                  <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-editor-format-align-left prefix"></i>
-                                          <input id="id_name" name="name" type="text" class="validate">
-                                          <label for="name">Nombre <span class="red-text"> *</span></label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                  <div class="col s1 m1 l1">
-                                    <i class="mdi-action-account-circle prefix"></i>
-                                  </div>
-                                   <div class="s3 m3 l3"><label for="">Responsable <span class="red-text"> *</span></label>
-                                   </div>
-                                       <div class="side-by-side clearfix ">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <i class="mdi-editor-format-align-left prefix"></i>
+                                        <input id="id_name" name="name" type="text" class="validate">
+                                        <label for="name">Nombre <span class="red-text"> *</span></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s1 m1 l1">
+                                        <i class="mdi-action-account-circle prefix"></i>
+                                    </div>
+                                    <div class="s3 m3 l3"><label for="">Responsable <span class="red-text"> *</span></label>
+                                    </div>
+                                    <div class="side-by-side clearfix ">
                                         <div class="col s1 m1"><p></p></div>
                                         <div class="col s11 m11 l11">
                                             {{ form.user }}
                                         </div>
-                                      </div>
-                                  </div>  
-                                 <div class="row">
-                                      <div class="col s1">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s1">
                                         <i class="mdi-action-event prefix"></i>
 
-                                      </div>
-                                      <div class="input-date-picker col s10">
+                                    </div>
+                                    <div class="input-date-picker col s10">
                                         <label for="start">Fecha de Inicio <span class="red-text"> *</span></label>
                                         {{form.startDate}}
-                                      </div>
-                                 </div>
-                                 <div class="row">
-                                     <div class="col s1">
-                                         <i class="mdi-action-event prefix"></i>
-                                     </div>
-                                     <div class="input-date-picker col s10">
-                                         <label for="start">Fecha de Culminación <span class="red-text"> *</span></label>
-                                         {{form.endDate}}
-                                     </div>
-                                 </div>
-                                  <div class="row">
-                                        <div class="col s12">
-                                            <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requerida por</label>
-                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s1">
+                                        <i class="mdi-action-event prefix"></i>
+                                    </div>
+                                    <div class="input-date-picker col s10">
+                                        <label for="start">Fecha de Culminación <span class="red-text"> *</span></label>
+                                        {{form.endDate}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <i class="mdi-content-content-paste prefix"></i>
+                                        <label for="start">Requerida por</label>
+                                    </div>
 
-                                     <div class="side-by-side clearfix ">
+                                    <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11 ">
                                             <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
-                                            <option value=""></option>
-                                            <option>Tarea1</option>
-                                            <option>Tarea2</option>
-                                            <option>Tarea3</option>
-                                            <option>Tarea4</option>
-                                          </select>
+                                                <option value=""></option>
+                                                <option>Tarea1</option>
+                                                <option>Tarea2</option>
+                                                <option>Tarea3</option>
+                                                <option>Tarea4</option>
+                                            </select>
 
                                         </div>
-                                      </div>
+                                    </div>
 
-                                  </div>
-                                 <div class="row">
-                                        <div class="col s12">
-                                            <i class="mdi-content-content-paste prefix"></i>
-                                            <label for="start">Requiere de</label>
-                                            
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <i class="mdi-content-content-paste prefix"></i>
+                                        <label for="start">Requiere de</label>
+
+                                    </div>
 
 
-                                     <div class="side-by-side clearfix ">
+                                    <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11">
-                                        
-                                        <select name = "dependency" id="id_dependency" data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
-                                           <option value="" selected></option>
-                                          {% for t in task %}
-                                            <option value="{{t.code}}" >{{t.name}}</option>
-                                            
-                                          {% endfor %}
-                                          </select>   
+
+                                            <select name = "dependency" id="id_dependency" data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
+                                                <option value="" selected></option>
+                                                {% for t in task %}
+                                                    <option value="{{t.code}}" >{{t.name}}</option>
+
+                                                {% endfor %}
+                                            </select>
 
                                         </div>
-                                      </div>
-                                  </div>
-                                  <div class="row">
-                                      <div class="input-field col s1 m1 l1">
-                                          <i class="mdi-action-history prefix"></i>
-                                      </div>
-                                      <div class="input-field col s11 m11 l11 center">
-                                          {{form.status}}
-                                          <label for ="status">Status</label>
-                                      </div>
-                                  </div>
-                                 <div class="row">
-                                      <div class="input-field col s12">
-                                          <i class="mdi-action-description prefix"></i>
-                                          {{form.description}}
-                                          <label for="description">Descripción <span class="red-text"> *</span></label>
-                                      </div>
-                                      <div class="row ">
-                                          <div class="input-field col s12 m6 l6 center">
-                                              <a class="btn  deep-purple accent-2 waves-effect waves-light " href="{% url 'users'%}">Cancelar
-                                                  <i class="mdi-content-reply right"></i>
-                                              </a>
-                                          </div>
-                                          <div class="input-field col s12 m6 l6 center">
-                                              <button class="btn deep-purple accent-2 waves-effect waves-light" type="submit" name="action">Guardar
-                                                  <i class="mdi-content-send right"></i>
-                                              </button>
-                                          </div>
-                                      </div>
-                                 </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s1 m1 l1">
+                                        <i class="mdi-action-history prefix"></i>
+                                    </div>
+                                    <div class="input-field col s11 m11 l11 center">
+                                        {{form.status}}
+                                        <label for ="status">Status</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <i class="mdi-action-description prefix"></i>
+                                        {{form.description}}
+                                        <label for="description">Descripción <span class="red-text"> *</span></label>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="input-field col s12 m6 l6 center">
+                                            <a class="btn  deep-purple accent-2 waves-effect waves-light " href="{% url 'users'%}">Cancelar
+                                                <i class="mdi-content-reply right"></i>
+                                            </a>
+                                        </div>
+                                        <div class="input-field col s12 m6 l6 center">
+                                            <button class="btn deep-purple accent-2 waves-effect waves-light" type="submit" name="action" onclick="check()">Guardar
+                                                <i class="mdi-content-send right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
 
 
-                              </form>
+                            </form>
 
-                          </div>
+                        </div>
 
-                      </div>
-                  </div>
-              </div>
-      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     <!--end container-->
@@ -182,29 +183,44 @@
     <script src="../static/js/chosen/init.js" type="text/javascript" charset="utf-8"></script>
     <script src="../static/js/required.js" type="text/javascript" charset="utf-8"></script>
 
-<script type="text/javascript">
-    {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %}
+    <script type="text/javascript">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    Materialize.toast('{{ error|escape }}', 4000);
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
                 Materialize.toast('{{ error|escape }}', 4000);
             {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            Materialize.toast('{{ error|escape }}', 4000);
-        {% endfor %}
-    {% endif %}
+        {% endif %}
 
-    {% if messages %}
-        {% for message in messages %}
-            Materialize.toast('{{message}}',4000);
-        {% endfor %}
-    {% endif %}
-</script>
+        {% if messages %}
+            {% for message in messages %}
+                Materialize.toast('{{message}}',4000);
+            {% endfor %}
+        {% endif %}
+    </script>
 
-   <script src="../static/js/jquery-ui.js"></script>
+    <script src="../static/js/jquery-ui.js"></script>
 
-  <!-- Others-->
-  <script type="text/javascript" src="../static/js/others.js"></script>
-  
-   
+    <!-- Others-->
+    <script type="text/javascript" src="../static/js/others.js"></script>
+
+    <script type="text/javascript">
+        function check() {
+            alert("click");
+            var selected = '';
+            var dep = $("#id_dependency").val();
+            alert(dep);
+
+            $("#dependencia").val(dep);
+            alert($("#dependencia").val());
+
+            return dep;
+        }
+    </script>
+
+
+
 {% endblock %}

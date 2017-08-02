@@ -259,6 +259,16 @@ class Detail_Project(TemplateView):
             Detail_Project, self).get_context_data(**kwargs)
         project = Project.objects.get(code=self.kwargs['pk'])
 
+        print("****************TAREAS*****************************")
+        # TAREAS
+
+        user_pk= self.request.user.id
+        profileUser = ProfileUser.objects.get(fk_profileUser_user_id = user_pk)
+        print(profileUser.pk)
+        print(user_pk)
+        task= Task.objects.filter(users=profileUser.pk,project=project)
+        print(task)
+
         now = datetime.datetime.now()
         print(project.endDate)
         if (project.endDate == None):
@@ -270,7 +280,6 @@ class Detail_Project(TemplateView):
 
         if (project.description == ''):
             project.description = 'Descripción no disponible'
-
 
         if project.startDate == None or project.endDate== None:
             project.startDate = 'No Disponible'
@@ -286,7 +295,7 @@ class Detail_Project(TemplateView):
             if str(user.groups.all()[0]) == "Cliente":
                 client = user.get_full_name()
 
-
+        context['tasks'] = task
         context['project'] = project
         context['client'] = client
         context['projectUser'] = projectUser
@@ -294,7 +303,7 @@ class Detail_Project(TemplateView):
         return context
 
 
-        
+
 def codeProject(name):
     name = ''.join(name)
     return name[:3]

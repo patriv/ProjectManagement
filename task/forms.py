@@ -63,4 +63,4 @@ class NewTaskForm(forms.ModelForm):
 	class Meta:
 		model = Task
 		fields = ('name','dependency',)
-		widgets = {'dependency':forms.Select(attrs={})}
+		widgets = {'dependency':forms.Select(attrs={'multiple':''})}

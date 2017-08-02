@@ -74,8 +74,15 @@ function drawBarColors() {
 
 
     function selectHandler() {
-        var selection=chart.getSelection()[0];
 
+        var selection=chart.getSelection()[0];
+        alert (selection);
+
+
+        // $.each(datos, function (i, val) {
+        //    alert(val[0]);
+        //
+        // });
         if (selection){
             datailProject(data.getValue(selection.row, 0));
             info = data.getValue(selection.row,0);

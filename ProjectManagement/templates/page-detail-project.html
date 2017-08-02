@@ -157,7 +157,7 @@
             <div id="table-datatables">
                 <div class="row">
                     <div class="col s9 m9 l9">
-                        <h3 class="header bold ">Tareas</h3>
+                        <h3 class="header bold ">Mis Tareas</h3>
                         <table id="data-table-simple" class="responsive-table display centered striped tableProject" cellspacing="0">
                             <thead>
                             <tr>
@@ -186,14 +186,17 @@
                             </tr>
                             </tfoot>
                             <tbody>
-                            <tr>
-                                <td>AGP-001</td>
-                                <td>Tarea 1</td>
-                                <td>Pedro Pérez</td>
-                                <td>01/03/2017</td>
-                                <td>04/03/2017</td>
+                            {% for task in tasks %}
+                                <tr>
+
+                                <td>{{ task.code }}</td>
+                                <td>{{ task.name }}</td>
+                                <td>{{ task.users }}</td>
+                                <td>{{ task.startDate }}</td>
+                                <td>{{ task.endDate }}</td>
                                 <td>AGP-003</td>
-                                <td>AGP-002</td>
+                                <td>{{ task.dependency.code }}</td>
+
                                 <td>
                                     <select class="browser-default">
                                         <option value="" disabled selected>Status</option>
@@ -209,31 +212,10 @@
                                     <a class = "waves-effect waves-light modal-trigger" href = "#modal2"><i class = "mdi-action-highlight-remove" id = "remove"></i></a>
 
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>AGP-002</td>
-                                <td>Tarea 2</td>
-                                <td>Pedro Pérez</td>
-                                <td>26/02/2017</td>
-                                <td>27/02/2017</td>
-                                <td>AGP-003</td>
-                                <td>--</td>
-                                <td>
-                                    <select class="browser-default chosen">
-                                        <option value="" disabled selected>Status</option>
-                                        <option value="1">In Progress</option>
-                                        <option value="2">Technical Review</option>
-                                        <option value="3">Functional Review</option>
-                                        <option value="3">Customer Acceptance</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <a class="waves-effect waves-light modal-trigger" href=""><i class = "mdi-content-create"></i></a>
-                                    <a class = "waves-effect waves-light modal-trigger" href = "#modal3"> <i class = "mdi-action-visibility" id = ""></i></a>
-                                    <a class = "waves-effect waves-light modal-trigger" href = "#modal2"> <i class = "mdi-action-highlight-remove" id = "remove"></i></a>
 
-                                </td>
-                            </tr>
+                                </tr>
+                             {% endfor %}
+
                             </tbody>
                         </table>
                     </div>

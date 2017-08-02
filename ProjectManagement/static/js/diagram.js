@@ -48,10 +48,11 @@ function drawChart() {
     data.addRows(x);
 
     var options = {
-        height: 400,
+        height: data.getNumberOfRows() * 32,
         gantt: {
             trackHeight: 30
         }
+       // explorer: {axis: 'horizontal', keepInBounds: true}
     };
 
     var chart = new google.visualization.Gantt(document.getElementById('gantt_chart'));

@@ -1594,3 +1594,12 @@ background-size: cover;
     padding: 3px 1em 3px .4em;
 }
 
+#gantt_chart {
+  overflow-x: scroll;
+  overflow-y: scroll;
+  width: 100%;
+  height: 50%;
+}
+
+
+
