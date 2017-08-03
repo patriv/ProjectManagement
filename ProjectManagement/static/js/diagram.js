@@ -46,14 +46,27 @@ function drawChart() {
     data.addColumn('string', 'Dependencies');
 
     data.addRows(x);
-
-    var options = {
-        height: data.getNumberOfRows() * 32,
+    alert(data.getNumberOfRows());
+    if (data.getNumberOfRows()<3){
+        var options = {
+        height: data.getNumberOfRows() * 200,
         gantt: {
             trackHeight: 30
         }
-       // explorer: {axis: 'horizontal', keepInBounds: true}
     };
+}
+    else{
+         var options = {
+        height: data.getNumberOfRows() * 35,
+        gantt: {
+            trackHeight: 30
+        }
+    }
+
+
+    };
+
+   
 
     var chart = new google.visualization.Gantt(document.getElementById('gantt_chart'));
 

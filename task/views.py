@@ -31,56 +31,70 @@ class New_Task(FormView):
 		post_values = request.POST.copy()
 		print(request.POST['dependencia'])
 		form = NewTaskForm(post_values)
-
+		
 		if form.is_valid():
 			project=self.kwargs['pk']
 			task = form.save(commit=False)
 			if (Task.objects.all().count()) == 0:
 				task.code = project + '-001'
 			else:
-				task_all = Task.objects.all()
-				key = []
-				for i in task_all:
-					work = Task.objects.get(name = i)
-					key.append (work.code.split('-'))
-				temp = []
-				arrayKey =[]
-				for z in key:
-					temp.append(z[0])
-				if (temp.count(str(project))) == 0:
+				task_all= Task.objects.filter(project=project)
+				if task_all.count() == 0:
+					print("soy vacio")
 					task.code = project + '-001'
 				else:
-					for k in key:
-						if k[0] == str(project):
-							arrayKey.append(k)
-					arrayKey.sort()
-					last = arrayKey.pop()
+					key = []
+					print("hello")
+					print(task_all)
+					for i in task_all:
+						key.append(i.code.split('-'))
+					print("soy key")
+					print(key)
+					key.sort()
+					last = key.pop()
 					newCode = int(last[1]) + 1
+					print(newCode)
 					if len(str(newCode)) == 1:
 						task.code = project + '-00'+ str(newCode)
 					elif len(str(newCode)) == 2:
 						task.code = project + '-0'+ str(newCode)
 					else:
 						task.code = project + '-'+ str(newCode)
+
+				
+				
 			task.project = Project.objects.get(code=project)
 			task.name = post_values['name']
 			user = post_values['user']
+			print(user)
 			task.users = ProfileUser.objects.get(id = user)
+			print(task.users)
 			a = post_values['startDate'].split('-')
 			startDate = a[2]+'-'+a[1]+'-'+a[0]
 			task.startDate = startDate
 			b = post_values['endDate'].split('-')
 			endDate = b[2] + '-' + b[1] + '-' + b[0]
 			task.endDate = endDate
-			#FALTA LA DEPENDENCIA
-			dependence = post_values['dependency']
-			print("soy dependencia")
-			print(dependence)
-			if dependence != '':
-				task.dependency=Task.objects.get(code = dependence)
 			task.status=post_values['status']
 			task.description= post_values['description']
-			#task.save()
+			task.save()
+			#FALTA LA DEPENDENCIA
+			dependence = post_values['dependencia']
+			if dependence != '':
+				dependences = dependence.split(',')
+				print("soy dependencia")
+				print(dependence)
+				task_save = Task.objects.get(code = task.code)
+				
+				for i in dependences:
+					if i != '':
+						print(i)
+				
+						task_dependence = Dependency(task = task_save, dependence=i)
+						task_dependence.save()
+
+
+			messages.success(request, "La tarea se ha guardado exitosamente")
 			return HttpResponseRedirect(reverse_lazy('new_task',
 													kwargs={'pk':project}))
 		else:

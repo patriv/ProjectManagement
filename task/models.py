@@ -21,8 +21,25 @@ class Task(models.Model):
 	endDate = models.DateField(null=True)
 	status= models.CharField(max_length= 20, choices=STATUS)
 	users= models.ForeignKey(ProfileUser, blank=False)
-	dependency = models.ForeignKey("Task", blank=True)
+	#dependency = models.ForeignKey("Task", blank=True)
 	project = models.ForeignKey(Project)
+
+	class Meta:
+		unique_together = ('name','project',)
 
 	def __str__(self):
 		return self.name
+
+
+
+class Dependency (models.Model):
+	task = models.ForeignKey(Task)
+	dependence = models.CharField(max_length=10)
+
+	def __str__(self):
+		return self.dependence
+
+	# login
+	# registro --> login
+	# rol --> login
+	# usuario 

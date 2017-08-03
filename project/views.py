@@ -266,9 +266,9 @@ class Detail_Project(TemplateView):
         profileUser = ProfileUser.objects.get(fk_profileUser_user_id = user_pk)
         print(profileUser.pk)
         print(user_pk)
-        task= Task.objects.filter(users=profileUser.pk,project=project)
-        print(task)
-
+        task= Task.objects.filter(users=profileUser.pk,project=project) 
+        dependencys = Dependency.objects.all()
+       
         now = datetime.datetime.now()
         print(project.endDate)
         if (project.endDate == None):
@@ -296,6 +296,7 @@ class Detail_Project(TemplateView):
                 client = user.get_full_name()
 
         context['tasks'] = task
+        context['dep'] = dependencys
         context['project'] = project
         context['client'] = client
         context['projectUser'] = projectUser

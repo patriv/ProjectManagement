@@ -194,9 +194,18 @@
                                 <td>{{ task.users }}</td>
                                 <td>{{ task.startDate }}</td>
                                 <td>{{ task.endDate }}</td>
-                                <td>AGP-003</td>
-                                <td>{{ task.dependency.code }}</td>
+                                <td>{%for d in dep %}
+                                    {% if d.dependence == task.code %}
+                                    {{d.task.code}}
+                                    {% endif %}
+                                    {% endfor %}</td>
 
+                                <td>{%for d in dep %}
+                                    {% if d.task.code == task.code %}
+                                    {{d.dependence}}
+                                    {% endif %}
+                                    {% endfor %}
+                                    </td>
                                 <td>
                                     <select class="browser-default">
                                         <option value="" disabled selected>Status</option>
