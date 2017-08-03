@@ -192,8 +192,8 @@
                                 <td>{{ task.code }}</td>
                                 <td>{{ task.name }}</td>
                                 <td>{{ task.users }}</td>
-                                <td>{{ task.startDate }}</td>
-                                <td>{{ task.endDate }}</td>
+                                <td>{{ task.get_startDate }}</td>
+                                <td>{{ task.get_startDate }}</td>
                                 <td>{%for d in dep %}
                                     {% if d.dependence == task.code %}
                                     {{d.task.code}}
@@ -213,12 +213,14 @@
                                         <option value="2">Technical Review</option>
                                         <option value="3">Functional Review</option>
                                         <option value="3">Customer Acceptance</option>
-                                  </select>
+                                    </select>
                                 </td>
                                 <td>
-                                    <a class="waves-effect waves-light modal-trigger" href=""><i class = "mdi-content-create"></i></a>
-                                    <a class = "waves-effect waves-light modal-trigger" href = ""><i class = "mdi-action-visibility" id = ""></i></a>
-                                    <a class = "waves-effect waves-light modal-trigger" href = "#modal2"><i class = "mdi-action-highlight-remove" id = "remove"></i></a>
+                                    <a class="waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="Editar Tarea" href="{% url 'update_task' task.code %}"><i class = "mdi-content-create"> </i></a>
+                                    <a class = "waves-effect waves-light modal-trigger tooltipped" data-position="top" data-delay="50" data-tooltip="Ver Tarea" href = "">
+                                        <i class = "mdi-action-visibility" id = ""></i></a>
+                                    <a class = "waves-effect waves-light modal-trigger tooltipped" data-position="right" data-delay="50" data-tooltip="Eliminar Tarea" href = "">
+                                        <i class = "mdi-action-highlight-remove" id = "remove"></i></a>
 
                                 </td>
 
@@ -267,8 +269,8 @@
             <li class="li-hover"><div class="divider"></div></li>
             <li class="li-hover">
             <li class="li-hover">
-               <p class="center">Fecha Inicio: {{project.startDate}}</p>
-                <p class="center">Fecha Fin: {{project.endDate}}</p>
+               <p class="center">Fecha Inicio: {{project.get_startDate}}</p>
+                <p class="center">Fecha Fin: {{project.get_endDate}}</p>
             </li>
             <li class="li-hover">
 

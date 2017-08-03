@@ -56,10 +56,10 @@ class NewTaskForm(forms.ModelForm):
 	# 	print(task)
 
 	# 	super(NewTaskForm, self).__init__(*args, **kwargs)
-		
+
 	# 	if task:
 	# 		self.fields['dependency'].initial = task[0]['dependency']
 	class Meta:
 		model = Task
 		fields = ('name',)
-		
+

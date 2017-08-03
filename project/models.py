@@ -24,6 +24,26 @@ class Project(models.Model):
 	def __str__(self):
 		return self.name
 
+	def get_startDate(self):
+		print("holis")
+		formato = "%d-%m-%Y"
+		if self.startDate is None:
+			return ''
+
+		date_time = self.startDate.strftime(formato)
+
+		return date_time
+
+	def get_endDate(self):
+		formato = "%d-%m-%Y"
+		if self.endDate is None:
+			return ''
+
+		date_time = self.endDate.strftime(formato)
+
+		return date_time
+
+
 class ProjectUser(models.Model):
 	user = models.ForeignKey(ProfileUser)
 	project = models.ForeignKey(Project)

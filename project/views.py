@@ -108,8 +108,6 @@ class Update_Project(TemplateView):
         context['title'] ='Modificar'
         project = Project.objects.get(code=self.kwargs['pk'])
         print(project.startDate)
-
-
         if project.startDate == None:
             startDate = ''
         else:
@@ -266,9 +264,9 @@ class Detail_Project(TemplateView):
         profileUser = ProfileUser.objects.get(fk_profileUser_user_id = user_pk)
         print(profileUser.pk)
         print(user_pk)
-        task= Task.objects.filter(users=profileUser.pk,project=project) 
+        task= Task.objects.filter(users=profileUser.pk,project=project)
         dependencys = Dependency.objects.all()
-       
+
         now = datetime.datetime.now()
         print(project.endDate)
         if (project.endDate == None):

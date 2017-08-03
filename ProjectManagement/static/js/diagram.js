@@ -2,7 +2,7 @@ google.charts.load('current', {'packages':['gantt']});
 google.charts.setOnLoadCallback(drawChart);
 var path = window.location.href.split('/');
 var url= path[0]+"/"+path[1]+"/"+path[2]+"/"+"ajax/gantt/";
-alert(path);
+
 var datos = $.ajax({
     url: url,
     type:'GET',
@@ -13,11 +13,8 @@ var datos = $.ajax({
     async:false
 }).responseText;
 
-alert(datos);
 
-//alert(datos[2]);
 datos = JSON.parse(datos);
-//alert(datos);
 
 var x = [];
 
@@ -46,7 +43,7 @@ function drawChart() {
     data.addColumn('string', 'Dependencies');
 
     data.addRows(x);
-    alert(data.getNumberOfRows());
+
     if (data.getNumberOfRows()<3){
         var options = {
         height: data.getNumberOfRows() * 200,
@@ -64,11 +61,16 @@ function drawChart() {
     }
 
 
-    };
-
+    }
    
 
     var chart = new google.visualization.Gantt(document.getElementById('gantt_chart'));
+    google.visualization.events.addListener(chart, 'error', function (googleError) {
+      google.visualization.errors.removeError(googleError.id);
+      $("#gantt_chart").empty().append('<img src="../../static/images/Status-image-missing-icon.png"><div>NO HAY GRÁFICO DISPONIBLE</div>');
+  });
+
 
     chart.draw(data, options);
+
 }

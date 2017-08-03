@@ -37,7 +37,11 @@
                 <div class="col s6 m6 l6">
                     <div class="card-panel">
                         <div class="col s6">
+                            {% if title == "Agregar"%}
                             <h4 class="header2">Nueva Tarea </h4>
+                            {% else %}
+                            <h4 class="header2">Editar Tarea</h4>
+                            {% endif %}
                         </div>
                         <div class="col s6 right">
                             <br>
@@ -47,12 +51,11 @@
                         <div class="row">
                             <form class="col s12" action="" method="POST">
                                 <input type="hidden" id="dependencia" name='dependencia' value="">
-
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <i class="mdi-editor-format-align-left prefix"></i>
-                                        <input id="id_name" name="name" type="text" class="validate">
+                                        {{ form.name }}
                                         <label for="name">Nombre <span class="red-text"> *</span></label>
                                     </div>
                                 </div>
@@ -97,7 +100,7 @@
                                     <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11 ">
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
+                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
                                                 <option value=""></option>
                                                 <option>Tarea1</option>
                                                 <option>Tarea2</option>

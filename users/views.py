@@ -306,9 +306,9 @@ class Update_Users(TemplateView):
             else:
                 proj2 = proj1.split(', ')
                 print("Soy el proyecto con split "+str(proj2))
-              
+
                 for i in proj2:
-  
+
                     # Reviso los proyectos que introduce el usuario en el campo, si no existe se crea la tupla
                     proj = Project.objects.filter(name=i).exists()
                     print(proj)
@@ -337,7 +337,7 @@ class Update_Users(TemplateView):
 
                 allProject = ProjectUser.objects.filter(user_id=userProfile)
                 print(allProject)
-                
+
                 for m in allProject:
                     count_exist = proj2.count(m.project.name)
                     print(count_exist)

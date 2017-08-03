@@ -14,4 +14,9 @@ urlpatterns = [
         Gantt,
         name='gantt'),
 
+    url(
+        r'^update-task/(?P<code>[\w-]+)$',
+        Update_Task.as_view(),
+        name='update_task'),
+
 ]

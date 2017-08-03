@@ -31,6 +31,22 @@ class Task(models.Model):
 		return self.name
 
 
+	def get_startDate(self):
+		formato = "%d-%m-%Y"
+		if self.startDate is None:
+			return ''
+
+		date_time = self.startDate.strftime(formato)
+
+		return date_time
+
+	def get_endDate(self):
+		formato = "%d-%m-%Y"
+		if self.endDate is None:
+			return ''
+		date_time = self.endDate.strftime(formato)
+		return date_time
+
 
 class Dependency (models.Model):
 	task = models.ForeignKey(Task)
@@ -39,7 +55,3 @@ class Dependency (models.Model):
 	def __str__(self):
 		return self.dependence
 
-	# login
-	# registro --> login
-	# rol --> login
-	# usuario 

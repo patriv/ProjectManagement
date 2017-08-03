@@ -31,7 +31,7 @@ class New_Task(FormView):
 		post_values = request.POST.copy()
 		print(request.POST['dependencia'])
 		form = NewTaskForm(post_values)
-		
+
 		if form.is_valid():
 			project=self.kwargs['pk']
 			task = form.save(commit=False)
@@ -61,8 +61,8 @@ class New_Task(FormView):
 					else:
 						task.code = project + '-'+ str(newCode)
 
-				
-				
+
+
 			task.project = Project.objects.get(code=project)
 			task.name = post_values['name']
 			user = post_values['user']
@@ -85,11 +85,11 @@ class New_Task(FormView):
 				print("soy dependencia")
 				print(dependence)
 				task_save = Task.objects.get(code = task.code)
-				
+
 				for i in dependences:
 					if i != '':
 						print(i)
-				
+
 						task_dependence = Dependency(task = task_save, dependence=i)
 						task_dependence.save()
 
@@ -113,6 +113,40 @@ def Gantt(request):
 		duration = task.endDate - task.startDate
 		array.append([task.code,task.name,task.startDate, task.endDate, duration.days, 100, None ])
 	return JsonResponse(array, safe=False)
+
+class Update_Task(TemplateView):
+	template_name = 'new_work.html'
+	form_class = NewTaskForm
+
+	def get_context_data(self, **kwargs):
+			context = super(
+				Update_Task, self).get_context_data(**kwargs)
+			print("get de update tareas")
+			context['title'] = 'Modificar'
+			task_pk = Task.objects.get(code = self.kwargs['code'])
+			if task_pk.startDate == None:
+				startDate = ''
+			else:
+				startDate = task_pk.startDate.strftime("%d-%m-%Y")
+			if task_pk.endDate == None:
+				endDate = ''
+			else:
+				endDate = task_pk.endDate.strftime("%d-%m-%Y")
+			print("hhh")
+			print( task_pk.users)
+			data = {'name': task_pk.name,
+					'responsable': task_pk.users,
+					'startDate': startDate,
+					'endDate': endDate,
+					'status': task_pk.status,
+					'description': task_pk.description
+					}
+			print(data)
+
+			form = NewTaskForm(initial=data)
+			context['form'] = form
+			return context
+
 
 
 
