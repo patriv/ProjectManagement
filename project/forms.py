@@ -22,11 +22,12 @@ class NewProjectForm(forms.ModelForm):
 	cliente = User.objects.all().filter(groups__name="Cliente")
 
 	client = forms.ModelChoiceField(
+		required= True,
 		queryset= cliente,
 		widget=forms.Select(attrs={'id':"drop",
 								   'tabindex' : "1",
 									'class' : "chosen-select browser-default",
-									'value': "pvalencia"
+									
 	})
 	)
 

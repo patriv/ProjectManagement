@@ -193,7 +193,7 @@
                                 <td>{{ task.name }}</td>
                                 <td>{{ task.users }}</td>
                                 <td>{{ task.get_startDate }}</td>
-                                <td>{{ task.get_startDate }}</td>
+                                <td>{{ task.get_endDate }}</td>
                                 <td>{%for d in dep %}
                                     {% if d.dependence == task.code %}
                                     {{d.task.code}}

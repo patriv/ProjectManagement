@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+    {% extends "base.html" %}
 {% load staticfiles %}
 
 {% block head %}
@@ -50,7 +50,7 @@
 
                         <div class="row">
                             <form class="col s12" action="" method="POST">
-                                <input type="hidden" id="dependencia" name='dependencia' value="">
+                                <input type="hidden" id="dependencia" name='dependencia' value=''>
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="input-field col s12">
@@ -59,16 +59,18 @@
                                         <label for="name">Nombre <span class="red-text"> *</span></label>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col s1 m1 l1">
                                         <i class="mdi-action-account-circle prefix"></i>
                                     </div>
-                                    <div class="s3 m3 l3"><label for="">Responsable <span class="red-text"> *</span></label>
+                                    <div class="s3 m3 l3"><label for="users">Responsable <span class="red-text"> *</span></label>
+                                    
                                     </div>
                                     <div class="side-by-side clearfix ">
                                         <div class="col s1 m1"><p></p></div>
                                         <div class="col s11 m11 l11">
-                                            {{ form.user }}
+                                            {{form.users}}
                                         </div>
                                     </div>
                                 </div>
@@ -97,39 +99,29 @@
                                         <label for="start">Requerida por</label>
                                     </div>
 
-                                    <div class="side-by-side clearfix ">
-                                        <div class="col s1"><p></p></div>
-                                        <div class="input-field col s11 ">
-                                            <select data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple tabindex="4" >
-                                                <option value=""></option>
-                                                <option>Tarea1</option>
-                                                <option>Tarea2</option>
-                                                <option>Tarea3</option>
-                                                <option>Tarea4</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-
+                              
                                 </div>
                                 <div class="row">
                                     <div class="col s12">
                                         <i class="mdi-content-content-paste prefix"></i>
                                         <label for="start">Requiere de</label>
-
                                     </div>
-
-
                                     <div class="side-by-side clearfix ">
                                         <div class="col s1"><p></p></div>
                                         <div class="input-field col s11">
-
-                                            <select name = "dependency" id="id_dependency" data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
+                                            <select name = "dependence" id="id_dependency" data-placeholder="Elija una tarea" class="chosen-select browser-default" multiple="True" tabindex="4" >
                                                 <option value="" selected></option>
                                                 {% for t in task %}
-                                                    <option value="{{t.code}}" >{{t.name}}</option>
+                                                    <option value="{{t.name}}" >{{t.name}}</option>
+                                                    {% endfor %}
+                                                    {% if title == "Modificar" %}
+                                                    {%for d in dependencia%}
+                                                    <option value="{{d}}" selected="">{{d}}
+                                                    </option>
+                                                    {%endfor%}
+                                                    {%endif%} 
 
-                                                {% endfor %}
+                                                
                                             </select>
 
                                         </div>
@@ -212,18 +204,41 @@
 
     <script type="text/javascript">
         function check() {
-            alert("click");
-            var selected = '';
+         
             var dep = $("#id_dependency").val();
-            alert(dep);
-
+           
             $("#dependencia").val(dep);
-            alert($("#dependencia").val());
-
+            
             return dep;
         }
     </script>
+    <!-- {% if title == "Modificar"%}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var dep = $("#dependencia").attr("value");
+                
+            $.each(dep.split(', '), function(i,val){
+               
+                                
+                $(".chosen-choices").prepend('<li class="search-choice"><span>'+
+                val+'</span><a class="search-choice-close" data-option-array-index='+(i+1)+'></a></li>');
+    
+                    
+                    $('li.active-result').each(function (i,val){
+                        alert("hi this");
+                        alert(val);
+                    });
+   
+            });
+                     $( ".search-choice-close" ).click(function() {
+                        $(this).parents('li').first().remove();
+    });
+ 
+        });
+         
 
+    </script>
+    {% endif %} -->
 
 
 {% endblock %}
