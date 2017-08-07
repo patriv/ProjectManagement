@@ -51,9 +51,14 @@ class AddRole(FormView):
                 group.permissions.add(can_add_project.id)
                 print("es vacio")
             if project != [] and update != []:
-                can_update_project = Permission.objects.get(codename='add_project')
+                can_update_project = Permission.objects.get(codename='change_project')
                 print(can_update_project.id)
                 group.permissions.add(can_update_project.id)
+                print("es vacio")
+            if project != [] and delete != []:
+                can_delet_project = Permission.objects.get(codename='delete_project')
+                print(can_delet_project.id)
+                group.permissions.add(can_delet_project.id)
                 print("es vacio")
 
             users = request.POST.getlist('users')
