@@ -27,12 +27,12 @@ urlpatterns = [
 
 
     url(
-        r'^ajax/name',
+        r'^ajax/name/$',
         ValidateName,
         name='validate_name'),
 
     url(
-        r'^ajax/detailProject',
+        r'^ajax/detailProject/$',
         ShowDetails,
         name='show_project'),
 
@@ -42,7 +42,7 @@ urlpatterns = [
         name='bar'),
 
     url(
-        r'^ajax/kwargs',
+        r'^ajax/kwargs/$',
         getCode,
         name='kwargs'),
 

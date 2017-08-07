@@ -10,7 +10,7 @@ urlpatterns = [
 
 
     url(
-        r'^ajax/gantt/',
+        r'^ajax/gantt/$',
         Gantt,
         name='gantt'),
 
@@ -19,4 +19,8 @@ urlpatterns = [
         Update_Task.as_view(),
         name='update_task'),
 
+    url(
+        r'^ajax/nameTask/$',
+        ValidateTask,
+        name='validate_name_task'),
 ]

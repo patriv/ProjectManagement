@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import messages
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import *
@@ -34,8 +34,37 @@ class AddRole(FormView):
     def post(self, request, *args, **kwargs):
         post_values = request.POST.copy()
         form = RoleForm(post_values)
+        print(form)
         if form.is_valid():
             newRole = form.save()
+            name = post_values['name']
+            print(name)
+            group = Group.objects.get(name = name)
+            print(group.id)
+            project = request.POST.getlist('project')
+            create = request.POST.getlist('create')
+            update = request.POST.getlist('update')
+            delete = request.POST.getlist('delete')
+            if project != [] and create !=[]:
+                can_add_project = Permission.objects.get(codename = 'add_project')
+                print(can_add_project.id)
+                group.permissions.add(can_add_project.id)
+                print("es vacio")
+            if project != [] and update != []:
+                can_update_project = Permission.objects.get(codename='add_project')
+                print(can_update_project.id)
+                group.permissions.add(can_update_project.id)
+                print("es vacio")
+
+            users = request.POST.getlist('users')
+            create = request.POST.getlist('create')
+            update = request.POST.getlist('update')
+            delete = request.POST.getlist('delete')
+            print(project)
+            print(users)
+
+
+
             messages.success(request, "Su rol se ha guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('role'))
         else:

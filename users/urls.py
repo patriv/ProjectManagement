@@ -67,7 +67,7 @@ urlpatterns = [
 
 
     url(
-        r'^ajax/validateUser',
+        r'^ajax/validateUser/$',
         ValidateUser,
         name='validate_user'),
 ]

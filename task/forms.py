@@ -64,3 +64,24 @@ class NewTaskForm(forms.ModelForm):
 		model = Task
 		fields = ('name',)
 
+	def __init__(self, *args, **kwargs):
+		self.code = kwargs.pop('code', None)
+		super(NewTaskForm, self).__init__(*args, **kwargs)
+
+	def clean_name(self,**kwargs):
+		name = self.cleaned_data.get('name')
+		if Task.objects.filter(name=name, project=self.code).count() != 0:
+			msj = "El nombre de proyecto ya existe, por favor verifique"
+			self.add_error('name', msj)
+		return name
+
+	def clean_endDate(self):
+
+		endDate = self.cleaned_data.get('endDate')
+		startDate = self.cleaned_data.get('startDate')
+		if (endDate < startDate):
+			msj = "La fecha de culminación no puede ser anterior a la de inicio"
+			self.add_error('endDate', msj)
+		return endDate
+
+

@@ -25,12 +25,12 @@ class New_Task(FormView):
 
         context['title'] = 'Agregar'
         context['task'] = task
+        context['code'] = self.kwargs['pk']
         return context
 
     def post(self, request, *args, **kwargs):
         post_values = request.POST.copy()
-        print(request.POST['dependencia'])
-        form = NewTaskForm(post_values)
+        form = NewTaskForm(post_values, code=self.kwargs['pk'])
 
         if form.is_valid():
             project=self.kwargs['pk']
@@ -90,7 +90,7 @@ class New_Task(FormView):
                     if i != '':
                         print(i)
                         c = Task.objects.get(project=task.project, name = i)
-                        print(c)    
+                        print(c)
                         task_dependence = Dependency(task = task_save, dependence=c.code)
                         task_dependence.save()
 
@@ -99,20 +99,21 @@ class New_Task(FormView):
             return HttpResponseRedirect(reverse_lazy('new_task',
                                                     kwargs={'pk':project}))
         else:
-            messages.success(request, "Error al registrar el proyecto")
-            return HttpResponseRedirect(reverse_lazy('new_project'))
+            messages.success(request, "Error al registrar la tarea")
+            return HttpResponseRedirect(reverse_lazy('new_task', kwargs={'pk':self.kwargs['pk']}))
 
 def Gantt(request):
     project = request.GET.get('project',None)
     project_pk = Project.objects.get(code=project)
     tasks = Task.objects.filter(project=project_pk)
+    print(tasks)
     #print(request.user.id) Con esto obtengo el id user log
     array = []
     for task in tasks:
-        #print(task)
-        task_pk = Task.objects.get(name = task)
         duration = task.endDate - task.startDate
+        print(task.code)
         array.append([task.code,task.name,task.startDate, task.endDate, duration.days, 100, None ])
+    print(array)
     return JsonResponse(array, safe=False)
 
 class Update_Task(TemplateView):
@@ -127,7 +128,6 @@ class Update_Task(TemplateView):
             task_pk = Task.objects.get(code = self.kwargs['code'])
             print(task_pk.project.code)
             task = Task.objects.filter(project=task_pk.project.code)
-            print(task)
             if task_pk.startDate == None:
                 startDate = ''
             else:
@@ -136,10 +136,7 @@ class Update_Task(TemplateView):
                 endDate = ''
             else:
                 endDate = task_pk.endDate.strftime("%d-%m-%Y")
-            print("hhh")
-            print( task_pk.users)
             dependence = Dependency.objects.filter(task=task_pk)
-            print('yo ' + str(task_pk))
             print(dependence)
             z = []
             for i in dependence:
@@ -147,9 +144,9 @@ class Update_Task(TemplateView):
                 print(i)
                 tarea = Task.objects.get(code = i)
                 z.append(tarea.name)
-            
+
             #z = (', ').join(z)
-                
+
             data = {'name': task_pk,
                     'users': task_pk.users.fk_profileUser_user,
                     'startDate': startDate,
@@ -157,7 +154,7 @@ class Update_Task(TemplateView):
                     'status': task_pk.status,
                     'description': task_pk.description
                     }
-            
+
             form = NewTaskForm(initial=data)
             context['form'] = form
             context['task'] = task
@@ -194,7 +191,7 @@ class Update_Task(TemplateView):
             dependence = dependence.split(',')
             print(dependence)
 
-            
+
             array_dependece = []
             for a in dependency:
                 array_dependece.append(Task.objects.get(code = a.dependence).name)
@@ -209,11 +206,6 @@ class Update_Task(TemplateView):
                     delete_dependence = Dependency.objects.get(dependence=a, task = task)
                     delete_dependence.delete()
 
-
-                
-
-
-
             for d in dependence:
                 print("soy d")
                 print(d)
@@ -226,7 +218,7 @@ class Update_Task(TemplateView):
                         print("dentro de dependency")
                         new = Dependency(dependence=code.code,task=task)
                         new.save()
-            
+
             # la dependencia esta mala!
             task.status = post_values['status']
             task.description = post_values['description']
@@ -234,10 +226,23 @@ class Update_Task(TemplateView):
 
 
             messages.success(request, "La tarea ha sido modificada exitosamente")
-            return HttpResponseRedirect(reverse_lazy('detail_project', 
+            return HttpResponseRedirect(reverse_lazy('detail_project',
                                                 kwargs={'pk': task.project.code}))
         else:
             return render(request, 'new-work.html', {'form':form, 'pk':self.kwargs['pk']})
+
+def ValidateTask(request):
+    print("*********** en validate************")
+    name = request.GET.get('name', None)
+    print(name)
+    code = request.GET.get('code', None)
+    print(code)
+    data = {
+        'name_exists': Task.objects.filter(name=name, project=code).exists()
+    }
+
+    return JsonResponse(data)
+
 
 
 

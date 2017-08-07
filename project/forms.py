@@ -6,6 +6,7 @@ from django.forms import DateField
 
 from ProjectManagement import settings
 from project.models import *
+from  task.models import *
 from django.db import models
 
 class NewProjectForm(forms.ModelForm):
@@ -142,31 +143,10 @@ class UpdateProjectForm(forms.ModelForm):
 		model = Project
 		fields = ('description',)
 
-# class UserForm(forms.ModelForm):
-# 	first_name = forms.TextInput(attrs={'id':"first_name",
-# 										'type':"text",
-# 										 'class':"validate"})
-# 	last_name= forms.TextInput(attrs={'id':"last_name",
-# 										'type':"text",
-# 										 'class':"validate"})
-# 	username=forms.TextInput(attrs={'id':"last_name",
-# 										'type':"text",
-# 										 'class':"validate"})
-# 	phone = forms.CharField(required=False)
-# 	email = forms.EmailInput(attrs={'id':"email",
-# 										'type':"email",
-# 										 'class':"validate"})
-
-# 	image_profile = forms.ImageField(required=False)
-
-# 	rol = forms.ModelChoiceField(
-#         required=True,
-#         queryset=Group.objects.all()
-#     )
-
-# 	class Meta:
-# 		model= User
-# 		fields = ('first_name','last_name','username','email','groups',)
+class statusForm(forms.ModelForm):
+	class Meta:
+		model=Task
+		fields=('status',)
 
 # 	def clean_email(self):
 # 		print("Clean email")

@@ -118,7 +118,9 @@ class Update_Project(TemplateView):
             endDate = project.endDate.strftime("%d-%m-%Y")
 
         projectUser = ProjectUser.objects.filter(project_id=project.code)
-
+        print("soy project user")
+        print(projectUser)
+        client=''
         for i in projectUser:
             print("dentro de for")
             print(i.user_id)
@@ -128,20 +130,18 @@ class Update_Project(TemplateView):
 
             if i.isResponsable:
                 print("Soy responsable" + str(i.isResponsable))
-                responsable=user.username
+                responsable=user
             else:
                 print("no es responsable")
-                group = user.groups.all()[0]
-                countGroup = user.groups.filter(name='Cliente').count()
-                print("cuenta de grupo "+str(countGroup))
-                if countGroup == 0:
-                    client=''
-                else:
-                    client = user.username
+                if str(user.groups.all()[0])=='Cliente':
+                    client=user
+
 
             countProject = ProjectUser.objects.filter(project_id=project.code, isResponsable=True).count()
             if countProject == 0:
                 responsable = ''
+            print(client)
+
 
         data = {'name':project,
                 'client':client,
@@ -251,6 +251,7 @@ class Update_Project(TemplateView):
 
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
+    form_class= statusForm
 
     def get_context_data(self, **kwargs):
         context = super(
@@ -293,11 +294,15 @@ class Detail_Project(TemplateView):
             if str(user.groups.all()[0]) == "Cliente":
                 client = user.get_full_name()
 
+        status = ['In Progress','Technical Review','Functional Review', 'Customer Acceptance','Done']
+
+
         context['tasks'] = task
         context['dep'] = dependencys
         context['project'] = project
         context['client'] = client
         context['projectUser'] = projectUser
+        context['status'] = status
 
         return context
 
