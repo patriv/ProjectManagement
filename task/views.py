@@ -193,15 +193,37 @@ class Update_Task(TemplateView):
             print(dependence)
             dependence = dependence.split(',')
             print(dependence)
+
+            
+            array_dependece = []
+            for a in dependency:
+                array_dependece.append(Task.objects.get(code = a.dependence).name)
+                print(a.dependence)
+            print(array_dependece)
+            for x in array_dependece:
+                print(x)
+                count_exist = dependence.count(x)
+                print(count_exist)
+                if count_exist == 0:
+                    a = Task.objects.get(name=x).code
+                    delete_dependence = Dependency.objects.get(dependence=a, task = task)
+                    delete_dependence.delete()
+
+
+                
+
+
+
             for d in dependence:
                 print("soy d")
                 print(d)
                 if d != '':
                     code = Task.objects.get(name=d)
                     print(code)
-                    dependency = Dependency.objects.filter(dependence=code.code).exists()
+                    dependency = Dependency.objects.filter(dependence=code.code,task=task).exists()
                     print(dependency)
                     if not dependency:
+                        print("dentro de dependency")
                         new = Dependency(dependence=code.code,task=task)
                         new.save()
             
@@ -209,6 +231,7 @@ class Update_Task(TemplateView):
             task.status = post_values['status']
             task.description = post_values['description']
             task.save()
+
 
             messages.success(request, "La tarea ha sido modificada exitosamente")
             return HttpResponseRedirect(reverse_lazy('detail_project', 
