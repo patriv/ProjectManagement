@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import *
 from psycopg2._psycopg import Date
 
+from project.models import ProjectUser
 from task.forms import *
 
 # Create your views here.
@@ -61,14 +62,17 @@ class New_Task(FormView):
                     else:
                         task.code = project + '-'+ str(newCode)
 
-
-
             task.project = Project.objects.get(code=project)
             task.name = post_values['name']
             user = post_values['users']
             print(user)
             task.users = ProfileUser.objects.get(id = user)
             print(task.users)
+            projectUser = ProjectUser.objects.filter(user=task.users).count()
+            print(projectUser)
+            if projectUser == 0:
+                newRelation= ProjectUser(isResponsable=False, project=task.project, user_id=task.users.pk)
+                newRelation.save()
             a = post_values['startDate'].split('-')
             startDate = a[2]+'-'+a[1]+'-'+a[0]
             task.startDate = startDate
@@ -242,6 +246,7 @@ def ValidateTask(request):
     }
 
     return JsonResponse(data)
+
 
 
 

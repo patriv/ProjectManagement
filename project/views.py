@@ -121,6 +121,7 @@ class Update_Project(TemplateView):
         print("soy project user")
         print(projectUser)
         client=''
+        responsable = ''
         for i in projectUser:
             print("dentro de for")
             print(i.user_id)
@@ -137,9 +138,7 @@ class Update_Project(TemplateView):
                     client=user
 
 
-            countProject = ProjectUser.objects.filter(project_id=project.code, isResponsable=True).count()
-            if countProject == 0:
-                responsable = ''
+
             print(client)
 
 
@@ -284,6 +283,7 @@ class Detail_Project(TemplateView):
             project.startDate = 'No Disponible'
             project.endDate = 'No Disponible'
         projectUser = ProjectUser.objects.filter(project_id=project.code)
+        client ='No Disponible'
         for i in projectUser:
             print(i.user_id)
             profileUser = ProfileUser.objects.get(id = i.user_id)
@@ -321,13 +321,26 @@ def ValidateName(request):
     return JsonResponse(data)
 
 def BarProgress(request):
-    proj = Project.objects.all()
+    user = request.user.id
+    user_pk = User.objects.get(pk=user)
+
+    print(user_pk.has_perms(['project.add_project']))
+    if (user_pk.has_perms(['project.add_project'])):
+        proj = Project.objects.all()
+        x = [p.name for p in proj]
+    else:
+        user = ProfileUser.objects.get(fk_profileUser_user=user_pk)
+        proj = ProjectUser.objects.filter(user=user )
+        x=[]
+        for i in proj:
+            x.append(Project.objects.get(code=i).name)
+
     print(proj)
     array = ([
         ['Proyecto', 'Estimada', 'Real']
     ])
 
-    x =[p.name for p in proj]
+    print(x)
     duration = []
     for i in x:
         project = Project.objects.get(name=i)

@@ -25,6 +25,10 @@ urlpatterns = [
         UpdateRole.as_view(),
         name='update_role'),
 
+    url(
+        r'^ajax/role/$',
+        ViewRole,
+        name='view_role'),
 
 ]
 

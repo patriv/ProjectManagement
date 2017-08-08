@@ -71,6 +71,11 @@ function drawBarColors() {
 
     };
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+    google.visualization.events.addListener(chart, 'error', function (googleError) {
+      google.visualization.errors.removeError(googleError.id);
+      $("#chart_div").empty().append('<img src="../../static/images/Status-image-missing-icon.png"><div>NO HAY GRÁFICO DISPONIBLE</div>');
+  });
+
 
 
     function selectHandler() {

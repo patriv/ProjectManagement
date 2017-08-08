@@ -67,7 +67,7 @@ function drawChart() {
     var chart = new google.visualization.Gantt(document.getElementById('gantt_chart'));
     google.visualization.events.addListener(chart, 'error', function (googleError) {
       google.visualization.errors.removeError(googleError.id);
-      $("#gantt_chart").empty().append('<img src="../../static/images/Status-image-missing-icon.png"><div>NO HAY GRÁFICO DISPONIBLE</div>');
+      $("#gantt_chart").empty().append('<img src="../../static/images/Status-image-missing-icon.png" ><div>NO HAY GRÁFICO DISPONIBLE</div>');
   });
 
 

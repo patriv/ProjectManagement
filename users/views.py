@@ -23,6 +23,7 @@ class Login(TemplateView):
 def user_login(request):
     if request.user.is_authenticated():
         print("autenticado")
+        #messages.success(request, 'Error al registrar usuario')
         return HttpResponseRedirect(reverse_lazy('logout'))
 
     if request.method == 'POST':
@@ -284,7 +285,9 @@ class Update_Users(TemplateView):
         if form.is_valid():
             user_pk = kwargs['id']
             userProfile = ProfileUser.objects.get(pk=user_pk)
-            print(userProfile.fk_profileUser_user)
+            print("editando un usuario")
+
+            print(userProfile)
             user = User.objects.get(pk=userProfile.fk_profileUser_user.pk)
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
@@ -375,7 +378,7 @@ class Password_Reset(TemplateView):
                 username = User.objects.get(email = email)
                 print(username.is_active)
                 if username.is_active:
-                    user = ProfileUser.objects.get(user=username)
+                    user = ProfileUser.objects.get(fk_profileUser_user_id=username)
                     print(user)
                     user.activationKey = create_token()
                     print("user.activation")
@@ -481,9 +484,9 @@ class Profile(TemplateView):
         print(form.is_valid())
         if form.is_valid():
             user_pk = kwargs['id']
-            userProfile = ProfileUser.objects.get(user=user_pk)
-            print(userProfile.user.id)
-            user = User.objects.get(pk=userProfile.user_id)
+            userProfile = ProfileUser.objects.get(fk_profileUser_user=user_pk)
+
+            user = User.objects.get(pk=userProfile.fk_profileUser_user_id)
             print(user)
             user.first_name = request.POST['first_name']
             print(user.first_name)
@@ -492,7 +495,8 @@ class Profile(TemplateView):
             if (request.FILES == {}):
                 pass
             else:
-                userProfile.imageProfile = request.FILES['imageProfile']
+                print(request.FILES)
+                userProfile.imageProfile = request.FILES['image_profile']
                 userProfile.loadPhoto = True
 
             print(userProfile.imageProfile)
@@ -537,5 +541,4 @@ def ValidateUser(request):
     }
 
     return JsonResponse(data)
-
 

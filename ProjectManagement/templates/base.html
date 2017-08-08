@@ -80,23 +80,35 @@
                     <li class="user-details background-user darken-2">
                         <div class="row">
                             <div class="col col s4 m4 l4">
-                                <img src="../static/images/avatar.jpg" alt="" class="circle responsive-img valign profile-image">
+                                {% if user.profile.loadPhoto == False %}
+                                <img src="../static/images/avatar2.jpg" alt="" class="circle responsive-img valign profile-image">
+                                {% else %}
+                                    <img src="{{ user.profile.imageProfile.url }}" alt="" class="circle responsive-img valign profile-image">
+                                {% endif %}
                             </div>
                             <div class="col col s8 m8 l8">
-                                <a class= "white-text">{{user.first_name}} {{user.last_name }}</a>
-                                <p class="user-roal">{{user.groups.all.0.name }}</p>
+
+                                <a id ="ident" class= "white-text center">{{user.first_name}} {{user.last_name }}</a>
+                                <p class="user-roal center">{{user.groups.all.0.name }}</p>
                             </div>
                         </div>
                     </li>
+                    {% if perms.project.view_project %}
                     <li class="bold"><a href="{% url 'project' %}" class="waves-effect waves-purple1"><i class="mdi-file-folder"></i> Portafolio de Proyecto</a>
                     </li>
+                    {% endif %}
+                    {% if perms.auth.add_user %}
                     <li class="bold"><a href="{% url 'users' %}" class="waves-effect waves-purple1"><i class="
                     mdi-action-account-child "></i> Usuarios</a>
                     </li>
+                    {% endif %}
                     <li class="bold"><a href="{% url 'profile' user.pk %}" class="waves-effect waves-purple1"><i class="mdi-action-face-unlock"></i>Perfil</a>
                     </li>
+                    {% if perms.auth.add_group %}
                     <li class="bold"><a href="{% url 'role' %}" class="waves-effect  waves-purple1"><i class="mdi-action-assignment-ind"></i>Roles</a>
                     </li>
+                    {% endif %}
+
                     <li class="li-hover"><div class="divider"></div></li>
                     <li class="bold"><a href="#modal1" class="waves-effect  waves-purple1 modal-trigger"><i class="mdi-action-settings-power"></i>Salir</a>
                     </li>

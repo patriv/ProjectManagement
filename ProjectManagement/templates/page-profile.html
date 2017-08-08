@@ -102,8 +102,8 @@
 
                                <div class="col s6 m6 l6 center">
                                    {% csrf_token %}
-                                   {% if users.load_photo == True %}
-                                        <img src="{{ users.image_profile.url }}" class="circle responsive-img valign profile-image image">
+                                   {% if users.loadPhoto == True %}
+                                        <img src="{{ users.imageProfile.url }}" class="circle responsive-img valign profile-image image">
                                    {% else %}
                                        <img src="{% static 'images/avatar1.png' %}" class="circle responsive-img valign profile-image image">
                                    {% endif %}

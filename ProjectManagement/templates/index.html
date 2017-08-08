@@ -25,12 +25,14 @@
     </div>
   </div>
 </div>
+    {% if perms.project.add_project %}
 <div class="row">
     <div class = "col s12 m12 l11">
          <p class="right"><a class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2" id="new_project"
                          data-position="bottom" data-delay="50" data-tooltip="Nuevo Proyecto" href = "{% url 'new_project' %}"><i class="mdi-content-add"></i></a></p>
     </div>
 </div>
+    {% endif %}
 
     <!--Title end-->
 
@@ -57,7 +59,7 @@
                 <div class="section">
 
                     <div class="row">
-                        <div class = "col s10 m10 l12">
+                        <div class = "col s10 m10 l12 center">
                             <div id="chart_div"></div>
                         </div>
                     </div>
@@ -72,9 +74,15 @@
                         <span class="strong" id="project"></span>
                          <span id ="stat">(<span id="status"></span>)</span>
                         <span>
+                            {% if perms.project.delete_project %}
                             <a class="waves-effect waves-light modal-trigger center tooltipped chat-collapse right" data-position="left" data-delay="50" data-tooltip="Eliminar Proyecto" href="#modal2"><i class="mdi-action-highlight-remove prefix icon-project" id="remove"></i></a>
+                            {% endif %}
+                            {% if perms.project.change_project %}
                             <a onclick="kwargsUpdate($('#project').text())" class="center tooltipped right" data-position="bottom" data-delay="50" data-tooltip="Editar Proyecto"><i class="mdi-content-create prefix icon-project"></i></a>
+                            {% endif %}
+                            {% if perms.project.view_project%}
                             <a onclick="kwargs($('#project').text())" class="center tooltipped right" data-position="top" data-delay="50" data-tooltip="Detallar Proyecto" ><i class="mdi-action-visibility prefix icon-project" id="visible"></i></a>
+                            {% endif %}
                         </span>
                     </div>
                     <div class="row">

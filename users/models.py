@@ -13,7 +13,7 @@ User.add_to_class("__str__", get_name)
 
 
 class ProfileUser(models.Model):
-        fk_profileUser_user = models.OneToOneField(User)
+        fk_profileUser_user = models.OneToOneField(User, related_name='profile')
         phone = models.CharField(max_length=11, blank=True)
         imageProfile = models.ImageField(upload_to='images/', blank=True)
         activationKey = models.CharField(max_length=40, blank=True)

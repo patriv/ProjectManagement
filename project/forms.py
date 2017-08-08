@@ -28,7 +28,7 @@ class NewProjectForm(forms.ModelForm):
 		widget=forms.Select(attrs={'id':"drop",
 								   'tabindex' : "1",
 									'class' : "chosen-select browser-default",
-									
+
 	})
 	)
 

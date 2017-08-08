@@ -1601,5 +1601,9 @@ background-size: cover;
   height: 50%;
 }
 
+#ident{
+  padding-left: 0 !important;
+}
+
 
 

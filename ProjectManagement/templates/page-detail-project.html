@@ -220,11 +220,15 @@
                                         </select>
                                     </td>
                                     <td>
+                                        {% if perms.project.add_project %}
                                         <a class="waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="Editar Tarea" href="{% url 'update_task' task.code %}"><i class = "mdi-content-create"> </i></a>
+                                        {% endif %}
                                         <a class = "waves-effect waves-light modal-trigger tooltipped" data-position="top" data-delay="50" data-tooltip="Ver Tarea" href = "">
                                             <i class = "mdi-action-visibility" id = ""></i></a>
+                                        {% if perms.project.add_project %}
                                         <a class = "waves-effect waves-light modal-trigger tooltipped" data-position="right" data-delay="50" data-tooltip="Eliminar Tarea" href = "">
                                             <i class = "mdi-action-highlight-remove" id = "remove"></i></a>
+                                        {% endif %}
 
                                     </td>
 
@@ -236,10 +240,12 @@
                     </div>
                     <div class = "row">
                         <div class="col s2 m2 l1">
+                            {% if perms.project.add_project %}
                             <p><a href="{% url 'new_task' project.pk%}" class="btn-floating btn-large tooltipped waves-effect waves-light deep-purple accent-2 lighten-2 modal-trigger"
                                   data-position="bottom" data-delay="50" data-tooltip="Nueva Tarea" >
                                 <i class="mdi-content-add"></i></a></p>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
