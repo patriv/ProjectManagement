@@ -23,4 +23,10 @@ urlpatterns = [
         r'^ajax/nameTask/$',
         ValidateTask,
         name='validate_name_task'),
+
+    url(
+        r'^delete-role/(?P<code>[\w-]+)$',
+        DeleteTask,
+        name='delete_task'),
+
 ]

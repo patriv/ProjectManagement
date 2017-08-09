@@ -97,7 +97,7 @@
                     <li class="bold"><a href="{% url 'project' %}" class="waves-effect waves-purple1"><i class="mdi-file-folder"></i> Portafolio de Proyecto</a>
                     </li>
                     {% endif %}
-                    {% if perms.auth.add_user %}
+                    {% if perms.auth.view_users %}
                     <li class="bold"><a href="{% url 'users' %}" class="waves-effect waves-purple1"><i class="
                     mdi-action-account-child "></i> Usuarios</a>
                     </li>

@@ -16,12 +16,12 @@ urlpatterns = [
         name='add_role'),
 
     url(
-        r'^delete-role/(?P<id>\w+)$',
+        r'^delete-role/(?P<id>\w+)/$',
         DeleteRole,
         name='delete_role'),
 
     url(
-        r'^update-role/(?P<id>\w+)$',
+        r'^update-role/(?P<id>\w+)/$',
         UpdateRole.as_view(),
         name='update_role'),
 

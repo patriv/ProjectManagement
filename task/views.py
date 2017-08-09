@@ -144,12 +144,9 @@ class Update_Task(TemplateView):
             print(dependence)
             z = []
             for i in dependence:
-                print("iiiiiiiiiiii")
-                print(i)
                 tarea = Task.objects.get(code = i)
                 z.append(tarea.name)
 
-            #z = (', ').join(z)
 
             data = {'name': task_pk,
                     'users': task_pk.users.fk_profileUser_user,
@@ -194,7 +191,6 @@ class Update_Task(TemplateView):
             print(dependence)
             dependence = dependence.split(',')
             print(dependence)
-
 
             array_dependece = []
             for a in dependency:
@@ -246,6 +242,21 @@ def ValidateTask(request):
     }
 
     return JsonResponse(data)
+
+def DeleteTask(request,code):
+    print("delete")
+    task = Task.objects.get(code=code)
+    project = Project.objects.get(code=task.project.code)
+    print(task.project.code)
+
+    if task.status == 'Technical Review':
+        messages.success(request, "La tarea " + str(task.name) + " no se puede eliminar.")
+        return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": task.project.code}))
+    else:
+        task.delete()
+        messages.success(request, "La tarea " + str(task.name) + " se ha eliminado exitosamente")
+        return HttpResponseRedirect(reverse_lazy('detail_project',kwargs={"pk":task.project.code}))
+
 
 
 

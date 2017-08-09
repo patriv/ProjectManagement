@@ -261,10 +261,14 @@ class Detail_Project(TemplateView):
         # TAREAS
 
         user_pk= self.request.user.id
+        user = User.objects.get(pk=user_pk)
         profileUser = ProfileUser.objects.get(fk_profileUser_user_id = user_pk)
         print(profileUser.pk)
         print(user_pk)
-        task= Task.objects.filter(users=profileUser.pk,project=project)
+        if (user.has_perms(['project.add_project'])):
+            task = Task.objects.all()
+        else:
+            task= Task.objects.filter(users=profileUser.pk,project=project)
         dependencys = Dependency.objects.all()
 
         now = datetime.datetime.now()

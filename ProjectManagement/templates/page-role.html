@@ -2,15 +2,15 @@
 {% load staticfiles %}
 
 {% block content %}
-     <!--Title start-->
+    <!--Title start-->
     <div class=" grey lighten-4">
-      <div class="container">
-        <div class="row">
-          <div class="col s12 m12 l12">
-            <h1 class="bold black-text center">Roles</h1>
-          </div>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <h1 class="bold black-text center">Roles</h1>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
     <!--Title end-->
 
@@ -22,7 +22,7 @@
         </nav>
 
         <form class="col s12" action= "{% url 'add_role' %}" method="post">
-       
+
             {% csrf_token %}
             <div class="modal-content">
                 <div class="container">
@@ -41,36 +41,65 @@
                                     <div class="col s12">
                                         <h4 >Permisos</h4>
                                     </div>
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s4">
+                                        <label for="id_project" class="strong center">Proyecto</label>
+                                         <br>
                                         <p>
-                                            <input type="checkbox" id="id_project" name="project"/>
-                                            <label for="id_project">Proyecto</label>
+                                            <input type="checkbox"  id="id_create_project" name="create_project" />
+                                            <label for="id_create_project">Crear</label>
                                         </p>
                                         <p>
-                                            <input type="checkbox"  id="id_users" name="users" />
-                                            <label for="id_users">Usuarios</label>
+                                            <input type="checkbox"  id="id_view_project" name="view_project" />
+                                            <label for="id_view_project">Ver</label>
                                         </p>
                                         <p>
-                                            <input type="checkbox"  id="id_rol" name="rol" />
-                                            <label for="id_rol">Roles</label>
+                                            <input type="checkbox"  id="id_update_project" name="update_project" />
+                                            <label for="id_update_project">Modificar</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_delete_project" name="delete_project" />
+                                            <label for="id_delete_project">Eliminar</label>
                                         </p>
                                     </div>
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s4">
+                                        <label for="id_users" class="strong center">Usuarios</label>
+                                         <br>
+
                                         <p>
-                                            <input type="checkbox"  id="id_create" name="create" />
-                                            <label for="id_create">Crear</label>
+                                            <input type="checkbox"  id="id_create_users" name="create_users" />
+                                            <label for="id_create_users">Crear</label>
                                         </p>
                                         <p>
-                                            <input type="checkbox"  id="id_view" name="view" />
-                                            <label for="id_view">Ver</label>
+                                            <input type="checkbox"  id="id_view_users" name="view_users" />
+                                            <label for="id_view_users">Ver</label>
                                         </p>
                                         <p>
-                                            <input type="checkbox"  id="id_update" name="update" />
-                                            <label for="id_update">Modificar</label>
+                                            <input type="checkbox"  id="id_update_users" name="update_users" />
+                                            <label for="id_update_users">Modificar</label>
                                         </p>
                                         <p>
-                                            <input type="checkbox"  id="id_delete" name="delete" />
-                                            <label for="id_delete">Eliminar</label>
+                                            <input type="checkbox"  id="id_delete_users" name="delete_users" />
+                                            <label for="id_delete_users">Eliminar</label>
+                                        </p>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <label for="id_rol" class="strong center">Roles</label>
+                                         <br>
+                                        <p>
+                                            <input type="checkbox"  id="id_create_rol" name="create_rol" />
+                                            <label for="id_create_rol">Crear</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_view_rol" name="view_rol" />
+                                            <label for="id_view_rol">Ver</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_update_rol" name="update_rol" />
+                                            <label for="id_update_rol">Modificar</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_delete_rol" name="delete_rol" />
+                                            <label for="id_delete_rol">Eliminar</label>
                                         </p>
                                     </div>
                                 </div>
@@ -99,77 +128,111 @@
         <div class="divider"></div>
         <div class = "modal-footer background-nav-modal">
             <a id="acceptDelete" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
+            <a  class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
     </div>
     <!--End delete-->
 
-       <div class = "modal" id = "updateRole">
-                                    <nav class="background-nav-modal">
-                                        <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
-                                        <h3 class = "bold center">{{ title }} Roles</h3>
-                                    </nav>
-                                    <div class="modal-content" >
-                                        <div class="container">
-                                            <div class="section">
-                                                <div class="row">
-                                                    <div class="col s2"><p></p></div>
-                                                    <div class="col s8">
-                                                        <form class="col s12" id="form_edit" action="" method="post">
-                                                        {% csrf_token %}
-                                                            <div class="row">
-                                                                <div class="input-field col s12">
-                                                                    <i class="mdi-action-account-box prefix"></i>
-                                                                    <input id="name" type="text" class="validate" name="name" >
-                                                                    <label for="name">Nombre</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col s12">
-                                                                    <h4 >Permisos</h4>
-                                                                </div>
-                                                                <div class="input-field col s6">
-                                                                    <p>
-                                                                        <input type="checkbox" id="test12" checked/>
-                                                                        <label for="test12">Proyecto</label>
-                                                                    </p>
-                                                                    <p>
-                                                                        <input type="checkbox" id="test11" checked/>
-                                                                        <label for="test11">Usuarios</label>
-                                                                    </p>
-                                                                </div>
-                                                                <div class="input-field col s6">
-                                                                    <p>
-                                                                        <input type="checkbox" id="test10" checked/>
-                                                                        <label for="test10">Crear</label>
-                                                                    </p>
-                                                                    <p>
-                                                                        <input type="checkbox" id="test9" />
-                                                                        <label for="test9">Ver</label>
-                                                                    </p>
-                                                                    <p>
-                                                                      <input type="checkbox" id="test8" />
-                                                                      <label for="test8">Modificar</label>
-                                                                    </p>
-                                                                    <p>
-                                                                      <input type="checkbox" id="test7" checked/>
-                                                                      <label for="test7">Eliminar</label>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+    <div class = "modal" id = "updateRole">
+        <nav class="background-nav-modal">
+            <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
+            <h3 class = "bold center">{{ title }} Roles</h3>
+        </nav>
+        <div class="modal-content" >
+            <div class="container">
+                <div class="section">
+                    <div class="row">
+                        <div class="col s2"><p></p></div>
+                        <div class="col s8">
+                            <form class="col s12" id="form_edit" action="" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <i class="mdi-action-account-box prefix"></i>
+                                        <input id="name" type="text" class="validate" name="name" >
+                                        <label for="name">Nombre</label>
                                     </div>
-                                    <div class = "modal-footer background-nav-modal">
-                                         <button id="guardar" class="waves-effect btn-flat modal-action white-text " type="submit" >Guardar</button>
-                                        <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text">Cancelar</a>
+                                </div>
+                                 <div class="row">
+                                    <div class="col s12">
+                                        <h4 >Permisos</h4>
                                     </div>
-                                    </form>
+                                    <div class="input-field col s4">
+                                        <label for="id_project" class="strong center">Proyecto</label>
+                                         <br>
+                                        <p>
+                                            <input type="checkbox"  id="id_create_project1" name="create_project" />
+                                            <label for="id_create_project1">Crear</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_view_project1" name="view_project" />
+                                            <label for="id_view_project1">Ver</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_update_project1" name="update_project" />
+                                            <label for="id_update_project1">Modificar</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_delete_project1" name="delete_project" />
+                                            <label for="id_delete_project1">Eliminar</label>
+                                        </p>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <label for="id_users" class="strong center">Usuarios</label>
+                                         <br>
+
+                                        <p>
+                                            <input type="checkbox"  id="id_create_users1" name="create_users" />
+                                            <label for="id_create_users1">Crear</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_view_users1" name="view_users" />
+                                            <label for="id_view_users1">Ver</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_update_users1" name="update_users" />
+                                            <label for="id_update_users1">Modificar</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_delete_users1" name="delete_users" />
+                                            <label for="id_delete_users1">Eliminar</label>
+                                        </p>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <label for="id_rol" class="strong center">Roles</label>
+                                         <br>
+                                        <p>
+                                            <input type="checkbox"  id="id_create_rol1" name="create_rol" />
+                                            <label for="id_create_rol1">Crear</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_view_rol1" name="view_rol" />
+                                            <label for="id_view_rol1">Ver</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_update_rol1" name="update_rol" />
+                                            <label for="id_update_rol1">Modificar</label>
+                                        </p>
+                                        <p>
+                                            <input type="checkbox"  id="id_delete_rol1" name="delete_rol" />
+                                            <label for="id_delete_rol1">Eliminar</label>
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <!--End modal Role-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "modal-footer background-nav-modal">
+            <button id="guardar" class="waves-effect btn-flat modal-action white-text " type="submit" >Guardar</button>
+            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text">Cancelar</a>
+        </div>
+        </form>
+    </div>
+
+    <!--End modal Role-->
 
 
     <!--start container-->
@@ -198,15 +261,14 @@
                             </tfoot>
 
                             <tbody>
-                                {% for rol in roles %}
+                            {% for rol in roles %}
                                 <tr>
                                     <td>{{rol.name}}</td>
                                     <td>
                                         <a class="waves-effect waves-light modal-trigger open-AddBookDialog" data-pk="{{ rol.name }}" data-target="updateRole" data-link-update= "{% url 'update_role' rol.pk %}"><i class = "mdi-content-create"> </i></a>
 
-                                       <a class = "waves-effect waves-light modal-trigger open-AddBookDialog1" data-target="modal2" data-link-delete="{% url 'delete_role' rol.pk %}" >
-
-                                       <i class = "mdi-action-highlight-remove" id = "remove"></i>
+                                        <a class = "waves-effect waves-light modal-trigger open-AddBookDialog1" data-target="modal2" data-link-delete="{% url 'delete_role' rol.pk %}" >
+                                            <i class = "mdi-action-highlight-remove" id = "remove"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -230,27 +292,27 @@
 
 
 {% block script %}
-<script type="text/javascript">
-{% if form.errors %}
-  {% for field in form %}
-    {% for error in field.errors %}
-      Materialize.toast('{{ error|escape }}', 4000);
-    {% endfor %}
-  {% endfor %}
-  {% for error in form.non_field_errors %}
-    Materialize.toast('{{ error|escape }}', 4000);
-  {% endfor %}
-{% endif %}
+    <script type="text/javascript">
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    Materialize.toast('{{ error|escape }}', 4000);
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                Materialize.toast('{{ error|escape }}', 4000);
+            {% endfor %}
+        {% endif %}
 
 
-{% if messages %}
-  {% for message in messages %}
-    Materialize.toast('{{message}}',4000);
-  {% endfor %}
-{% endif %}
-</script>
+        {% if messages %}
+            {% for message in messages %}
+                Materialize.toast('{{message}}',4000);
+            {% endfor %}
+        {% endif %}
+    </script>
 
-<script type="text/javascript" src="../static/js/role.js"></script>
+    <script type="text/javascript" src="../static/js/role.js"></script>
 
 {% endblock %}
 
