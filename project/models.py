@@ -43,7 +43,6 @@ class Project(models.Model):
 
 		return date_time
 
-
 class ProjectUser(models.Model):
 	user = models.ForeignKey(ProfileUser)
 	project = models.ForeignKey(Project)
@@ -56,3 +55,7 @@ class ProjectUser(models.Model):
 class Documents(models.Model):
 	file = models.FileField(upload_to='files/')
 	fk_documents_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	description = models.CharField(max_length=64, blank=False)
+
+	def __str__(self):
+		return self.fk_documents_project.name

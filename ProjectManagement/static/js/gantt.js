@@ -12,6 +12,57 @@ var datos = $.ajax({
 
 datos = JSON.parse(datos);
 
+function detailTable(name) {
+    var nameProject=name;
+    var path = window.location.href.split('/');
+    var url = path[0]+"/"+path[1]+"/"+path[2]+"/ajax/table/";
+
+     $.ajax({
+        url: url,
+        origin: 'http://127.0.0.1:8000',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},
+        data: {
+            nameProject: nameProject
+        },
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            if (data.project) {
+                alert("aqui");
+                alert(data.task);
+                $.each(data.task,function (i,val) {
+                    alert(val);
+                    $.each(val, function (j, item) {
+                        alert(item);
+
+                    })
+
+                });
+                 var $newtd = $('<tr >\n' +
+                     ' <td>AGP-001</td>\n' +
+                     ' <td>Login</td>\n' +
+                     ' <td>Pedro Pérez</td>\n' +
+                     ' <td>01/03/2017</td>\n' +
+                     ' <td>04/03/2017</td>\n' +
+                     ' <td>AGP-002</td>\n' +
+                     ' <td>AGP-003</td>\n' +
+                     ' <td>In Progress</td>\n' +
+                     ' </tr>');
+
+                 $("#info").append($newtd);
+
+            }
+            else {
+                alert("error");
+            }
+        },
+        error: function (data) {
+            alert("Lo sentimos, hay problemas con el servidor. Intente más tarde.");
+        }
+    });
+
+}
+
 function datailProject(name) {
 
     var nameProject = name;
@@ -83,13 +134,9 @@ function drawBarColors() {
         var selection=chart.getSelection()[0];
         alert (selection);
 
-
-        // $.each(datos, function (i, val) {
-        //    alert(val[0]);
-        //
-        // });
         if (selection){
             datailProject(data.getValue(selection.row, 0));
+            detailTable(data.getValue(selection.row, 0));
             info = data.getValue(selection.row,0);
             var chart_div = document.getElementById('detail');
             //document.getElementById('detail').innerHTML = data.getValue(selection.row,0);

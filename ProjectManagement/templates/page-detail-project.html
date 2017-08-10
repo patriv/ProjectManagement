@@ -63,28 +63,29 @@
                     <div class="row">
                         <div class="col s2"><p></p></div>
                         <div class="col s8">
-                            <form class="col s12">
+                            <form class="col s12" method="post" enctype="multipart/form-data" action="{% url 'more_users' project.pk %}">
+                                {% csrf_token %}
                                 <div class="row">
                                     <div class="input-field col s12">
-                                        <select data-placeholder="Usuarios" class="chosen-select browser-default" multiple tabindex="4" >
-                                            <option value=""></option>
-                                            <option>José López</option>
-                                            <option>Ana González</option>
-                                            <option>María Martínez</option>
-                                            <option>Samuel Rondón</option>
+                                        <select data-placeholder="Usuarios" name="user" id="id_user" class="chosen-select browser-default" multiple tabindex="4" >
+                                            {% for user in users %}
+                                                <option value="{{ user.pk }}">{{user}}</option>
+                                            {% endfor %}
+
                                         </select>
                                     </div>
                                 </div>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class = "modal-footer background-nav-modal">
-            <a href="#" class="waves-effect waves-red btn-flat modal-action modal-close white-text ">Agregar</a>
+            <button id="guardar" class="waves-effect btn-flat modal-action white-text " type="submit" >Guardar</button>
             <a href="{% url 'new_users' %}" class="waves-effect waves-red btn-flat modal-action modal-close white-text">Registrar</a>
+            <a class="waves-effect waves-red btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
+    </form>
     </div>
     <!--End modal People-->
 
@@ -98,42 +99,49 @@
             <div class="container">
                 <div class="section">
                     <div class="row">
-                        
+
                         <div class="col s12">
-                            <form class="col s12" >
+                            <form class="col s12" method="post" enctype="multipart/form-data" action="{% url 'documents' project.pk %}">
+                                {% csrf_token %}
                                 <div class="row">
-                                <div class="col l2 right">
-                                    <p><a class="btn-floating btn-large tooltipped waves-effect waves-light modal-trigger  deep-purple accent-2"
-                                          data-position="bottom" data-delay="50" data-tooltip="Más Documentos" onclick="moreDocument();">
-                                        <i class="mdi-content-add"></i></a></p>
-                                </div>
+                                    <div class="col l2 right">
+                                        <p><a class="btn-floating btn-large tooltipped waves-effect waves-light modal-trigger  deep-purple accent-2"
+                                              data-position="bottom" data-delay="50" data-tooltip="Más Documentos" onclick="moreDocument();">
+                                            <i class="mdi-content-add"></i></a></p>
+                                    </div>
                                 </div>
                                 <div class="row" >
+
                                     <div class="input-field col l12" id="showDocument">
                                         <li class="file-field input-field">
-                                            <input class="file-path validate document" type="text" />
+                                            <input class="file-path validate document" type="text" name="file" />
                                             <span class="col l6"></span>
-                                            <input class="description" type="text" name placeholder="Descripción" ="description">
-                                            
+                                            <input class="description" type="text" name ="description" placeholder="Descripción">
+                                            {% if form.errors %}
+                                                <div >
+                                                    <strong >{{form.description.errors}}</strong>
+                                                </div>
+                                            {% endif %}
                                             <div class="btn">
-                                                <span>File</span>
-                                                <input type="file"/>
+                                                <span for="id_file">File</span>
+                                                <input type="file" name="file" id="id_file" />
                                             </div>
                                         </li>
                                     </div>
-                                    
-                                </div>
 
-                            </form>
+                                </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class = "modal-footer background-nav-modal">
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
+            <button id="guardar" class="waves-effect btn-flat modal-action white-text " type="submit" >Guardar</button>
+            <a class="waves-effect waves-red btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
+        </form>
+
     </div>
 
     <!--End Modal Documents-->
@@ -214,8 +222,7 @@
                                     {% endfor %}
                                     </td>
                                     <td>
-                                        <select class="browser-default" id = 'status'>
-
+                                        <select class="browser-default" id = 'status' onchange="this.form.submit()">
                                             {% for s in status %}
                                                 {% if s == task.status  %}
                                                     <option onclick="alert('aqui')" value="{{ task.status }}" selected>{{ task.status }}</option>
@@ -289,7 +296,7 @@
             <li class="li-hover">
             <li class="li-hover">
                 <div class="center">Fecha Inicio: {{project.get_startDate}} <br>
-                Fecha Fin: {{project.get_endDate}}</div>
+                    Fecha Fin: {{project.get_endDate}}</div>
             </li>
             <li class="li-hover">
 
@@ -320,9 +327,9 @@
                     <div class="collapsible-body sales-repoart">
                         <div class="sales-repoart-list chat-out-list row">
                             <div class="col s9 recent-activity-list-text">
-                                <div>Documento 1</div>
-                                <div>Documento 2</div>
-                                <div>Documento 3</div>
+                                {% for i in documents %}
+                                <a href="{{ i.file.url }}">{{ i.file }}</a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

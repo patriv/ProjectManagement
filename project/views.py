@@ -256,6 +256,10 @@ class Detail_Project(TemplateView):
         context = super(
             Detail_Project, self).get_context_data(**kwargs)
         project = Project.objects.get(code=self.kwargs['pk'])
+        # DOCUMENTOS
+        documents = Documents.objects.filter(fk_documents_project=project)
+        print("**** USUARIOS************")
+        users = User.objects.all()
 
         print("****************TAREAS*****************************")
         # TAREAS
@@ -307,10 +311,10 @@ class Detail_Project(TemplateView):
         context['client'] = client
         context['projectUser'] = projectUser
         context['status'] = status
+        context['documents']=documents
+        context['users']=users
 
         return context
-
-
 
 def codeProject(name):
     name = ''.join(name)
@@ -374,37 +378,26 @@ def BarProgress(request):
 
 def ShowDetails(request):
     nameProject = request.GET.get('nameProject', None)
-    print(nameProject)
 
     data = {'project': Project.objects.filter(name=nameProject).exists()}
 
     if data['project']:
         project = Project.objects.get(name=nameProject)
-        print("Este es project " + str(project.code))
         projectUser = ProjectUser.objects.filter(project_id = project.code)
-        print("projectUser " + str(projectUser))
         data['client'] = 'No disponible'
         data['responsable'] = 'No disponible'
         for i in projectUser:
             profileUser = ProfileUser.objects.get(id=i.user_id)
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
             if i.isResponsable:
-                print("Soy responsable" + str(i.isResponsable))
                 data['responsable']=user.get_full_name()
-                print('soy responsableee' + str(data['responsable']))
-
             else:
-                print("en else")
                 group = user.groups.all()[0]
-                print(group)
-                print( str(group) == 'Cliente')
                 if str(user.groups.all()[0]) == "Cliente":
-                    print("si, soy un cliente")
                     data['client'] = user.get_full_name()
 
 
         data['name']= project.name
-        print(data['name'])
         data['start'] = project.startDate
         if data['start']== None:
             data['start'] = 'No disponible'
@@ -418,13 +411,110 @@ def ShowDetails(request):
         data['status'] = project.status
         if data['status'] == '':
             data['status'] = "Sin status"
-        print(JsonResponse(data))
         return JsonResponse(data)
 
 def getCode(request):
     nameProject= request.GET.get('nameProject',None)
     data ={'code' : Project.objects.get(name=nameProject).code}
     return JsonResponse(data)
+
+class DocumentsView(FormView):
+    template_name = 'page-detail-project.html'
+    form_class = DocumentsForm
+
+    def post(self, request, *args, **kwargs):
+        print("en post Documets")
+        form = DocumentsForm(request.POST, request.FILES)
+        print(form.is_valid())
+        print(form)
+        if form.is_valid():
+            project_pk = self.kwargs['pk']
+            project = Project.objects.get(pk=project_pk)
+
+            print(project)
+            if (request.FILES == {}):
+                pass
+            else:
+                desc = request.POST.getlist('description')
+                files =request.FILES.getlist('file')
+                for i in zip(files, desc):
+                    doc = Documents(file=i[0],
+                                    fk_documents_project= project,
+                                    description=i[1])
+                    doc.save()
+
+            messages.success(request, "El Documento ha sido guardado exitosamente")
+            return HttpResponseRedirect(reverse_lazy('detail_project',kwargs={"pk":self.kwargs['pk']}))
+        else:
+            messages.success(request, "No se puede guardar el documento")
+            return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
+
+class MoreUsersView(FormView):
+    template_name = 'page-detail-project.html'
+    form_class = MoreUsersForm
+
+    def post(self, request, *args, **kwargs):
+        print("more users")
+        post_values = request.POST.copy()
+        form = MoreUsersForm(post_values)
+        print(form)
+        if form.is_valid():
+            project_pk = self.kwargs['pk']
+            project = Project.objects.get(code=project_pk)
+
+            users = post_values.getlist('user')
+            for user in users:
+                user = User.objects.get(pk=user)
+                userProfile = ProfileUser.objects.get(fk_profileUser_user=user)
+                existUser = ProjectUser.objects.filter(user=userProfile, project=project).exists()
+                print("existe " + str(existUser))
+                print(user)
+                if not existUser:
+                    projectUser = ProjectUser(isResponsable=False, project=project, user=userProfile)
+                    projectUser.save()
+            messages.success(request, "La/as persona/as se ha agregado al proyecto "+str(project.name))
+            return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
+        else:
+            project = Project.objects.get(code=self.kwargs['pk'])
+            messages.success(request, "Erro al registrar usuarios en el proyecto " + str(project.name))
+            return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
+
+def ShowTable(request):
+    nameProject = request.GET.get('nameProject', None)
+    print("*********** EN AJAX ********************")
+    print(nameProject)
+    project=Project.objects.get(name=nameProject)
+
+    data = {'project': Project.objects.filter(name=nameProject).exists()}
+
+    task = Task.objects.filter(project=project)
+    print(task)
+    x = []
+    for i in task:
+        print(i.name)
+        user=User.objects.get(pk=i.users.fk_profileUser_user_id)
+        y=[]
+        y.append(i.code)
+        y.append(i.name)
+        y.append(user.first_name)
+        y.append(i.startDate)
+        y.append(i.endDate)
+        y.append("aqui va el requerida")
+        y.append("aqui va quien requiere")
+        y.append(i.status)
+        x.append(y)
+    print(x)
+    data['task']=x
+
+
+    return JsonResponse(data)
+
+
+
+
+
+
+
 
 
 

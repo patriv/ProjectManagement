@@ -2,8 +2,8 @@ function moreDocument() {
   var $newdiv1 = $('<li class="file-field input-field">' +
       ' <i class="mdi-navigation-close right close-document"></i>'+
       '<input class="file-path validate document" type="text" />'+'<span class="col l6"> </span>'+
-      '<input class="description" type="text" name placeholder="Descripción"="description">'+
-      '<div class="btn"><span>File</span><input type="file"/></div>'+
+      '<input class="description" type="text" name="description" placeholder="Descripción">'+
+      '<div class="btn"><span>File</span><input type="file" name="file" /></div>'+
       '</li>');
   $("#showDocument").append($newdiv1);
 

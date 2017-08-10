@@ -46,5 +46,21 @@ urlpatterns = [
         getCode,
         name='kwargs'),
 
+    url(
+        r'^documents/(?P<pk>\w+)$',
+        DocumentsView.as_view(),
+        name='documents'),
+
+    url(
+        r'^moreUsers/(?P<pk>\w+)$',
+        MoreUsersView.as_view(),
+        name='more_users'),
+
+    url(
+        r'^ajax/table/$',
+        ShowTable,
+        name='table'),
+
+
 ]
 

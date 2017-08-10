@@ -46,6 +46,11 @@
                                           <i class="mdi-action-account-box prefix"></i>
                                           {{ form.first_name }}
                                           <label for="first_name">Nombre <span class="red-text"> *</span></label>
+                                          {% if form.errors %}
+                                                <span>
+                                                    <strong >{{form.first_name.errors}}</strong>
+                                                </span>
+                                            {% endif %}
                                       </div>
                                   </div>
                                   <div class="row">
@@ -53,6 +58,11 @@
                                           <i class="mdi-action-account-box prefix"></i>
                                           {{ form.last_name }}
                                           <label for="last_name">Apellido <span class="red-text"> *</span></label>
+                                          {% if form.errors %}
+                                                <span >
+                                                    <strong >{{form.last_name.errors}}</strong>
+                                                </span>
+                                          {% endif %}
                                       </div>
                                   </div>
                                   <div class="row">
@@ -60,6 +70,11 @@
                                           <i class="mdi-action-account-circle prefix"></i>
                                           {{ form.username }}
                                           <label for="username">Username <span class="red-text"> *</span></label>
+                                          {% if form.errors %}
+                                                <span >
+                                                    <strong >{{form.username.errors}}</strong>
+                                                </span>
+                                          {% endif %}
                                       </div>
                                   </div>
                                   <div class="row">
