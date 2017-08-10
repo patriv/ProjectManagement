@@ -1605,5 +1605,16 @@ background-size: cover;
   padding-left: 0 !important;
 }
 
+#showDocument li{
+  list-style:none
+}
 
+.document{
+  width: 35% !important;
+}
+
+.description{
+  width:40% !important;
+  margin-left: 34%;
+}
 

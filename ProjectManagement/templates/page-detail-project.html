@@ -5,6 +5,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <link rel="stylesheet" href="../static/css/chosen/prism.css">
     <link rel="stylesheet" href="../static/css/chosen/chosen.css">
+
 {% endblock %}
 {% block content %}
 
@@ -97,25 +98,30 @@
             <div class="container">
                 <div class="section">
                     <div class="row">
-                        <div class="col s2"><p></p></div>
-                        <div class="col s8">
-                            <form class="col s12" id="showDocument">
+                        
+                        <div class="col s12">
+                            <form class="col s12" >
+                                <div class="row">
                                 <div class="col l2 right">
                                     <p><a class="btn-floating btn-large tooltipped waves-effect waves-light modal-trigger  deep-purple accent-2"
                                           data-position="bottom" data-delay="50" data-tooltip="Más Documentos" onclick="moreDocument();">
                                         <i class="mdi-content-add"></i></a></p>
                                 </div>
+                                </div>
                                 <div class="row" >
-                                    <div class="input-field col l10">
-                                        <div class="file-field input-field">
-                                            <input class="file-path validate" type="text" />
-
+                                    <div class="input-field col l12" id="showDocument">
+                                        <li class="file-field input-field">
+                                            <input class="file-path validate document" type="text" />
+                                            <span class="col l6"></span>
+                                            <input class="description" type="text" name placeholder="Descripción" ="description">
+                                            
                                             <div class="btn">
                                                 <span>File</span>
                                                 <input type="file"/>
                                             </div>
-                                        </div>
+                                        </li>
                                     </div>
+                                    
                                 </div>
 
                             </form>
@@ -282,8 +288,8 @@
             <li class="li-hover"><div class="divider"></div></li>
             <li class="li-hover">
             <li class="li-hover">
-                <p class="center">Fecha Inicio: {{project.get_startDate}}</p>
-                <p class="center">Fecha Fin: {{project.get_endDate}}</p>
+                <div class="center">Fecha Inicio: {{project.get_startDate}} <br>
+                Fecha Fin: {{project.get_endDate}}</div>
             </li>
             <li class="li-hover">
 
@@ -354,6 +360,8 @@
     <script type="text/javascript" src="../static/js/kwargsTask.js"></script>
     <script type="text/javascript" src="../static/js/deleteTask.js"></script>
 
+
+
     <script type="text/javascript">
         {% if form.errors %}
             {% for field in form %}
@@ -373,6 +381,9 @@
             {% endfor %}
         {% endif %}
     </script>
+
+
+
 
 
 {% endblock %}

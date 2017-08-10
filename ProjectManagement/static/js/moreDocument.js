@@ -1,8 +1,10 @@
 function moreDocument() {
-  var $newdiv1 = $('<div class="row" ><div class="input-field col l10"><div class="file-field input-field"> ' +
-      '<a> <i class="mdi-navigation-close right"></i></a>'+
-      '<input class="file-path validate" type="text" /><div class="btn"><span>File</span><input type="file"/></div> ' +
-      '</div></div> </div>');
+  var $newdiv1 = $('<li class="file-field input-field">' +
+      ' <i class="mdi-navigation-close right close-document"></i>'+
+      '<input class="file-path validate document" type="text" />'+'<span class="col l6"> </span>'+
+      '<input class="description" type="text" name placeholder="Descripción"="description">'+
+      '<div class="btn"><span>File</span><input type="file"/></div>'+
+      '</li>');
   $("#showDocument").append($newdiv1);
 
   $('.file-field').each(function() {
@@ -13,4 +15,9 @@ function moreDocument() {
   });
 });
 
+    $(".close-document").click(function() {
+        $(this).parents('li').first().remove();
+    });
+
 }
+                          
