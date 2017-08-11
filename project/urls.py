@@ -61,6 +61,11 @@ urlpatterns = [
         ShowTable,
         name='table'),
 
+    url(
+        r'^changeStatus/(?P<code>[\w-]+)/(?P<pk>\w+)/$',
+        ChangeStatus.as_view(),
+        name='change_status'),
+
 
 ]
 

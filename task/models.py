@@ -12,7 +12,8 @@ class Task(models.Model):
 		('In Progress', 'In Progress'),
 		('Technical Review', 'Technical Review'),
 		('Functional Review', 'Functional Review'),
-		('Customer Acceptance', 'Customer Acceptance')
+		('Customer Acceptance', 'Customer Acceptance'),
+		('Done', 'Done')
 		)
 	code = models.CharField(primary_key = True, max_length=8, blank=False)
 	name = models.CharField(max_length = 20, blank=False)

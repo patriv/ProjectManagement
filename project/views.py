@@ -245,9 +245,6 @@ class Update_Project(TemplateView):
         else:
             return render(request, 'page-new-project.html', {'form':form, 'pk':self.kwargs['pk']})
 
-
-
-
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
     form_class= statusForm
@@ -270,7 +267,7 @@ class Detail_Project(TemplateView):
         print(profileUser.pk)
         print(user_pk)
         if (user.has_perms(['project.add_project'])):
-            task = Task.objects.all()
+            task = Task.objects.filter(project=project)
         else:
             task= Task.objects.filter(users=profileUser.pk,project=project)
         dependencys = Dependency.objects.all()
@@ -315,6 +312,8 @@ class Detail_Project(TemplateView):
         context['users']=users
 
         return context
+
+
 
 def codeProject(name):
     name = ''.join(name)
@@ -484,31 +483,85 @@ def ShowTable(request):
     print("*********** EN AJAX ********************")
     print(nameProject)
     project=Project.objects.get(name=nameProject)
-
     data = {'project': Project.objects.filter(name=nameProject).exists()}
+    # Usuario que inicia sesion
+    user = request.user.id
+    user_pk = User.objects.get(pk=user)
+    profileUser = ProfileUser.objects.get(fk_profileUser_user=user_pk)
+    if (user_pk.has_perms(['project.add_project'])):
+        task = Task.objects.filter(project=project)
+    else:
+        task = Task.objects.filter(users=profileUser.pk, project=project)
 
-    task = Task.objects.filter(project=project)
-    print(task)
     x = []
+    j = 0
     for i in task:
         print(i.name)
+        # usuario dueño de la tarea
         user=User.objects.get(pk=i.users.fk_profileUser_user_id)
+        dependence = Dependency.objects.filter(task_id=i.code)
+        d = []
+        for dep in dependence:
+            print()
+            d.append(dep.dependence)
+        d = (' ').join(d)
+        required= Dependency.objects.filter(dependence=i.code)
+        r = []
+        for req in required:
+            r.append(req.task_id)
+        r = (' ').join(r)
+        a = i.startDate
+        start = str(a.day)+'-'+str(a.month)+'-'+str(a.year)
+        b = i.endDate
+        end = str(b.day)+'-'+str(b.month)+'-'+str(b.year)
         y=[]
         y.append(i.code)
         y.append(i.name)
         y.append(user.first_name)
         y.append(user.last_name)
-        y.append(i.startDate)
-        y.append(i.endDate)
-        y.append("aqui va el requerida")
-        y.append("aqui va quien requiere")
+        y.append(start)
+        y.append(end)
+        y.append(r)
+        y.append(d)
         y.append(i.status)
         x.append(y)
+        j =j+1
     print(x)
     data['task']=x
 
-
     return JsonResponse(data)
+
+class ChangeStatus(TemplateView):
+    template_name = 'page-detail-project.html'
+    form_class= statusForm
+
+    def post(self, request, *args, **kwargs):
+        print("post de STATUUUUUUSSSS")
+        post_values = request.POST.copy()
+        form = statusForm(post_values)
+        print(form)
+        if form.is_valid():
+            project_pk = self.kwargs['pk']
+            code_task = self.kwargs['code']
+            print(project_pk)
+            print(code_task)
+            project = Project.objects.get(pk=project_pk)
+            print(project.code)
+            task = Task.objects.get(code=code_task, project=project_pk)
+            print(task)
+            task.status = post_values['status']
+            task.save()
+
+            messages.success(request, "El proyecto ha sido modificado exitosamente")
+            return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
+        else:
+            return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
+
+
+
+
+
+
 
 
 

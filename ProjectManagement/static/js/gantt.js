@@ -29,8 +29,9 @@ function detailTable(name) {
         success: function (data) {
             if (data.project) {
                 var t = $("#data-table-simple").DataTable();
+                t.clear().draw();
                 $.each(data.task,function (i,val) {
-               
+
                     t.row.add([val[0],val[1],val[2]+" "+val[3],val[4],
                         val[5],val[6],val[7],val[8]]).draw();
                   });       
@@ -118,9 +119,10 @@ function drawBarColors() {
         var selection=chart.getSelection()[0];  
 
         if (selection){
-            datailProject(data.getValue(selection.row, 0));
-            detailTable(data.getValue(selection.row, 0));
             info = data.getValue(selection.row,0);
+            datailProject(info);
+            detailTable(info);
+
             var chart_div = document.getElementById('detail');
             //document.getElementById('detail').innerHTML = data.getValue(selection.row,0);
 

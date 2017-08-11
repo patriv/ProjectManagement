@@ -222,16 +222,20 @@
                                     {% endfor %}
                                     </td>
                                     <td>
-                                        <select class="browser-default" id = 'status' onchange="this.form.submit()">
+                                    <form action="{% url 'change_status' code=task.code pk=task.project.code %}" method="POST">
+                                    {% csrf_token %}
+                                        <select class="browser-default"  name="status" id="id_status" onchange="this.form.submit()">
                                             {% for s in status %}
                                                 {% if s == task.status  %}
                                                     <option onclick="alert('aqui')" value="{{ task.status }}" selected>{{ task.status }}</option>
                                                 {% else %}
-                                                    <option onclick="alert('aqui')" value={{ s }} >{{s}}</option>
+                                                    <p>{{ s }}</p>
+                                                    <option onclick="alert('aqui')" value="{{s}}" >{{s}}</option>
                                                 {% endif %}
                                             {% endfor %}
                                             <option value="" disabled >Status</option>
                                         </select>
+                                    </form>
                                     </td>
                                     <td>
                                         {% if perms.project.add_project %}
@@ -388,7 +392,20 @@
             {% endfor %}
         {% endif %}
     </script>
-
+    <script>
+    $(document).ready(function (){
+        $('#id_status').change(
+        function(){
+            alert("cambio");
+             $(this).closest('form').trigger('submit');
+             /* or:
+             $('#formElementId').trigger('submit');
+                or:
+             $('#formElementId').submit();
+             */
+        });
+        });
+    </script>
 
 
 

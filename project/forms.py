@@ -144,6 +144,16 @@ class UpdateProjectForm(forms.ModelForm):
 		fields = ('description',)
 
 class statusForm(forms.ModelForm):
+	status = forms.ChoiceField(
+		required=True,
+		choices=[
+			('--', '---'),
+			('In Progress', 'In Progress'),
+			('Technical Review', 'Technical Review'),
+			('Functional Review', 'Functional Review'),
+			('Customer Acceptance', 'Customer Acceptance')
+		]
+	)
 	class Meta:
 		model=Task
 		fields=('status',)
