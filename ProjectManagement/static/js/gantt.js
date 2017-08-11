@@ -28,28 +28,12 @@ function detailTable(name) {
         dataType: 'json',
         success: function (data) {
             if (data.project) {
-                alert("aqui");
-                alert(data.task);
+                var t = $("#data-table-simple").DataTable();
                 $.each(data.task,function (i,val) {
-                    alert(val);
-                    $.each(val, function (j, item) {
-                        alert(item);
-
-                    })
-
-                });
-                 var $newtd = $('<tr >\n' +
-                     ' <td>AGP-001</td>\n' +
-                     ' <td>Login</td>\n' +
-                     ' <td>Pedro Pérez</td>\n' +
-                     ' <td>01/03/2017</td>\n' +
-                     ' <td>04/03/2017</td>\n' +
-                     ' <td>AGP-002</td>\n' +
-                     ' <td>AGP-003</td>\n' +
-                     ' <td>In Progress</td>\n' +
-                     ' </tr>');
-
-                 $("#info").append($newtd);
+               
+                    t.row.add([val[0],val[1],val[2]+" "+val[3],val[4],
+                        val[5],val[6],val[7],val[8]]).draw();
+                  });       
 
             }
             else {
@@ -131,8 +115,7 @@ function drawBarColors() {
 
     function selectHandler() {
 
-        var selection=chart.getSelection()[0];
-        alert (selection);
+        var selection=chart.getSelection()[0];  
 
         if (selection){
             datailProject(data.getValue(selection.row, 0));

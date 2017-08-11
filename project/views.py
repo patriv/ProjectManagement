@@ -497,6 +497,7 @@ def ShowTable(request):
         y.append(i.code)
         y.append(i.name)
         y.append(user.first_name)
+        y.append(user.last_name)
         y.append(i.startDate)
         y.append(i.endDate)
         y.append("aqui va el requerida")

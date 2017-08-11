@@ -3,6 +3,8 @@
 
 {% block head %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
 {% endblock %}
 
 {% block content %}
@@ -103,7 +105,7 @@
             <div class="section" id="table_task" style="display: none;">
                 <h3 class="header bold"> Tareas</h3>
                 <div class="row">
-                    <div class="col s12 m12 l12">
+                    <div class="col s12 m12 l12" id = "tabla">
                         <table id="data-table-simple" class="responsive-table display centered striped" cellspacing="0">
                             <thead>
                             <tr id="filas">
@@ -129,38 +131,8 @@
                                 <th>Status</th>
                             </tr>
                             </tfoot>
-                            <tbody id ="info">
-                            <tr >
-                                <td>AGP-001</td>
-                                <td>Login</td>
-                                <td>Pedro Pérez</td>
-                                <td>01/03/2017</td>
-                                <td>04/03/2017</td>
-                                <td>AGP-002</td>
-                                <td>AGP-003</td>
-                                <td>In Progress</td>
-                            </tr>
-                            <tr>
-                                <td>AGP-002</td>
-                                <td>Registro de Usuario</td>
-                                <td>Pedro Pérez</td>
-                                <td>26/02/2017</td>
-                                <td>27/02/2017</td>
-                                <td>AGP-001</td>
-                                <td>--</td>
-                                <td>In Progress</td>
-                            </tr>
-                            <tr>
-                                <td>AGP-003</td>
-                                <td>Home</td>
-                                <td>Pedro Pérez</td>
-                                <td>06/03/2017</td>
-                                <td>10/03/2017</td>
-                                <td>--</td>
-                                <td>AGP-002</td>
-                                <td>In Progress</td>
-
-                            </tr>
+                            <tbody id="info">
+                            
                             </tbody>
                         </table>
                     </div>
