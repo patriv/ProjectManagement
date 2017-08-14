@@ -17,6 +17,9 @@ from project.models import *
 from task.models import *
 from django.urls import reverse
 
+from users.views import send_email
+
+
 class Home(TemplateView):
     template_name = 'index.html'
 
@@ -299,7 +302,8 @@ class Detail_Project(TemplateView):
             if str(user.groups.all()[0]) == "Cliente":
                 client = user.get_full_name()
 
-        status = ['In Progress','Technical Review','Functional Review', 'Customer Acceptance','Done']
+        status_project= ['In Progress','Technical Review','Functional Review', 'Customer Acceptance','Done']
+        status = ['In Progress','Technical Review']
 
 
         context['tasks'] = task
@@ -307,13 +311,12 @@ class Detail_Project(TemplateView):
         context['project'] = project
         context['client'] = client
         context['projectUser'] = projectUser
-        context['status'] = status
+        context['status_project'] = status_project
+        context['status']=status
         context['documents']=documents
         context['users']=users
 
         return context
-
-
 
 def codeProject(name):
     name = ''.join(name)
@@ -337,7 +340,7 @@ def BarProgress(request):
         x = [p.name for p in proj]
     else:
         user = ProfileUser.objects.get(fk_profileUser_user=user_pk)
-        proj = ProjectUser.objects.filter(user=user )
+        proj = ProjectUser.objects.filter(user=user)
         x=[]
         for i in proj:
             x.append(Project.objects.get(code=i).name)
@@ -349,13 +352,15 @@ def BarProgress(request):
 
     print(x)
     duration = []
+    durationDone =[]
     for i in x:
         project = Project.objects.get(name=i)
+        print("******* PROJECT *******************")
         print(project)
         tasksCount = Task.objects.filter(project_id=project.code).count()
         if tasksCount == 0:
             days = 0
-            array.append([i,days,100])
+            array.append([i,days,0])
         else:
             tasks = Task.objects.filter(project_id=project.code)
             print("soy tareas" + str(tasks))
@@ -366,10 +371,27 @@ def BarProgress(request):
                 print(duration)
                 duration.append(days.days)
             days=sum(duration)
-            array.append([project.name,days,100])
             duration = []
-
             print(duration)
+
+            taskDone = Task.objects.filter(project_id=project.code, status='Done')
+            print("")
+            print(taskDone)
+            if taskDone:
+                for t in taskDone:
+                    print(t.startDate)
+                    print(t.endDateReal)
+                    daysDone = t.endDateReal - t.startDate
+                    print(daysDone.days)
+                    durationDone.append(daysDone.days)
+                print(durationDone)
+                daysDone = sum(durationDone)
+                durationDone = []
+
+                array.append([project.name,days,daysDone])
+            else:
+                array.append([project.name, days, 0])
+
 
     print(array)
 
@@ -545,16 +567,63 @@ class ChangeStatus(TemplateView):
             code_task = self.kwargs['code']
             print(project_pk)
             print(code_task)
+            user_pk = self.request.user.id
+            users = User.objects.get(pk=user_pk)
             project = Project.objects.get(pk=project_pk)
             print(project.code)
             task = Task.objects.get(code=code_task, project=project_pk)
-            print(task)
+            print("status viejo")
+            print(task.status)
+            old_status = task.status
             task.status = post_values['status']
-            task.save()
+            print("task.status nuevo " + str(task.status))
+            #task = Task.objects.get(code = code_task)
+            print(task.users.fk_profileUser_user.email)
+            projectUser = ProjectUser.objects.filter(project_id = project)
+            print(projectUser)
+            email_subject = 'IDBC Group - Cambio de Estado de tarea del proyecto ' + str(project.name)
+            message_template = 'emailStatusTask.html'
+            for i in projectUser:
+                if i.isResponsable == True:
+                    name_responsable = i.user.fk_profileUser_user.first_name
+                    email_responsable = i.user.fk_profileUser_user.email
+                    print(email_responsable)
+                    print(i.user_id)
+                    c = {'usuario': name_responsable,
+                         'name_task': task.name,
+                         'project' : project.name,
+                         'user':users.first_name +' '+users.last_name,
+                         'old_status':old_status,
+                         'new_status': task.status,
+                         'host': request.META['HTTP_HOST']
+                         }
+                    print(c)
+                    print(email_responsable)
 
-            messages.success(request, "El proyecto ha sido modificado exitosamente")
+                    send_email(email_subject, message_template, c, email_responsable)
+
+            email_task = task.users.fk_profileUser_user.email
+            name_responsable = task.users.fk_profileUser_user.first_name
+            c = {'usuario': name_responsable,
+                 'name_task': task.name,
+                 'project': project.name,
+                 'user': users.first_name + ' ' + users.last_name,
+                 'old_status': old_status,
+                 'new_status': task.status,
+                 'host': request.META['HTTP_HOST']
+                 }
+            send_email(email_subject, message_template, c, email_task)
+
+            endDateReal = datetime.date.today()
+            print(endDateReal)
+            task.endDateReal = endDateReal
+            task.save()
+            print("despues de save")
+
+            messages.success(request, "El status de la tarea ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
         else:
+            messages.success(request, "Error al cambiar status de tarea")
             return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
 
 

@@ -229,7 +229,7 @@ class Update_Task(TemplateView):
             return HttpResponseRedirect(reverse_lazy('detail_project',
                                                 kwargs={'pk': task.project.code}))
         else:
-            return render(request, 'new-work.html', {'form':form, 'pk':self.kwargs['pk']})
+            return render(request, 'new_work.html', {'form':form, 'code':self.kwargs['code']})
 
 def ValidateTask(request):
     print("*********** en validate************")

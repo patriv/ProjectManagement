@@ -224,24 +224,43 @@
                                     <td>
                                     <form action="{% url 'change_status' code=task.code pk=task.project.code %}" method="POST">
                                     {% csrf_token %}
+                                    {% if perms.project.add_project %}
                                         <select class="browser-default"  name="status" id="id_status" onchange="this.form.submit()">
-                                            {% for s in status %}
+                                            {% for s in status_project %}
                                                 {% if s == task.status  %}
-                                                    <option onclick="alert('aqui')" value="{{ task.status }}" selected>{{ task.status }}</option>
+                                                    <option value="{{ task.status }}" selected>{{ task.status }}</option>
                                                 {% else %}
                                                     <p>{{ s }}</p>
-                                                    <option onclick="alert('aqui')" value="{{s}}" >{{s}}</option>
+                                                    <option value="{{s}}" >{{s}}</option>
                                                 {% endif %}
                                             {% endfor %}
                                             <option value="" disabled >Status</option>
                                         </select>
+
+                                    {% else %}
+                                    {% if task.status == 'In Progress' %}
+                                         <select class="browser-default"  name="status" id="id_status" onchange="this.form.submit()">
+                                            {% for s in status %}
+                                                {% if s == task.status  %}
+                                                    <option value="{{ task.status }}" selected>{{ task.status }}</option>
+                                                {% else %}
+                                                    <p>{{ s }}</p>
+                                                    <option value="{{s}}" >{{s}}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <option value="" disabled >Status</option>
+                                        </select>
+                                        {% else %}
+                                        {{ task.status }}
+                                    {% endif %}
+                                    {% endif %}
                                     </form>
                                     </td>
                                     <td>
                                         {% if perms.project.add_project %}
                                             <a class="waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="Editar Tarea" href="{% url 'update_task' task.code %}"><i class = "mdi-content-create"> </i></a>
                                         {% endif %}
-                                        <a class = "waves-effect waves-light modal-trigger tooltipped" data-position="top" data-delay="50" data-tooltip="Ver Tarea" href = "">
+                                        <a class = "waves-effect waves-light modal-trigger tooltipped" data-position="top" data-delay="50" data-tooltip="Ver Tarea" href = "#modal3">
                                             <i class = "mdi-action-visibility" id = ""></i></a>
                                         {% if perms.project.add_project %}
 

@@ -17,7 +17,7 @@ function detailTable(name) {
     var path = window.location.href.split('/');
     var url = path[0]+"/"+path[1]+"/"+path[2]+"/ajax/table/";
 
-     $.ajax({
+    $.ajax({
         url: url,
         origin: 'http://127.0.0.1:8000',
         headers: {'X-CSRFToken': getCookie('csrftoken')},
@@ -34,7 +34,7 @@ function detailTable(name) {
 
                     t.row.add([val[0],val[1],val[2]+" "+val[3],val[4],
                         val[5],val[6],val[7],val[8]]).draw();
-                  });       
+                });
 
             }
             else {
@@ -85,6 +85,8 @@ function datailProject(name) {
     });
 }
 
+
+
 function drawBarColors() {
     var data = google.visualization.arrayToDataTable(datos);
 
@@ -100,6 +102,7 @@ function drawBarColors() {
         },
         vAxis: {
             title: 'Proyectos'
+
         },
         height: 280,
         legend: {alignment:'center', position: "top", maxLines: 3},
@@ -108,35 +111,64 @@ function drawBarColors() {
     };
     var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
     google.visualization.events.addListener(chart, 'error', function (googleError) {
-      google.visualization.errors.removeError(googleError.id);
-      $("#chart_div").empty().append('<img src="../../static/images/Status-image-missing-icon.png"><div>NO HAY GRÁFICO DISPONIBLE</div>');
-  });
+        google.visualization.errors.removeError(googleError.id);
+        $("#chart_div").empty().append('<img src="../../static/images/Status-image-missing-icon.png"><div>NO HAY GRÁFICO DISPONIBLE</div>');
+    });
 
 
 
-    function selectHandler() {
+    function selectHandler(e) {
+        var parts = e.targetID.split('#');
 
-        var selection=chart.getSelection()[0];  
-
-        if (selection){
-            info = data.getValue(selection.row,0);
+        if (parts.indexOf('label') >= 0) {
+            var idx = parts[parts.indexOf('label') + 1];
+            info = data.getValue(parseInt(idx), 0);
             datailProject(info);
             detailTable(info);
-
-            var chart_div = document.getElementById('detail');
-            //document.getElementById('detail').innerHTML = data.getValue(selection.row,0);
-
             document.getElementById('detail').style.display = 'block';
             document.getElementById('table_task').style.display = 'block';
-
         }
+
+        // var selection=chart.getSelection()[0];
+        //
+        // if (selection){
+        //     info = data.getValue(selection.row,0);
+        //     datailProject(info);
+        //     detailTable(info);
+        //
+        //     var chart_div = document.getElementById('detail');
+        //     //document.getElementById('detail').innerHTML = data.getValue(selection.row,0);
+        //
+        //     document.getElementById('detail').style.display = 'block';
+        //     document.getElementById('table_task').style.display = 'block';
+        //
+        // }
 
     }
 
     // Listen for the 'select' event, and call my function selectHandler() when
     // the user selects something on the chart.
-    google.visualization.events.addListener(chart, 'select', selectHandler);
+    google.visualization.events.addListener(chart, 'click', selectHandler);
+
     chart.draw(data, options);
+     google.visualization.events.addListener(chart, 'ready', function (e) {
+      // modify x-axis labels
+      var parts = e.targetID.split('#');
+
+        if (parts.indexOf('label') >= 0) {
+            var idx = parts[parts.indexOf('label') + 1];
+            labels = data.getValue(parseInt(idx), 0);
+        }
+
+      Array.prototype.forEach.call(labels, function(label) {
+          if (label.getAttribute('text-anchor') === 'middle') {
+              label.style.textDecoration = 'underline';
+              label.style.cursor = 'pointer';
+          }
+
+      });
+    });
+
 }
 
 // Diagrama de Gantt

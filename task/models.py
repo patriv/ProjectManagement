@@ -22,8 +22,8 @@ class Task(models.Model):
 	endDate = models.DateField(null=True)
 	status= models.CharField(max_length= 20, choices=STATUS)
 	users= models.ForeignKey(ProfileUser, blank=False)
-	#dependency = models.ForeignKey("Task", blank=True)
 	project = models.ForeignKey(Project)
+	endDateReal = models.DateField(null= True)
 
 	class Meta:
 		unique_together = ('name','project',)

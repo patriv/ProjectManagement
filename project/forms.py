@@ -151,7 +151,8 @@ class statusForm(forms.ModelForm):
 			('In Progress', 'In Progress'),
 			('Technical Review', 'Technical Review'),
 			('Functional Review', 'Functional Review'),
-			('Customer Acceptance', 'Customer Acceptance')
+			('Customer Acceptance', 'Customer Acceptance'),
+			('Done', 'Done')
 		]
 	)
 	class Meta:
