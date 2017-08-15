@@ -258,6 +258,23 @@ def DeleteTask(request,code):
         return HttpResponseRedirect(reverse_lazy('detail_project',kwargs={"pk":task.project.code}))
 
 
+def DetailTask(request, code):
+    print("*********** en validate task************")
+    code = request.GET.get('code', None)
+    print(code)
+    data = {
+        'name_exists': Task.objects.filter(code=code).exists()
+    }
+
+    task = Task.objects.get(code=code)
+    data['name']=task.name
+    data['responsable']=task.users.fk_profileUser_user.first_name+" "+task.users.fk_profileUser_user.last_name
+    data['status']= task.status
+    data['description']=task.description
+
+    return JsonResponse(data)
+
+
 
 
 

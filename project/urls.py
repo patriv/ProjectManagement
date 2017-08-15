@@ -66,6 +66,15 @@ urlpatterns = [
         ChangeStatus.as_view(),
         name='change_status'),
 
+    url(
+        r'^buttoncloseProject/$',
+        ChangeButton,
+        name='change_button'),
+
+    url(
+        r'^closeProject/(?P<pk>\w+)/$',
+        CloseProject,
+        name='close_project'),
 
 ]
 

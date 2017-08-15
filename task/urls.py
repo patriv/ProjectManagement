@@ -25,8 +25,15 @@ urlpatterns = [
         name='validate_name_task'),
 
     url(
-        r'^delete-role/(?P<code>[\w-]+)$',
+        r'^delete-task/(?P<code>[\w-]+)$',
         DeleteTask,
         name='delete_task'),
+
+    url(
+        r'^detail-task/(?P<code>[\w-]+)$',
+        DetailTask,
+        name='detail_task'),
+
+    
 
 ]

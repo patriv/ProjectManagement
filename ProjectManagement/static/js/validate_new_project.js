@@ -28,7 +28,8 @@ $(document).ready(function () {
         if (end < start) {
             Materialize.toast('La fecha de culminación del proyecto no puede ser anterior a la de inicio.',4000);
         }
-    })
+    });
+
 });
 
 

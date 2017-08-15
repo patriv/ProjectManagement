@@ -22,7 +22,7 @@
         <div class="divider"></div>
         <div class = "modal-footer background-nav-modal">
             <a id="acceptDelete" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
+            <a  class="waves-effect btn-flat modal-action modal-close white-text">Cancelar</a>
         </div>
     </div>
 
@@ -36,16 +36,16 @@
             <div class="row">
                 <div class="col m2"><p></p></div>
                 <div class="col m8">
-                    <p> Nombre: Tarea 1 </p>
-                    <p> Responsable: Pedro Pérez </p>
-                    <p> Status: In Progress </p>
-                    <p> Descripción: Aquí va la descripción de la tarea 1 </p>
+                    <p><b>Nombre: </b><span id ="nameTask"> </span></p>
+                    <p><b>Responsable: </b><span id ="responsableTask"> </span></p>
+                    <p><b>Status: </b><span id ="statusTask"> </span></p>
+                    <p><b>Descripción: </b><span id ="descriptionTask"> </span></p>
                 </div>
             </div>
         </div>
         <div class="divider"></div>
         <div class = "modal-footer background-nav-modal">
-            <a href="#" class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
+            <a class="waves-effect btn-flat modal-action modal-close white-text">Aceptar</a>
         </div>
     </div>
 
@@ -258,10 +258,13 @@
                                     </td>
                                     <td>
                                         {% if perms.project.add_project %}
-                                            <a class="waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="Editar Tarea" href="{% url 'update_task' task.code %}"><i class = "mdi-content-create"> </i></a>
+                                            <a class="waves-effect waves-light tooltipped" data-position="left"
+                                               data-delay="50" data-tooltip="Editar Tarea" href="{% url 'update_task' task.code %}">
+                                                <i class = "mdi-content-create"> </i></a>
                                         {% endif %}
-                                        <a class = "waves-effect waves-light modal-trigger tooltipped" data-position="top" data-delay="50" data-tooltip="Ver Tarea" href = "#modal3">
-                                            <i class = "mdi-action-visibility" id = ""></i></a>
+                                        <a class = "waves-effect waves-light modal-trigger tooltipped open-AddBookDialogTask" data-position="top" data-delay="50" data-tooltip="Ver Tarea"
+                                        data-target="modal3" data-pk="{{ task.code }}">
+                                            <i class = "mdi-action-visibility" id = "viewTask"></i></a>
                                         {% if perms.project.add_project %}
 
                                             <a class = "waves-effect waves-light modal-trigger tooltipped open-AddBookDialog1" data-position="right" data-delay="50" data-tooltip="Eliminar Tarea"
@@ -295,12 +298,15 @@
         <div class="section">
             <div class="row">
                 <div class="col s4 m4 l4">
-                    <a class="btn  deep-purple accent-2 waves-effect waves-light" href="#">Cancelar</a>
+                    <a class="btn  deep-purple accent-2 waves-effect waves-light" href="{% url 'project' %}">Cancelar</a>
                 </div>
 
                 <div class="col l2"><p></p></div>
                 <div class="col s4 m4 l3">
-                    <a class="btn right disabled" href="#">Cerrar Proyecto</a>
+                  <form method="POST" action="{% url 'close_project' project.pk %}" id="formProject">
+                      {% csrf_token %}
+                    <a class="btn right" id="closeProject">Cerrar Proyecto</a>
+                  </form>
                 </div>
             </div>
         </div>
@@ -389,7 +395,8 @@
 
     <script type="text/javascript" src="../static/js/kwargsTask.js"></script>
     <script type="text/javascript" src="../static/js/deleteTask.js"></script>
-
+    <script type="text/javascript" src="../static/js/detailTask.js"></script>
+    <script type="text/javascript" src="../static/js/closeProject.js"></script>
 
 
     <script type="text/javascript">
@@ -415,15 +422,9 @@
     $(document).ready(function (){
         $('#id_status').change(
         function(){
-            alert("cambio");
              $(this).closest('form').trigger('submit');
-             /* or:
-             $('#formElementId').trigger('submit');
-                or:
-             $('#formElementId').submit();
-             */
         });
-        });
+    });
     </script>
 
 

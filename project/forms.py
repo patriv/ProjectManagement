@@ -38,7 +38,7 @@ class NewProjectForm(forms.ModelForm):
 
 	company = forms.ModelChoiceField(
 		queryset=company_querySet,
-		widget=forms.Select(attrs={'id':"drop",
+		widget=forms.Select(attrs={'id':"id_company",
 								   'tabindex' : "1",
 									'class' : "chosen-select browser-default"
 		})
@@ -146,6 +146,29 @@ class UpdateProjectForm(forms.ModelForm):
 	class Meta:
 		model = Project
 		fields = ('description',)
+
+
+
+	def clean_endDate(self):
+		endDate = self.cleaned_data.get('endDate')
+		splitEndDate = endDate.split('-')
+		startDate = self.cleaned_data.get('startDate')
+		splitStartDate = startDate.split('-')
+		startDate = datetime.date(int(splitStartDate[2]),int(splitStartDate[1]),int(splitStartDate[0]))
+		endDate = datetime.date(int(splitEndDate[2]),int(splitEndDate[1]),int(splitEndDate[0]))
+		if (endDate < startDate):
+			msj = "La fecha de culminación no puede ser anterior a la de inicio"
+			self.add_error('endDate', msj)
+		return endDate
+
+	def clean_company(self):
+		company = self.cleaned_data.get('company')
+
+		if (company == ''):
+			msj = "La fecha de culminación no puede ser anterior a la de inicio"
+			self.add_error('company', msj)
+		return company
+
 
 class statusForm(forms.ModelForm):
 	status = forms.ChoiceField(

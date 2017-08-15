@@ -1618,3 +1618,11 @@ background-size: cover;
   margin-left: 20px !important;
 }
 
+#detailProject {
+  cursor: pointer;
+}
+
+#editProject{
+  cursor: pointer;
+}
+

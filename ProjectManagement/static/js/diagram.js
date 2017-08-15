@@ -44,9 +44,9 @@ function drawChart() {
 
     data.addRows(x);
 
-    if (data.getNumberOfRows()<3){
+    if (data.getNumberOfRows()<4){
         var options = {
-        height: data.getNumberOfRows() * 200,
+        height: data.getNumberOfRows() * 100,
         gantt: {
             trackHeight: 30
         }

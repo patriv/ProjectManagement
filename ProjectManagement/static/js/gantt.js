@@ -156,16 +156,13 @@ function drawBarColors() {
      
 
         var labels = chartContainer.getElementsByTagName('text');
-        alert(labels);
-       
+
             Array.prototype.forEach.call(labels, function(label) {
 
              if (label.getAttribute('text-anchor') === 'end') {
                 label.style.fontWeight = 'bold';
                 label.style.cursor = 'pointer';
                 }
-          
-
 
       });
 

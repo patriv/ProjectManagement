@@ -80,10 +80,14 @@
                             <a class="waves-effect waves-light modal-trigger center tooltipped chat-collapse right" data-position="left" data-delay="50" data-tooltip="Eliminar Proyecto" href="#modal2"><i class="mdi-action-highlight-remove prefix icon-project" id="remove"></i></a>
                             {% endif %}
                             {% if perms.project.change_project %}
-                            <a onclick="kwargsUpdate($('#project').text())" class="center tooltipped right" data-position="bottom" data-delay="50" data-tooltip="Editar Proyecto"><i class="mdi-content-create prefix icon-project"></i></a>
+                            <a onclick="kwargsUpdate($('#project').text())" class="center tooltipped right" id="editProject"
+                               data-position="bottom" data-delay="50" data-tooltip="Editar Proyecto">
+                                <i class="mdi-content-create prefix icon-project"></i></a>
                             {% endif %}
                             {% if perms.project.view_project%}
-                            <a onclick="kwargs($('#project').text())" class="center tooltipped right" data-position="top" data-delay="50" data-tooltip="Detallar Proyecto" ><i class="mdi-action-visibility prefix icon-project" id="visible"></i></a>
+                            <a onclick="kwargs($('#project').text())" class="center tooltipped right" id="detailProject"
+                               data-position="top" data-delay="50" data-tooltip="Detallar Proyecto" >
+                                <i class="mdi-action-visibility prefix icon-project" id="visible"></i></a>
                             {% endif %}
                         </span>
                     </div>

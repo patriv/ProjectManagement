@@ -19,7 +19,6 @@ from django.urls import reverse
 
 from users.views import send_email
 
-
 class Home(TemplateView):
     template_name = 'index.html'
 
@@ -625,6 +624,38 @@ class ChangeStatus(TemplateView):
         else:
             messages.success(request, "Error al cambiar status de tarea")
             return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
+
+def ChangeButton(request):
+    code = request.GET.get('code', None)
+    all_task = Task.objects.filter(project=code).count()
+    done_task = Task.objects.filter(project=code, status="Done").count()
+
+    data = {
+        'name_exists': Project.objects.filter(code=code).exists()
+    }
+    project = Project.objects.get(code=code)
+    data['code'] = code
+    data['all_task']= all_task
+    data['done_task']=done_task
+    data['status']=project.status
+
+    return JsonResponse(data)
+
+def CloseProject(request, pk):
+    print("Close Project")
+    project = Project.objects.get(code=pk)
+    print(project.status)
+    project.status ='Done'
+    print(project.status)
+    project.save()
+
+
+    messages.success(request, "El Proyecto "+str(project.name)+ " se ha cerrado.")
+    return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": project.code}))
+
+
+
+
 
 
 
