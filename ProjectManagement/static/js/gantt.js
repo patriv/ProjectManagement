@@ -98,7 +98,7 @@ function drawBarColors() {
         colors: ['#965a89', '#E6B0B8'],
         hAxis: {
             title: 'Duración (días)',
-            minValue: 0
+            minValue: 10
         },
         vAxis: {
             title: 'Proyectos',

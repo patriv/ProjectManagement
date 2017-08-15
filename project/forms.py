@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
+import datetime
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.forms import DateField
@@ -77,12 +78,15 @@ class NewProjectForm(forms.ModelForm):
 	def clean_endDate(self):
 
 		endDate = self.cleaned_data.get('endDate')
+		splitEndDate = endDate.split('-')
 		startDate = self.cleaned_data.get('startDate')
+		splitStartDate = startDate.split('-')
+		startDate = datetime.date(int(splitStartDate[2]),int(splitStartDate[1]),int(splitStartDate[0]))
+		endDate = datetime.date(int(splitEndDate[2]),int(splitEndDate[1]),int(splitEndDate[0]))
 		if (endDate < startDate):
 			msj = "La fecha de culminación no puede ser anterior a la de inicio"
 			self.add_error('endDate', msj)
 		return endDate
-
 
 class UpdateProjectForm(forms.ModelForm):
 
