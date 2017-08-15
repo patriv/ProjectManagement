@@ -101,7 +101,8 @@ function drawBarColors() {
             minValue: 0
         },
         vAxis: {
-            title: 'Proyectos'
+            title: 'Proyectos',
+            minValue: 0
 
         },
         height: 280,
@@ -149,27 +150,29 @@ function drawBarColors() {
     // Listen for the 'select' event, and call my function selectHandler() when
     // the user selects something on the chart.
     google.visualization.events.addListener(chart, 'click', selectHandler);
-
-    chart.draw(data, options);
-     google.visualization.events.addListener(chart, 'ready', function (e) {
+     var chartContainer = document.getElementById('chart_div');
+    google.visualization.events.addListener(chart, 'ready', function (e) {
       // modify x-axis labels
-      var parts = e.targetID.split('#');
+     
 
-        if (parts.indexOf('label') >= 0) {
-            var idx = parts[parts.indexOf('label') + 1];
-            labels = data.getValue(parseInt(idx), 0);
-        }
+        var labels = chartContainer.getElementsByTagName('text');
+        alert(labels);
+       
+            Array.prototype.forEach.call(labels, function(label) {
 
-      Array.prototype.forEach.call(labels, function(label) {
-          if (label.getAttribute('text-anchor') === 'middle') {
-              label.style.textDecoration = 'underline';
-              label.style.cursor = 'pointer';
-          }
+             if (label.getAttribute('text-anchor') === 'end') {
+                label.style.fontWeight = 'bold';
+                label.style.cursor = 'pointer';
+                }
+          
+
 
       });
+
     });
+
+    chart.draw(data, options);
 
 }
 
-// Diagrama de Gantt
 
