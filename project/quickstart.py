@@ -39,6 +39,7 @@ def get_credentials():
     credential_path = os.path.join(credential_dir,
                                    'calendar-python-quickstart.json')
 
+    print(credential_path)
     store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
@@ -49,6 +50,8 @@ def get_credentials():
         else: # Needed only for compatibility with Python 2.6
             credentials = tools.run(flow, store)
         print('Storing credentials to ' + credential_path)
+
+    print(credentials)
     return credentials
 
 def main():
@@ -83,7 +86,7 @@ def main():
 
     print (calendar['summary'])
 
-    # Refer to the Python quickstart on how to setup the environment:
+        # Refer to the Python quickstart on how to setup the environment:
     # https://developers.google.com/google-apps/calendar/quickstart/python
     # Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
     # stored credentials.
@@ -93,12 +96,12 @@ def main():
         'location': '800 Howard St., San Francisco, CA 94103',
         'description': 'A chance to hear more about Google\'s developer products.',
         'start': {
-            'dateTime': '2015-05-28T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': '2017-07-18T09:00:00-07:00',
+            'timeZone': 'America/Caracas',
         },
         'end': {
-            'dateTime': '2015-05-28T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': '2017-07-18T17:00:00-07:00',
+            'timeZone': 'America/Caracas',
         },
         'recurrence': [
             'RRULE:FREQ=DAILY;COUNT=2'
