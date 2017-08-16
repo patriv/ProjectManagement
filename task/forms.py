@@ -30,7 +30,7 @@ class NewTaskForm(forms.ModelForm):
 		queryset= responsable_querySet,
 		widget=forms.Select(attrs={'id':"drop",
 								   'tabindex' : "1",
-									'class' : "chosen-select browser-default",
+									'class' : "chosen-select browser-default"
 
 	})
 	)
@@ -55,14 +55,6 @@ class NewTaskForm(forms.ModelForm):
 										 'length':"120"
 	 								}))
 
-	# def __init__(self, *args, **kwargs):
-	# 	task = kwargs.pop('task', None)
-	# 	print(task)
-
-	# 	super(NewTaskForm, self).__init__(*args, **kwargs)
-
-	# 	if task:
-	# 		self.fields['dependency'].initial = task[0]['dependency']
 	class Meta:
 		model = Task
 		fields = ('name',)

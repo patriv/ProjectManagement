@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+import pytz
 from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
@@ -7,6 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic import *
 from psycopg2._psycopg import Date
 
+from google_calendar import create_event
 from project.models import ProjectUser
 from task.forms import *
 
@@ -35,6 +38,7 @@ class New_Task(FormView):
 
         if form.is_valid():
             project=self.kwargs['pk']
+            project_pk=Project.objects.get(code=project)
             task = form.save(commit=False)
             if (Task.objects.all().count()) == 0:
                 task.code = project + '-001'
@@ -73,6 +77,9 @@ class New_Task(FormView):
             if projectUser == 0:
                 newRelation= ProjectUser(isResponsable=False, project=task.project, user_id=task.users.pk)
                 newRelation.save()
+            responsable = ProjectUser.objects.get(project=project_pk, isResponsable=True)
+            print("RESPONSABLEEE " +str(responsable.user.fk_profileUser_user.email))
+            print(task.users.fk_profileUser_user.email)
             a = post_values['startDate'].split('-')
             startDate = a[2]+'-'+a[1]+'-'+a[0]
             task.startDate = startDate
@@ -81,6 +88,37 @@ class New_Task(FormView):
             task.endDate = endDate
             task.status=post_values['status']
             task.description= post_values['description']
+
+            # Se crea el evento para realizar la conexión con Google Calendar
+
+            tz = pytz.timezone('America/Caracas')
+            print(tz)
+            start_datetime = tz.localize(datetime.datetime(int(a[2]), int(a[1]), int(a[0])))
+            print(start_datetime)
+            stop_datetime = tz.localize(datetime.datetime(int(b[2]), int(b[1]), int(b[0])))
+            print(stop_datetime)
+            event = {
+                'summary': 'Tarea ' + str(task.name)+" del proyecto "+str(project_pk.name),
+                'description': task.description,
+                'start': {
+                    'dateTime': start_datetime.isoformat(),
+                    'timeZone': 'America/Caracas',
+                },
+                'end': {
+                    'dateTime': stop_datetime.isoformat(),
+                    'timeZone': 'America/Caracas',
+                },
+                'attendees': [
+                    {'email': task.users.fk_profileUser_user.email},
+                    {'email': responsable.user.fk_profileUser_user.email},
+                ],
+            }
+
+            create_event(event)
+            print("se creo el evento")
+
+            ####################################################
+
             task.save()
             #FALTA LA DEPENDENCIA
             dependence = post_values['dependencia']
@@ -104,7 +142,8 @@ class New_Task(FormView):
                                                     kwargs={'pk':project}))
         else:
             messages.success(request, "Error al registrar la tarea")
-            return HttpResponseRedirect(reverse_lazy('new_task', kwargs={'pk':self.kwargs['pk']}))
+            return render(request, 'new_work.html', {'form': form, 'pk': self.kwargs['pk']})
+
 
 def Gantt(request):
     project = request.GET.get('project',None)

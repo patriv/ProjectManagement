@@ -3,6 +3,7 @@ from __future__ import print_function
 import httplib2
 import os
 
+import pytz
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -91,36 +92,31 @@ def main():
     # Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
     # stored credentials.
 
+    tz = pytz.timezone('America/Caracas')
+    print(tz)
+    start_datetime = tz.localize(datetime.datetime(2017, 8, 19))
+    print(start_datetime)
+    stop_datetime = tz.localize(datetime.datetime(2017, 8, 19))
+    print(stop_datetime)
     event = {
-        'summary': 'Google I/O 2015',
-        'location': '800 Howard St., San Francisco, CA 94103',
+        'summary': 'Evento prueba',
         'description': 'A chance to hear more about Google\'s developer products.',
         'start': {
-            'dateTime': '2017-07-18T09:00:00-07:00',
+            'dateTime': start_datetime.isoformat(),
             'timeZone': 'America/Caracas',
         },
         'end': {
-            'dateTime': '2017-07-18T17:00:00-07:00',
+            'dateTime': stop_datetime.isoformat(),
             'timeZone': 'America/Caracas',
         },
-        'recurrence': [
-            'RRULE:FREQ=DAILY;COUNT=2'
-        ],
         'attendees': [
-            {'email': 'lpage@example.com'},
-            {'email': 'sbrin@example.com'},
+            {'email': 'pvalencia@idbcgroup.com'},
+            {'email': 'patty.vl91@gmail.com'},
         ],
-        'reminders': {
-            'useDefault': False,
-            'overrides': [
-                {'method': 'email', 'minutes': 24 * 60},
-                {'method': 'popup', 'minutes': 10},
-            ],
-        },
     }
-
     event = service.events().insert(calendarId='primary', body=event).execute()
-    print ('Event created: %s' % (event.get('htmlLink')))
+    print('Event created: %s' % (event.get('htmlLink')))
+
 
 
 if __name__ == '__main__':

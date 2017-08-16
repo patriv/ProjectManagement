@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#email").change(function () {
         var email = $(this).val();
         $.ajax({
-            url: 'ajax/validateUser',
+            url: 'ajax/validateUser/',
             data: {
                 email: email
             },
@@ -23,7 +23,7 @@ $(document).ready(function () {
    $("#id_username").change(function () {
         var username = $(this).val();
         $.ajax({
-            url: 'ajax/validateUser',
+            url: 'ajax/validateUser/',
             data: {
                 username: username
             },

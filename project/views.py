@@ -3,6 +3,8 @@ import hashlib
 import random
 import json
 import datetime
+
+import pytz
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import *
@@ -12,12 +14,15 @@ from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
+
+from google_calendar import create_event
 from project.forms import *
 from project.models import *
 from task.models import *
 from django.urls import reverse
 
 from users.views import send_email
+
 
 class Home(TemplateView):
     template_name = 'index.html'
@@ -76,21 +81,47 @@ class New_Project(FormView):
             print(project.startDate)
             auth_cliente = post_values['client']
             auth_emp = post_values['company']
-            print("comany")
-            print(auth_emp)
             # id de responsable de la empresa
             profile_emp = ProfileUser.objects.get(fk_profileUser_user_id = auth_emp)
-            print(profile_emp.pk)
             # id del cliente
             profile_client = ProfileUser.objects.get(fk_profileUser_user = auth_cliente)
-            print(profile_client.id)
+
+            # Se crea el evento para realizar la conexión con Google Calendar
+
+            tz = pytz.timezone('America/Caracas')
+            print(tz)
+            start_datetime = tz.localize(datetime.datetime(int(a[2]), int(a[1]), int(a[0])))
+            print(start_datetime)
+            stop_datetime = tz.localize(datetime.datetime(int(b[2]), int(b[1]), int(b[0])))
+            print(stop_datetime)
+            event = {
+                'summary': 'Proyecto '+ str(project.name),
+                'description': project.description,
+                'start': {
+                    'dateTime': start_datetime.isoformat(),
+                    'timeZone': 'America/Caracas',
+                },
+                'end': {
+                    'dateTime': stop_datetime.isoformat(),
+                    'timeZone': 'America/Caracas',
+                },
+                'attendees': [
+                    {'email': profile_emp.fk_profileUser_user.email},
+                    {'email': profile_client.fk_profileUser_user.email},
+                ],
+            }
+
+            create_event(event)
+            print("se creo el evento")
+
+            ####################################################
             project.save()
             new_project= Project.objects.get(code = project.code)
-            print(new_project)
             # relacion cliente proyecto
             project_user_client = ProjectUser(user= profile_client, project=new_project)
             #relacion empresa proyecto
             project_user_emp = ProjectUser(user= profile_emp, project=new_project, isResponsable= True)
+
             project_user_client.save()
             project_user_emp.save()
             messages.success(request, "El projecto ha sido guardado exitosamente")
@@ -106,10 +137,8 @@ class Update_Project(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(
             Update_Project, self).get_context_data(**kwargs)
-        print("get de update project")
         context['title'] ='Modificar'
         project = Project.objects.get(code=self.kwargs['pk'])
-        print(project.startDate)
         if project.startDate == None:
             startDate = ''
         else:
@@ -120,16 +149,11 @@ class Update_Project(TemplateView):
             endDate = project.endDate.strftime("%d-%m-%Y")
 
         projectUser = ProjectUser.objects.filter(project_id=project.code)
-        print("soy project user")
-        print(projectUser)
         client=''
         responsable = ''
         for i in projectUser:
-            print("dentro de for")
-            print(i.user_id)
             profileUser = ProfileUser.objects.get(id = i.user_id)
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
-            print(user)
 
             if i.isResponsable:
                 print("Soy responsable" + str(i.isResponsable))
@@ -138,12 +162,6 @@ class Update_Project(TemplateView):
                 print("no es responsable")
                 if str(user.groups.all()[0])=='Cliente':
                     client=user
-
-
-
-            print(client)
-
-
         data = {'name':project,
                 'client':client,
                 'company': responsable,
@@ -333,7 +351,6 @@ def BarProgress(request):
     user = request.user.id
     user_pk = User.objects.get(pk=user)
 
-    print(user_pk.has_perms(['project.add_project']))
     if (user_pk.has_perms(['project.add_project'])):
         proj = Project.objects.all()
         x = [p.name for p in proj]
@@ -344,12 +361,10 @@ def BarProgress(request):
         for i in proj:
             x.append(Project.objects.get(code=i).name)
 
-    print(proj)
     array = ([
         ['Proyecto', 'Estimada', 'Real']
     ])
 
-    print(x)
     duration = []
     durationDone =[]
     for i in x:
@@ -390,9 +405,6 @@ def BarProgress(request):
                 array.append([project.name,days,daysDone])
             else:
                 array.append([project.name, days, 0])
-
-
-    print(array)
 
     return JsonResponse(array, safe=False)
 
@@ -445,13 +457,10 @@ class DocumentsView(FormView):
     def post(self, request, *args, **kwargs):
         print("en post Documets")
         form = DocumentsForm(request.POST, request.FILES)
-        print(form.is_valid())
-        print(form)
         if form.is_valid():
             project_pk = self.kwargs['pk']
             project = Project.objects.get(pk=project_pk)
 
-            print(project)
             if (request.FILES == {}):
                 pass
             else:
@@ -501,8 +510,6 @@ class MoreUsersView(FormView):
 
 def ShowTable(request):
     nameProject = request.GET.get('nameProject', None)
-    print("*********** EN AJAX ********************")
-    print(nameProject)
     project=Project.objects.get(name=nameProject)
     data = {'project': Project.objects.filter(name=nameProject).exists()}
     # Usuario que inicia sesion

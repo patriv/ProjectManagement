@@ -14,8 +14,9 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (data) {
                 if (data.name_exists) {
+                    $("#id_name").removeClass('valid').addClass('invalid');
                     Materialize.toast('Esta tarea ya existe para este proyecto, por favor, verifique',4000);
-                    $("#name").removeClass('valid').addClass('invalid');
+
                 }
             }
         });
