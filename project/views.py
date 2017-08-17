@@ -14,13 +14,12 @@ from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
-
+from google_drive import upload_file
 from google_calendar import create_event
 from project.forms import *
 from project.models import *
 from task.models import *
 from django.urls import reverse
-
 from users.views import send_email
 
 
@@ -467,10 +466,15 @@ class DocumentsView(FormView):
                 desc = request.POST.getlist('description')
                 files =request.FILES.getlist('file')
                 for i in zip(files, desc):
+
                     doc = Documents(file=i[0],
                                     fk_documents_project= project,
                                     description=i[1])
                     doc.save()
+                    print(doc.file)
+                    path= 'ProjectManagement/static/media/'+str(doc.file)
+                    print(path)
+                    upload_file(path)
 
             messages.success(request, "El Documento ha sido guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('detail_project',kwargs={"pk":self.kwargs['pk']}))

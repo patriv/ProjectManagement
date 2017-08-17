@@ -1548,7 +1548,11 @@ background-size: cover;
 }
 
 #accion{
-  width:104px;
+  min-width:70px;
+}
+
+#tabStatus{
+  min-width: 80px;
 }
 
 #data-table-project_wrapper{
