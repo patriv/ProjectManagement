@@ -28,7 +28,13 @@ function detailTable(name) {
         dataType: 'json',
         success: function (data) {
             if (data.project) {
-                var t = $("#data-table-simple").DataTable();
+                var t = $("#data-table-simple").DataTable({
+                    "destroy":true,
+                    "language":{
+                        "emptyTable":"No hay tareas disponibles para este proyecto"
+                    }
+                    }
+                );
                 t.clear().draw();
                 $.each(data.task,function (i,val) {
 

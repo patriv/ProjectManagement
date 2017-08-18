@@ -169,7 +169,6 @@ class UpdateProjectForm(forms.ModelForm):
 			self.add_error('company', msj)
 		return company
 
-
 class statusForm(forms.ModelForm):
 	status = forms.ChoiceField(
 		required=True,

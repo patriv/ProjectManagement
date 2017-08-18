@@ -41,7 +41,16 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'users.apps.UsersConfig',
     'task.apps.TaskConfig',
+    'rest_framework',
+    'API',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ],
+    'PAGE_SIZE': 10
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

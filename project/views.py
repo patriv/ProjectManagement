@@ -584,10 +584,18 @@ class ChangeStatus(TemplateView):
             task = Task.objects.get(code=code_task, project=project_pk)
             print("status viejo")
             print(task.status)
+            print(task.startDate)
+            #Calculo la fecha actual para saber cuando se cambia el status
+            endDateReal = datetime.date.today()
+            print(endDateReal)
+            task.endDateReal = endDateReal
+            # Si la fecha de inicio de la tarea es mayor que la actual no se debe cambiar el status
+            if (task.startDate > task.endDateReal ):
+                messages.success(request, "La tarea "+str(task.name)+ " no ha sido iniciada. No puede cambiar su status")
+                return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
             old_status = task.status
             task.status = post_values['status']
             print("task.status nuevo " + str(task.status))
-            #task = Task.objects.get(code = code_task)
             print(task.users.fk_profileUser_user.email)
             projectUser = ProjectUser.objects.filter(project_id = project)
             print(projectUser)
@@ -624,9 +632,7 @@ class ChangeStatus(TemplateView):
                  }
             send_email(email_subject, message_template, c, email_task)
 
-            endDateReal = datetime.date.today()
-            print(endDateReal)
-            task.endDateReal = endDateReal
+
             task.save()
             print("despues de save")
 

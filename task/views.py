@@ -49,7 +49,6 @@ class New_Task(FormView):
                     task.code = project + '-001'
                 else:
                     key = []
-                    print("hello")
                     print(task_all)
                     for i in task_all:
                         key.append(i.code.split('-'))
@@ -81,11 +80,24 @@ class New_Task(FormView):
             print("RESPONSABLEEE " +str(responsable.user.fk_profileUser_user.email))
             print(task.users.fk_profileUser_user.email)
             a = post_values['startDate'].split('-')
-            startDate = a[2]+'-'+a[1]+'-'+a[0]
+            startDate = a[2] + '-' + a[1] + '-' + a[0]
             task.startDate = startDate
             b = post_values['endDate'].split('-')
             endDate = b[2] + '-' + b[1] + '-' + b[0]
             task.endDate = endDate
+            dateProject=project_pk.endDate.day
+            if datetime.date(int(a[2]),int(a[1]),int(a[0])) > project_pk.endDate or datetime.date(int(b[2]),int(b[1]),int(b[0])) > project_pk.endDate :
+                messages.success(request, "El proyecto " +str(project_pk.name)+" finaliza el "
+                                 +str(project_pk.endDate.day)+'-'+str(project_pk.endDate.month)+'-'+
+                                 str(project_pk.endDate.year)+" , por favor revise las fechas de la tarea")
+                return render(request, 'new_work.html', {'form': form, 'pk': self.kwargs['pk']})
+
+            if datetime.date(int(a[2]),int(a[1]),int(a[0])) < project_pk.startDate or datetime.date(int(b[2]),int(b[1]),int(b[0])) < project_pk.startDate :
+                messages.success(request, "El proyecto " +str(project_pk.name)+" inicia el "
+                                 +str(project_pk.startDate.day)+'-'+str(project_pk.startDate.month)+'-'+
+                                 str(project_pk.startDate.year)+" , por favor revise las fechas de la tarea")
+                return render(request, 'new_work.html', {'form': form, 'pk': self.kwargs['pk']})
+
             task.status=post_values['status']
             task.description= post_values['description']
 
