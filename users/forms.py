@@ -2,9 +2,16 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User, Group
+from django.core.validators import RegexValidator
+
 from users.models import ProfileUser
 from django.db import models
 from role.forms import *
+
+PHONE_VALIDATOR = RegexValidator(
+    regex=r'^(0414|0412|0424|0416|0426)\d{7}$',
+    message="Formato de teléfono inválido.",
+)
 
 class LoginForm(forms.Form):
 	class Meta:
@@ -19,7 +26,10 @@ class UserForm(forms.ModelForm):
 										'type':"text",
 										 'class':"validate"})
 	username=forms.CharField(required=True)
-	phone = forms.CharField(required=False)
+	phone = forms.CharField(required=False, validators=[PHONE_VALIDATOR],
+							widget=forms.TextInput(attrs={
+								'placeholder': "Ej:0412xxxxxx"}
+							))
 	email = forms.EmailField(required=True,
 							 widget= forms.EmailInput(attrs={'id':"email",
 							 	'type':"email",
@@ -34,7 +44,6 @@ class UserForm(forms.ModelForm):
         required=True,
         queryset=Group.objects.all()
     )
-
 
 
 	class Meta:
@@ -60,7 +69,10 @@ class UpdateUserForm(forms.ModelForm):
 										'type':"text",
 										 'class':"validate"}))
 	username=forms.CharField(required= False)
-	phone = forms.CharField(required=False)
+	phone = forms.CharField(required=False, validators=[PHONE_VALIDATOR],
+							widget=forms.TextInput(attrs={
+								'placeholder':"Ej:0412xxxxxx"
+							}))
 	email = forms.EmailField(required=True,
 							 widget= forms.EmailInput(attrs={'id':"email",
 										'type':"email",

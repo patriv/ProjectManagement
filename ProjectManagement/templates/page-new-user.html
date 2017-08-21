@@ -46,7 +46,7 @@
                               {% if title == "Agregar"%}
                                   <form class="col s12" action="{% url 'new_users' %}" method="post" >
                               {% else %}
-                                  <form class="col s12" action="{% url 'update_users' userProfile.pk %}" method="post">
+                                  <form class="col s12" action="" method="post">
                               {% endif %}
                                   {% csrf_token %}
                                   <div class="row">
@@ -99,7 +99,7 @@
                                       <div class="input-field col s12">
                                           <i class="mdi-file-folder prefix"></i>
                                           {{form.project}}
-                                          <label for="autocomplete">Proyecto <span class="red-text"> *</span></label>
+                                          <label for="autocomplete">Proyecto</label>
                                       </div>
                                   </div>                               
 

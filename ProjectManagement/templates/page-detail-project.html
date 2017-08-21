@@ -313,8 +313,6 @@
     </div>
     <!-- End Gantt Chart-->
 
-
-
     <!-- LEFT RIGHT SIDEBAR NAV-->
     <aside id="right-sidebar-nav">
         <ul id="slide-out" class="side-nav fixed right-aligned rightside-navigation">
@@ -328,20 +326,17 @@
                     Fecha Fin: {{project.get_endDate}}</div>
             </li>
             <li class="li-hover">
-
             </li>
             <ul class="chat-collapsible" data-collapsible="expandable">
                 <li>
                     <div class="collapsible-header teal white-text active center">
                         Personas<a class="right tooltipped modal-trigger" data-position="bottom" data-delay="50" data-tooltip="Agregar Personas" href="#new_people"><i class="mdi-content-add" ></i></a>
                     </div>
-
                     <div class="collapsible-body recent-activity">
                         <div class="recent-activity-list  row">
                             <div class="col s9 recent-activity-list-text">
-
                                 {%for i in projectUser%}
-                                    <div>{{i.user}}</div>
+                                    <div class="userProject">{{i.user}}</div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -397,6 +392,7 @@
     <script type="text/javascript" src="../static/js/deleteTask.js"></script>
     <script type="text/javascript" src="../static/js/detailTask.js"></script>
     <script type="text/javascript" src="../static/js/closeProject.js"></script>
+    <script type="text/javascript" src="../static/js/detailProject.js"></script>
 
 
     <script type="text/javascript">

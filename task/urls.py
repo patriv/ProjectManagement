@@ -34,6 +34,4 @@ urlpatterns = [
         DetailTask,
         name='detail_task'),
 
-    
-
 ]

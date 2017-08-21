@@ -24,7 +24,4 @@ $(document).ready(function (){
         $("#descriptionTask").text(datos.description);
 
     });
-
-
-
 });

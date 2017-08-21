@@ -25,7 +25,6 @@ urlpatterns = [
         Detail_Project.as_view(),
         name='detail_project'),
 
-
     url(
         r'^ajax/name/$',
         ValidateName,

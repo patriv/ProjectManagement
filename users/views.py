@@ -13,6 +13,7 @@ from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
 from project.models import Project, ProjectUser
+from task.models import Task
 from users.forms import *
 from users.models import *
 from django.urls import reverse
@@ -105,12 +106,10 @@ class New_Users(FormView):
     template_name = 'page-new-user.html'
     form_class = UserForm
 
-
     def get_context_data(self, **kwargs):
         context = super(
             New_Users, self).get_context_data(**kwargs)
         context['title'] = 'Agregar'
-
         return context
 
     def post(self, request, *args, **kwargs):
@@ -177,12 +176,20 @@ class New_Users(FormView):
             return HttpResponseRedirect(reverse_lazy('users'))
         else:
             messages.success(request, 'Error al registrar usuario')
-            return HttpResponseRedirect(reverse_lazy('new_users'))
+            return render(request, 'page-new-user.html', {'form': form})
+            # return render(request, 'page-new-user.html',
+            #               {'form': form})
 
 def DeleteUser(request,id):
     user = ProfileUser.objects.get(pk=id)
     print(user.fk_profileUser_user)
     user_pk = User.objects.get(pk=user.fk_profileUser_user.pk)
+    task=Task.objects.filter(users=user).count()
+    print("soy tareas")
+    print(task)
+    if task > 0 :
+        messages.success(request,"El usuario " + str(user.fk_profileUser_user.username) + " tiene tareas asociadas. No se puede eliminar")
+        return HttpResponseRedirect(reverse_lazy('users'))
     user.delete()
     user_pk.delete()
     messages.success(request, "El usuario " + str(user.fk_profileUser_user.username) +" se ha eliminado exitosamente")
@@ -283,10 +290,9 @@ class Update_Users(TemplateView):
     def post(self, request, *args, **kwargs):
         form = UpdateUserForm(data=request.POST, instance=request.user)
         if form.is_valid():
-            user_pk = kwargs['id']
+            user_pk = self.kwargs['id']
             userProfile = ProfileUser.objects.get(pk=user_pk)
             print("editando un usuario")
-
             print(userProfile)
             user = User.objects.get(pk=userProfile.fk_profileUser_user.pk)
             user.first_name = request.POST['first_name']
@@ -355,10 +361,9 @@ class Update_Users(TemplateView):
 
             messages.success(request, "El usuario ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('users'))
-
         else:
-            return render(request, 'page-user.html',
-                              {'form': form})
+            return render(request, 'page-new-user.html',
+                              {'form': form, 'pk': self.kwargs['id']})
 
 class Password_Reset(TemplateView):
     template_name = 'password-reset-form.html'
