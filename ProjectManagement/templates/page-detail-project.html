@@ -49,8 +49,6 @@
         </div>
     </div>
 
-    <!--Modal update task-->
-
     <!--Modal People-->
     <div class = "modal" id = "new_people">
         <nav class="background-nav-modal">
@@ -143,8 +141,32 @@
         </form>
 
     </div>
-
     <!--End Modal Documents-->
+
+    <!-- Modal "Ver más personas" -->
+    <div id="ViewUsers" class="modal">
+        <div class="modal-content">
+            {%for i in projectUser%}
+                <div >{{i.user}}</div>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <a class="waves-effect waves-green btn-flat modal-action modal-close">Aceptar</a>
+        </div>
+    </div>
+    <!-- End Modal "Ver más personas" -->
+
+    <!-- Modal "Ver más Documentos" -->
+    <div id="ViewDocuments" class="modal">
+     <a class="modal-close right"><i class="mdi-navigation-close"></i></a>
+        <div class="modal-content">
+            {% for i in documents %}
+                <p><a href="{{ i.file.url }}">{{ i.file }}</a></p>
+            {% endfor %}
+        </div>
+
+    </div>
+    <!-- End Modal "Ver más documentos" -->
 
 
     <!-- Gantt Chart-->
@@ -174,6 +196,7 @@
                     <div class="col s9 m9 l9">
                         <h3 class="header bold ">Mis Tareas</h3>
                         <table id="data-table-simple" class="responsive-table display centered striped tableProject" cellspacing="0">
+
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -222,6 +245,7 @@
                                     {% endfor %}
                                     </td>
                                     <td>
+
                                     <form action="{% url 'change_status' code=task.code pk=task.project.code %}" method="POST">
                                     {% csrf_token %}
                                     {% if perms.project.add_project %}
@@ -298,7 +322,7 @@
         <div class="section">
             <div class="row">
                 <div class="col s4 m4 l4">
-                    <a class="btn  deep-purple accent-2 waves-effect waves-light" href="{% url 'project' %}">Cancelar</a>
+                    <a class="btn deep-purple accent-2 waves-effect waves-light" href="{% url 'project' %}">Cancelar</a>
                 </div>
 
                 <div class="col l2"><p></p></div>
@@ -313,8 +337,10 @@
     </div>
     <!-- End Gantt Chart-->
 
+
     <!-- LEFT RIGHT SIDEBAR NAV-->
     <aside id="right-sidebar-nav">
+
         <ul id="slide-out" class="side-nav fixed right-aligned rightside-navigation">
             <li class="li-hover">
                 <h4 class="center">Restan<br>{{resta}} <br>Días</h4>
@@ -334,7 +360,7 @@
                     </div>
                     <div class="collapsible-body recent-activity">
                         <div class="recent-activity-list  row">
-                            <div class="col s9 recent-activity-list-text">
+                            <div class="col s9 recent-activity-list-text persons">
                                 {%for i in projectUser%}
                                     <div class="userProject">{{i.user}}</div>
                                 {% endfor %}
@@ -350,9 +376,9 @@
                     </div>
                     <div class="collapsible-body sales-repoart">
                         <div class="sales-repoart-list chat-out-list row">
-                            <div class="col s9 recent-activity-list-text">
+                            <div class="col s9 recent-activity-list-text documents">
                                 {% for i in documents %}
-                                <a href="{{ i.file.url }}">{{ i.file }}</a>
+                                <a class="doc" href="{{ i.file.url }}">{{ i.file }}</a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -422,8 +448,5 @@
         });
     });
     </script>
-
-
-
 
 {% endblock %}

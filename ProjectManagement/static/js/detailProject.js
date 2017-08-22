@@ -1,15 +1,32 @@
 $(document).ready(function (){
     var elems = $(".userProject");
-    var $newvisibility = $('<i class = "mdi-navigation-more-horiz" id = "viewTask"></i></a>');
-    alert("mayor");
-    $(".recent-activity-list-text").append($newvisibility);
-    for(var i = 0; ele = elems[i]; i++) {
-        alert(i);
-        if (i > 2) {
-            alert(i);
-            if (ele.className === 'userProject')
-                ele.innerHTML = '';
+    var doc= $(".doc");
+    var $newvisibility = $('<a class="waves-effect waves-light modal-trigger"  onclick="viewUsers()">Ver Más</a>');
+    var $newdoc = $('<a class="waves-effect waves-light modal-trigger" onclick="viewDocuments()" >Ver Más</a>');
+    if (elems.length >= 2) {
+        $(".persons").append($newvisibility);
+        for (var i = 0; ele = elems[i]; i++) {
+            if (i > 1) {
+                if (ele.className === 'userProject')
+                    ele.style.display="none";
+            }
         }
     }
-    //$(".recent-activity-list-text").toggle();
+    if (doc.length >= 2 ){
+        $(".documents").append($newdoc);
+        for (var i = 0; ele = doc[i]; i++) {
+            if (i > 1) {
+                if (ele.className === 'doc')
+                    ele.style.display="none";
+            }
+        }
+    }
 });
+
+function viewUsers() {
+    $("#ViewUsers").openModal();
+}
+
+function viewDocuments() {
+    $("#ViewDocuments").openModal();
+}

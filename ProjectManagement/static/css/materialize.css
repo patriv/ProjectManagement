@@ -8306,7 +8306,19 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 
 .sizeContent{
     min-height: 633px;
+}
 
+#ViewUsers{
+  top: 50%!important;
+  left: 80%!important;
+  width: 15%!important;
+}
+
+#ViewDocuments{
+  top: 70%!important;
+  left: 75%!important;
+  width: 24%!important;
+  height: 30%;
 }
 
 /*# sourceMappingURL=materialize.css.map */
