@@ -3,7 +3,7 @@ $(document).ready(function (){
     var doc= $(".doc");
     var $newvisibility = $('<a class="waves-effect waves-light modal-trigger"  onclick="viewUsers()">Ver Más</a>');
     var $newdoc = $('<a class="waves-effect waves-light modal-trigger" onclick="viewDocuments()" >Ver Más</a>');
-    if (elems.length >= 2) {
+    if (elems.length > 1) {
         $(".persons").append($newvisibility);
         for (var i = 0; ele = elems[i]; i++) {
             if (i > 1) {

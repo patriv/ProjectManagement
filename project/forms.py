@@ -90,7 +90,7 @@ class NewProjectForm(forms.ModelForm):
 
 class UpdateProjectForm(forms.ModelForm):
 
-	name = forms.CharField()
+	name = forms.CharField(widget= forms.TextInput(attrs={'autocomplete':'off'}))
 
 	status = forms.ChoiceField(
         required=True,

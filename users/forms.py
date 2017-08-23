@@ -21,19 +21,23 @@ class LoginForm(forms.Form):
 class UserForm(forms.ModelForm):
 	first_name = forms.TextInput(attrs={'id':"first_name",
 										'type':"text",
-										 'class':"validate"})
+										 'class':"validate",
+										'autocomplete':'off'})
 	last_name= forms.TextInput(attrs={'id':"last_name",
 										'type':"text",
-										 'class':"validate"})
+										 'class':"validate",
+										'autocomplete':'off'})
 	username=forms.CharField(required=True)
 	phone = forms.CharField(required=False, validators=[PHONE_VALIDATOR],
 							widget=forms.TextInput(attrs={
-								'placeholder': "Ej:0412xxxxxx"}
+								'placeholder': "Ej:0412xxxxxx",
+								'autocomplete': 'off'}
 							))
 	email = forms.EmailField(required=True,
 							 widget= forms.EmailInput(attrs={'id':"email",
 							 	'type':"email",
-							 	'class':"validate"}))
+							 	'class':"validate",
+								'autocomplete': 'off'}))
 
 	imageProfile = forms.ImageField(required=False)
 

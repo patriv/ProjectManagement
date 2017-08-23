@@ -6,6 +6,8 @@ $(document).ready(function (){
         var myPk = $(this).data('pk');
         $("#form_edit").attr("action", myBookId );
         $("#name").val(myPk);
+        $("#nameRol").addClass("active");
+        $("#iconRol").addClass("active");
         var path = window.location.href.split('/');
         var url= path[0]+"/"+path[1]+"/"+path[2]+"/"+"ajax/role/";
 

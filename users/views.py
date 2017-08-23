@@ -165,7 +165,7 @@ class New_Users(FormView):
 
             email_subject = 'IDBC Group - Activación de cuenta'
             message_template = 'emailNewUser.html'
-            email = user.email
+            email =[user.email]
             send_email(email_subject, message_template, c, email)
 
             # new_user.save()
@@ -199,7 +199,7 @@ def send_email(subject, message_template, context, email):
     from_email = 'IDBC Group - Activación de cuenta'
     email_subject = subject
     message = get_template(message_template).render(context)
-    msg = EmailMessage(email_subject, message, to=[email], from_email=from_email)
+    msg = EmailMessage(email_subject, message, to=email, from_email=from_email)
     msg.content_subtype = 'html'
     msg.send()
 
@@ -398,7 +398,7 @@ class Password_Reset(TemplateView):
 
                     email_subject = 'IDBC Group - Recuperación de Contraseña'
                     message_template = 'password-reset-email.html'
-                    email = email
+                    email = [email]
                     send_email(email_subject, message_template, c, email)
                     return render(request, 'password-reset-done.html')
                 else:

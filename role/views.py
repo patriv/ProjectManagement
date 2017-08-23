@@ -37,8 +37,12 @@ class AddRole(FormView):
         form = RoleForm(post_values)
         print(form)
         if form.is_valid():
-            newRole = form.save()
+            newRole = form.save(commit=False)
             newRole.name = post_values['name']
+            print(Group.objects.filter(name=newRole.name).exists())
+            if Group.objects.filter(name=newRole.name).exists():
+                messages.error(request, "Este rol ya existe, por favor verifique")
+                return HttpResponseRedirect(reverse_lazy('role'))
             newRole.save()
             group = Group.objects.get(name = newRole.name)
             print(group.id)
@@ -162,8 +166,7 @@ def DeleteRole(request,id):
         messages.success(request, "El rol " + str(role.name) +" se ha eliminado exitosamente")
         return HttpResponseRedirect(reverse_lazy('role'))
 
-
-class UpdateRole(FormView):
+class UpdateRole(UpdateView):
     template_name = 'page-role.html'
     form_class = RoleForm
 
@@ -174,6 +177,15 @@ class UpdateRole(FormView):
             pk = kwargs['id']
             group = Group.objects.get(id = pk)
             group.name = request.POST['name']
+            ex = Group.objects.exclude(pk=pk)
+            print(ex)
+            others =[]
+            for i in ex:
+                others.append(i.name)
+
+            if others.count(group.name) != 0:
+                messages.error(request, "Este rol ya existe, por favor verifique")
+                return HttpResponseRedirect(reverse_lazy('role'))
             group.save()
 
             # Project
@@ -198,6 +210,12 @@ class UpdateRole(FormView):
             # Project
             if (view_project != []):
                 print("project and view")
+                if not (Permission.objects.filter(codename='view_project').exists()):
+                    print("no existe ese permiso")
+                    content_type = ContentType.objects.get(app_label='project', model='project')
+                    permission = Permission.objects.create(codename='view_project',
+                                                           name='Can view Project',
+                                                           content_type=content_type)
                 can_view_project = Permission.objects.get(codename='view_project')
                 group.permissions.add(can_view_project.id)
             if (create_project != []):
@@ -213,6 +231,12 @@ class UpdateRole(FormView):
             # ROL
             if (view_rol != []):
                 print("project and view")
+                if not (Permission.objects.filter(codename='view_group').exists()):
+                    print("no existe ese permiso")
+                    content_type = ContentType.objects.get(app_label='auth', model='group')
+                    permission = Permission.objects.create(codename='view_group',
+                                                           name='Can view group',
+                                                           content_type=content_type)
                 can_view_group = Permission.objects.get(codename='view_group')
                 group.permissions.add(can_view_group.id)
 
@@ -236,9 +260,14 @@ class UpdateRole(FormView):
                 print("es vacio")
 
             # Users
-
             if (view_users != []):
                 print("project and view")
+                if not (Permission.objects.filter(codename='view_users').exists()):
+                    print("no existe ese permiso")
+                    content_type = ContentType.objects.get(app_label='auth', model='user')
+                    permission = Permission.objects.create(codename='view_users',
+                                                           name='Can View Users',
+                                                           content_type=content_type)
                 can_view_users = Permission.objects.get(codename='view_users')
                 group.permissions.add(can_view_users.id)
             if (create_users != []):
@@ -348,9 +377,6 @@ class UpdateRole(FormView):
                     print("deleteeeeeeee")
                     p = Permission.objects.get(codename="delete_group")
                     p.group_set.remove(group)
-
-
-
             messages.success(request, "Su rol se ha guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('role'))
         else:

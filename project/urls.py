@@ -4,7 +4,6 @@ from project.views import *
 
 urlpatterns = [
 
-
     url(
         r'^project',
         Home.as_view(),
@@ -74,6 +73,11 @@ urlpatterns = [
         r'^closeProject/(?P<pk>\w+)/$',
         CloseProject,
         name='close_project'),
+
+    url(
+        r'^delete-project/(?P<code>\w+)/$',
+        DeleteProject,
+        name='delete_project'),
 
 ]
 

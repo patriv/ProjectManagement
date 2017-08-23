@@ -291,6 +291,7 @@ class Detail_Project(TemplateView):
             task= Task.objects.filter(users=profileUser.pk,project=project)
         dependencys = Dependency.objects.all()
 
+        projectUser = ProjectUser.objects.filter(project_id=project.code)
         now = datetime.datetime.now()
         print(project.endDate)
         if (project.endDate == None):
@@ -299,6 +300,22 @@ class Detail_Project(TemplateView):
         else:
             resta = project.endDate - now.date()
             context['resta'] = resta.days
+            print("RESTAAAAA")
+            print(resta.days)
+            if resta.days == 1:
+                emailUser =[]
+                for i in projectUser:
+                    emailUser.append(i.user.fk_profileUser_user.email)
+                print("correoooooosss")
+                print(emailUser)
+                email_subject = 'IDBC Group - Entrega de  ' + str(project.name)
+                message_template = 'emailEndProject.html'
+                c = {'project': project.name,
+                     'endDate':project.endDate
+                     }
+                print(c)
+
+                send_email(email_subject, message_template, c, emailUser)
 
         if (project.description == ''):
             project.description = 'Descripción no disponible'
@@ -306,7 +323,7 @@ class Detail_Project(TemplateView):
         if project.startDate == None or project.endDate== None:
             project.startDate = 'No Disponible'
             project.endDate = 'No Disponible'
-        projectUser = ProjectUser.objects.filter(project_id=project.code)
+
         client ='No Disponible'
         for i in projectUser:
             print(i.user_id)
@@ -448,6 +465,20 @@ def getCode(request):
     nameProject= request.GET.get('nameProject',None)
     data ={'code' : Project.objects.get(name=nameProject).code}
     return JsonResponse(data)
+
+
+def DeleteProject(request,code):
+    print("delete Project")
+    project = Project.objects.get(code=code)
+    task = Task.objects.filter(project=project.code).count()
+    if task > 0:
+        messages.success(request, "El proyecto " + str(project.name) + " tiene tareas asociadas. No se puede eliminar")
+        return HttpResponseRedirect(reverse_lazy('project'))
+    else:
+        project.delete()
+        messages.success(request, "El proyecto " + str(project.name) + " se ha eliminado exitosamente")
+        return HttpResponseRedirect(reverse_lazy('project'))
+
 
 class DocumentsView(FormView):
     template_name = 'page-detail-project.html'
@@ -604,7 +635,7 @@ class ChangeStatus(TemplateView):
             for i in projectUser:
                 if i.isResponsable == True:
                     name_responsable = i.user.fk_profileUser_user.first_name
-                    email_responsable = i.user.fk_profileUser_user.email
+                    email_responsable = [i.user.fk_profileUser_user.email]
                     print(email_responsable)
                     print(i.user_id)
                     c = {'usuario': name_responsable,
@@ -620,7 +651,7 @@ class ChangeStatus(TemplateView):
 
                     send_email(email_subject, message_template, c, email_responsable)
 
-            email_task = task.users.fk_profileUser_user.email
+            email_task = [task.users.fk_profileUser_user.email]
             name_responsable = task.users.fk_profileUser_user.first_name
             c = {'usuario': name_responsable,
                  'name_task': task.name,
