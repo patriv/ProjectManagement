@@ -2,6 +2,8 @@ $(document).ready(function () {
 
     $("#email").change(function () {
         var email = $(this).val();
+        var email_regex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
+       
         $.ajax({
             url: 'ajax/validateUser/',
             data: {
@@ -16,6 +18,11 @@ $(document).ready(function () {
                     Materialize.toast('Este email ya está registrado, por favor verifique',4000);
                     $("#email").removeClass('valid').addClass('invalid');
                 }
+                if (email.match(email_regex)=== null){
+                    Materialize.toast('Debe introducir un email válido',4000);
+                    $("#email").removeClass('valid').addClass('invalid');
+                }
+
             }
         });
     });
