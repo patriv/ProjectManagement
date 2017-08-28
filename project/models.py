@@ -20,6 +20,7 @@ class Project(models.Model):
 	endDate = models.DateField(null=True)
 	status= models.CharField(max_length= 20, choices=STATUS)
 	users= models.ManyToManyField(ProfileUser, through='ProjectUser')
+	idTeamWorkProject = models.IntegerField(blank=True, null=True)
 
 	def __str__(self):
 		return self.name

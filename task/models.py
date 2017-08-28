@@ -24,6 +24,7 @@ class Task(models.Model):
 	users= models.ForeignKey(ProfileUser, blank=False)
 	project = models.ForeignKey(Project)
 	endDateReal = models.DateField(null= True)
+	idTeamWorkTask = models.IntegerField(blank=True, null=True)
 
 	class Meta:
 		unique_together = ('name','project',)

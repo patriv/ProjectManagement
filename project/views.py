@@ -21,6 +21,7 @@ from project.models import *
 from task.models import *
 from django.urls import reverse
 from users.views import send_email
+from project_TW import add_project
 
 
 class Home(TemplateView):
@@ -113,7 +114,12 @@ class New_Project(FormView):
             create_event(event)
             print("se creo el evento")
 
-            ####################################################
+
+            #####################Conexion con Team Work###############################
+            id_team_work= add_project(project.name, project.description)
+            print(id_team_work)
+            project.idTeamWorkProject=id_team_work
+            ##################################################
             project.save()
             new_project= Project.objects.get(code = project.code)
             # relacion cliente proyecto
