@@ -36,7 +36,6 @@ root = ET.Element("request")
 task = ET.SubElement(root,"todo-list")
 name_el = ET.SubElement(task, "name")
 description_el = ET.SubElement(task, "description")
-uncompleted_el = ET.SubElement(task, "uncompleted-count")
 projectName_el=ET.SubElement(task,"projectname")
 content_el = ET.SubElement(task, "projectid")
 #due_date_el = ET.SubElement(todo_el, "due-date")
@@ -44,7 +43,7 @@ content_el = ET.SubElement(task, "projectid")
 name_el.text = tasklist_name
 content_el.text = project_id
 projectName_el.text = project_name
-uncompleted_el.text = "2"
+
 #todo_el.text = tasklist_name
 
 #due_date_el.text = due_date

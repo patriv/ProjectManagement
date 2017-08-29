@@ -8,10 +8,11 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import *
 from psycopg2._psycopg import Date
-
 from google_calendar import create_event
 from project.models import ProjectUser
 from task.forms import *
+from newListTaskTW import NewTaskList
+from add_taskTW import AddTask
 
 # Create your views here.
 
@@ -42,16 +43,29 @@ class New_Task(FormView):
             task = form.save(commit=False)
             if (Task.objects.all().count()) == 0:
                 task.code = project + '-001'
+                print("*********************************")
+                print("antes de crear en teamwork")
+                id_TeamWork=NewTaskList("Tareas "+str(project_pk.name), project_pk.idTeamWorkProject, project_pk.name)
+                task.idTeamWorkTask = id_TeamWork
             else:
                 task_all= Task.objects.filter(project=project)
                 if task_all.count() == 0:
                     print("soy vacio")
                     task.code = project + '-001'
+                    print("*********************************")
+                    print("antes de crear en teamwork")
+                    id_TeamWork=NewTaskList("Tareas " + str(project_pk.name), str(project_pk.idTeamWorkProject), project_pk.name)
+                    task.idTeamWorkTask=id_TeamWork
+                    print("AQUIIIIIIII")
+                    print(task.idTeamWorkTask)
                 else:
                     key = []
                     print(task_all)
+                    teamWork = 0
                     for i in task_all:
                         key.append(i.code.split('-'))
+                        teamWork=i.idTeamWorkTask
+                    print(teamWork)
                     print("soy key")
                     print(key)
                     key.sort()
@@ -64,7 +78,8 @@ class New_Task(FormView):
                         task.code = project + '-0'+ str(newCode)
                     else:
                         task.code = project + '-'+ str(newCode)
-
+                    task.idTeamWorkTask=teamWork
+                    print(task.idTeamWorkTask)
             task.project = Project.objects.get(code=project)
             task.name = post_values['name']
             user = post_values['users']
@@ -86,13 +101,15 @@ class New_Task(FormView):
             endDate = b[2] + '-' + b[1] + '-' + b[0]
             task.endDate = endDate
             dateProject=project_pk.endDate.day
-            if datetime.date(int(a[2]),int(a[1]),int(a[0])) > project_pk.endDate or datetime.date(int(b[2]),int(b[1]),int(b[0])) > project_pk.endDate :
+            if datetime.date(int(a[2]),int(a[1]),int(a[0])) > project_pk.endDate or datetime.date\
+                        (int(b[2]),int(b[1]),int(b[0])) > project_pk.endDate :
                 messages.success(request, "El proyecto " +str(project_pk.name)+" finaliza el "
                                  +str(project_pk.endDate.day)+'-'+str(project_pk.endDate.month)+'-'+
                                  str(project_pk.endDate.year)+" , por favor revise las fechas de la tarea")
                 return render(request, 'new_work.html', {'form': form, 'pk': self.kwargs['pk']})
 
-            if datetime.date(int(a[2]),int(a[1]),int(a[0])) < project_pk.startDate or datetime.date(int(b[2]),int(b[1]),int(b[0])) < project_pk.startDate :
+            if datetime.date(int(a[2]),int(a[1]),int(a[0])) < project_pk.startDate or \
+                            datetime.date(int(b[2]),int(b[1]),int(b[0])) < project_pk.startDate :
                 messages.success(request, "El proyecto " +str(project_pk.name)+" inicia el "
                                  +str(project_pk.startDate.day)+'-'+str(project_pk.startDate.month)+'-'+
                                  str(project_pk.startDate.year)+" , por favor revise las fechas de la tarea")
@@ -128,10 +145,16 @@ class New_Task(FormView):
 
             create_event(event)
             print("se creo el evento")
-
+            print(startDate)
             ####################################################
-
+          #
             task.save()
+            task = Task.objects.get(code=task.code)
+            print(str(task.startDate).split('-'))
+            startDate= str(task.startDate).split('-')
+            endDate=str(task.endDate).split('-')
+            print(''.join(startDate))
+            AddTask(task.idTeamWorkTask, task.name, ''.join(startDate), ''.join(endDate))
             #FALTA LA DEPENDENCIA
             dependence = post_values['dependencia']
             if dependence != '':
