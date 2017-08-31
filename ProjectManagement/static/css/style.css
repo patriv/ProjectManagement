@@ -1488,7 +1488,7 @@ background-size: cover;
 
 #banner{
   width: 203px;
-  height: 55px;
+  height: auto;
 }
 
 #banner1{

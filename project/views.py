@@ -14,6 +14,8 @@ from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+
 from google_drive import upload_file
 from google_calendar import create_event
 from project.forms import *
@@ -21,7 +23,7 @@ from project.models import *
 from task.models import *
 from django.urls import reverse
 from users.views import send_email
-from project_TW import add_project
+from project_TW import add_project, UpdateProjectTW
 
 
 class Home(TemplateView):
@@ -44,29 +46,20 @@ class New_Project(FormView):
     def get_context_data(self, **kwargs):
         context = super(
             New_Project, self).get_context_data(**kwargs)
-        print("get")
         context['title'] = 'Agregar'
         return context
 
     def post(self, request, *args, **kwargs):
-        print("en post project")
         post_values = request.POST.copy()
         form = NewProjectForm(post_values)
-        print(form.is_valid())
         if form.is_valid():
             project = form.save(commit=False)
             project.name = post_values['name']
-            print(project.name)
             code = codeProject(project.name)
-            print("esto es code")
-            print(code)
             code_exist = Project.objects.filter(code=code).exists()
-            print(code_exist)
             if code_exist:
                 length = len(code)
                 code = code + project.name[length]
-                print("new code")
-                print(code)
                 project.code=code
             else:
                 project.code = code
@@ -78,7 +71,6 @@ class New_Project(FormView):
             project.endDate = endDate
             project.status = post_values['status']
             project.description = post_values['description']
-            print(project.startDate)
             auth_cliente = post_values['client']
             auth_emp = post_values['company']
             # id de responsable de la empresa
@@ -89,11 +81,8 @@ class New_Project(FormView):
             # Se crea el evento para realizar la conexión con Google Calendar
 
             tz = pytz.timezone('America/Caracas')
-            print(tz)
             start_datetime = tz.localize(datetime.datetime(int(a[2]), int(a[1]), int(a[0])))
-            print(start_datetime)
             stop_datetime = tz.localize(datetime.datetime(int(b[2]), int(b[1]), int(b[0])))
-            print(stop_datetime)
             event = {
                 'summary': 'Proyecto '+ str(project.name),
                 'description': project.description,
@@ -115,13 +104,22 @@ class New_Project(FormView):
             print("se creo el evento")
 
 
-            #####################Conexion con Team Work###############################
-            id_team_work= add_project(project.name, project.description)
-            print(id_team_work)
-            project.idTeamWorkProject=id_team_work
-            ##################################################
             project.save()
             new_project= Project.objects.get(code = project.code)
+
+            print(str(new_project.startDate).split('-'))
+            startDate = str(new_project.startDate).split('-')
+            endDate = str(new_project.endDate).split('-')
+            print(''.join(startDate))
+
+            #####################Conexion con Team Work###############################
+            id_team_work= add_project(project.name, project.description, ''.join(startDate), ''.join(endDate))
+            print(id_team_work)
+            project.idTeamWorkProject=id_team_work
+            project.save()
+            project.save()
+            ##################################################
+
             # relacion cliente proyecto
             project_user_client = ProjectUser(user= profile_client, project=new_project)
             #relacion empresa proyecto
@@ -133,7 +131,8 @@ class New_Project(FormView):
             return HttpResponseRedirect(reverse_lazy('new_project'))
         else:
             messages.success(request, "Error al registrar el proyecto")
-            return HttpResponseRedirect(reverse_lazy('new_project'))
+
+            return render(request, 'page-new-project.html', {'form': form})
 
 class Update_Project(TemplateView):
     template_name = 'page-new-project.html'
@@ -235,7 +234,6 @@ class Update_Project(TemplateView):
                 print(project_user_emp)
                 project_user_emp.save()
 
-
             profile_client = ProfileUser.objects.get(fk_profileUser_user = auth_cliente)
             old_client = ProjectUser.objects.filter(user=profile_client.pk, project=project)
             print("viejo cliente " + str(old_client))
@@ -248,7 +246,6 @@ class Update_Project(TemplateView):
                     profileUser = ProfileUser.objects.get(id = i.user_id)
                     user = User.objects.get(id=profileUser.fk_profileUser_user_id)
                     print(user)
-                    group = user.groups.all()[0]
                     if str(user.groups.all()[0]) == "Cliente":
                         deleteClient = ProjectUser.objects.get(user_id=profileUser)
                         print("me van a eliminar " +str(deleteClient.user_id))
@@ -264,6 +261,22 @@ class Update_Project(TemplateView):
             project.description = post_values['description']
 
             project.save()
+            project = Project.objects.get(code = project.code)
+            print("aquiiiiii antes de la fecha")
+            print(str(project.startDate).split('-'))
+            startDate = str(project.startDate).split('-')
+            endDate = str(project.endDate).split('-')
+            print(''.join(startDate))
+
+            # ****************** Team Work ***********************
+            print("AQUIIIIIIII")
+
+            print(request.method)
+            UpdateProjectTW(project.idTeamWorkProject, project.name, ''.join(startDate), ''.join(endDate),
+                            project.description)
+            print("Despues del update")
+
+            # *******************************************************
 
             messages.success(request, "El proyecto ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('project'))
@@ -472,9 +485,9 @@ def getCode(request):
     data ={'code' : Project.objects.get(name=nameProject).code}
     return JsonResponse(data)
 
-
 def DeleteProject(request,code):
     print("delete Project")
+    print(request.method)
     project = Project.objects.get(code=code)
     task = Task.objects.filter(project=project.code).count()
     if task > 0:
@@ -484,7 +497,6 @@ def DeleteProject(request,code):
         project.delete()
         messages.success(request, "El proyecto " + str(project.name) + " se ha eliminado exitosamente")
         return HttpResponseRedirect(reverse_lazy('project'))
-
 
 class DocumentsView(FormView):
     template_name = 'page-detail-project.html'
@@ -702,7 +714,6 @@ def CloseProject(request, pk):
     project.status ='Done'
     print(project.status)
     project.save()
-
 
     messages.success(request, "El Proyecto "+str(project.name)+ " se ha cerrado.")
     return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": project.code}))

@@ -249,7 +249,6 @@ class Update_Task(TemplateView):
             task.name = post_values['name']
             profile_users = post_values['users']
             task.users = ProfileUser.objects.get(fk_profileUser_user=profile_users)
-
             a = post_values['startDate'].split('-')
             startDate = a[2]+'-'+a[1]+'-'+a[0]
             print(startDate)
@@ -261,11 +260,7 @@ class Update_Task(TemplateView):
             dependency = Dependency.objects.filter(task=task)
             print(dependency)
             dependence = post_values['dependencia']
-            print("soy yo")
-            print(dependence)
             dependence = dependence.split(',')
-            print(dependence)
-
             array_dependece = []
             for a in dependency:
                 array_dependece.append(Task.objects.get(code = a.dependence).name)
@@ -293,7 +288,6 @@ class Update_Task(TemplateView):
                         new = Dependency(dependence=code.code,task=task)
                         new.save()
 
-            # la dependencia esta mala!
             task.status = post_values['status']
             task.description = post_values['description']
             task.save()
