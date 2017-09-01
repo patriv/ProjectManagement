@@ -23,7 +23,7 @@ from project.models import *
 from task.models import *
 from django.urls import reverse
 from users.views import send_email
-from project_TW import add_project, UpdateProjectTW
+from project_TW import add_project, UpdateProjectTW, DeleteProjectTW
 
 
 class Home(TemplateView):
@@ -494,6 +494,7 @@ def DeleteProject(request,code):
         messages.success(request, "El proyecto " + str(project.name) + " tiene tareas asociadas. No se puede eliminar")
         return HttpResponseRedirect(reverse_lazy('project'))
     else:
+        DeleteProjectTW(project.idTeamWorkProject)
         project.delete()
         messages.success(request, "El proyecto " + str(project.name) + " se ha eliminado exitosamente")
         return HttpResponseRedirect(reverse_lazy('project'))

@@ -38,11 +38,11 @@ def AddTask(tasklist_id, task_name, start_date, end_date ):
     print(json.dumps(z))
 
     request = urllib.request.Request(
-        "https://{0}.teamwork.com/todo_lists/{1}/todo_items.xml".format(company, tasklist_id),
+        "https://{0}.teamwork.com/todo_lists/{1}/todo_items.json".format(company, tasklist_id),
         json_string)
     print(request)
     request.add_header("Authorization", "BASIC " + key.decode())
-    request.add_header("Content-type", "application/xml")
+    request.add_header("Content-type", "application/json")
     print(request.header_items())
     response = urllib.request.urlopen(request)
     data = response.read()
