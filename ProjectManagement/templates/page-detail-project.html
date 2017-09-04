@@ -290,7 +290,6 @@
                                         data-target="modal3" data-pk="{{ task.code }}">
                                             <i class = "mdi-action-visibility" id = "viewTask"></i></a>
                                         {% if perms.project.add_project %}
-
                                             <a class = "waves-effect waves-light modal-trigger tooltipped open-AddBookDialog1" data-position="right" data-delay="50" data-tooltip="Eliminar Tarea"
                                                data-target="modal2" data-link-delete="{% url 'delete_task' task.code %}">
                                                 <i class = "mdi-action-highlight-remove" id = "remove"></i></a>

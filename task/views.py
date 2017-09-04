@@ -12,10 +12,10 @@ from google_calendar import create_event
 from project.models import ProjectUser
 from task.forms import *
 from newListTaskTW import NewTaskList
-from add_taskTW import AddTask
+from add_taskTW import AddTask, UpdateTaskTW, DeleteTaskTW
+
 
 # Create your views here.
-
 
 class New_Task(FormView):
     template_name = 'new_work.html'
@@ -24,7 +24,6 @@ class New_Task(FormView):
     def get_context_data(self, **kwargs):
         context = super(
             New_Task, self).get_context_data(**kwargs)
-        print("get")
         project = Project.objects.get(code=self.kwargs['pk'])
         task = Task.objects.filter(project=project)
 
@@ -43,8 +42,6 @@ class New_Task(FormView):
             task = form.save(commit=False)
             if (Task.objects.all().count()) == 0:
                 task.code = project + '-001'
-                print("*********************************")
-                print("antes de crear en teamwork")
                 id_TeamWork=NewTaskList("Tareas "+str(project_pk.name), project_pk.idTeamWorkProject, project_pk.name)
                 task.idTeamWorkTask = id_TeamWork
             else:
@@ -52,22 +49,15 @@ class New_Task(FormView):
                 if task_all.count() == 0:
                     print("soy vacio")
                     task.code = project + '-001'
-                    print("*********************************")
-                    print("antes de crear en teamwork")
                     id_TeamWork=NewTaskList("Tareas " + str(project_pk.name), str(project_pk.idTeamWorkProject), project_pk.name)
                     task.idTeamWorkTask=id_TeamWork
-                    print("AQUIIIIIIII")
                     print(task.idTeamWorkTask)
                 else:
                     key = []
-                    print(task_all)
                     teamWork = 0
                     for i in task_all:
                         key.append(i.code.split('-'))
                         teamWork=i.idTeamWorkTask
-                    print(teamWork)
-                    print("soy key")
-                    print(key)
                     key.sort()
                     last = key.pop()
                     newCode = int(last[1]) + 1
@@ -79,15 +69,11 @@ class New_Task(FormView):
                     else:
                         task.code = project + '-'+ str(newCode)
                     task.idTeamWorkTask=teamWork
-                    print(task.idTeamWorkTask)
             task.project = Project.objects.get(code=project)
             task.name = post_values['name']
             user = post_values['users']
-            print(user)
             task.users = ProfileUser.objects.get(id = user)
-            print(task.users)
             projectUser = ProjectUser.objects.filter(user=task.users).count()
-            print(projectUser)
             if projectUser == 0:
                 newRelation= ProjectUser(isResponsable=False, project=task.project, user_id=task.users.pk)
                 newRelation.save()
@@ -100,7 +86,7 @@ class New_Task(FormView):
             b = post_values['endDate'].split('-')
             endDate = b[2] + '-' + b[1] + '-' + b[0]
             task.endDate = endDate
-            dateProject=project_pk.endDate.day
+            #dateProject=project_pk.endDate.day
             if datetime.date(int(a[2]),int(a[1]),int(a[0])) > project_pk.endDate or datetime.date\
                         (int(b[2]),int(b[1]),int(b[0])) > project_pk.endDate :
                 messages.success(request, "El proyecto " +str(project_pk.name)+" finaliza el "
@@ -154,7 +140,8 @@ class New_Task(FormView):
             startDate= str(task.startDate).split('-')
             endDate=str(task.endDate).split('-')
             print(''.join(startDate))
-            AddTask(task.idTeamWorkTask, task.name, ''.join(startDate), ''.join(endDate))
+            task.idTaskTW=AddTask(task.idTeamWorkTask, task.name, ''.join(startDate), ''.join(endDate))
+            task.save()
             #FALTA LA DEPENDENCIA
             dependence = post_values['dependencia']
             if dependence != '':
@@ -292,6 +279,14 @@ class Update_Task(TemplateView):
             task.description = post_values['description']
             task.save()
 
+            task = Task.objects.get(code=task.code)
+            print(str(task.startDate).split('-'))
+            startDate = str(task.startDate).split('-')
+            endDate = str(task.endDate).split('-')
+            print(''.join(startDate))
+
+            UpdateTaskTW(task.idTaskTW, task.name, ''.join(startDate), ''.join(endDate))
+            print("despues del update")
 
             messages.success(request, "La tarea ha sido modificada exitosamente")
             return HttpResponseRedirect(reverse_lazy('detail_project',
@@ -300,11 +295,8 @@ class Update_Task(TemplateView):
             return render(request, 'new_work.html', {'form':form, 'code':self.kwargs['code']})
 
 def ValidateTask(request):
-    print("*********** en validate************")
     name = request.GET.get('name', None)
-    print(name)
     code = request.GET.get('code', None)
-    print(code)
     data = {
         'name_exists': Task.objects.filter(name=name, project=code).exists()
     }
@@ -312,22 +304,21 @@ def ValidateTask(request):
     return JsonResponse(data)
 
 def DeleteTask(request,code):
-    print("delete")
     task = Task.objects.get(code=code)
     project = Project.objects.get(code=task.project.code)
-    print(task.project.code)
 
     if task.status == 'Technical Review':
         messages.success(request, "La tarea " + str(task.name) + " no se puede eliminar.")
         return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": task.project.code}))
     else:
+        print(task.idTaskTW)
+        DeleteTaskTW(task.idTaskTW)
         task.delete()
         messages.success(request, "La tarea " + str(task.name) + " se ha eliminado exitosamente")
         return HttpResponseRedirect(reverse_lazy('detail_project',kwargs={"pk":task.project.code}))
 
 
 def DetailTask(request, code):
-    print("*********** en validate task************")
     code = request.GET.get('code', None)
     print(code)
     data = {

@@ -44,7 +44,6 @@ def add_project(name_project, description_project, start_date, end_date):
 
     return x['id']
 
-
 def UpdateProjectTW(project_id, project_name, start_date, end_date, description ):
     company = "project36"
     key = base64.b64encode(b'twp_TRKx81UCnv4deufBFU2b85350cXo:xxx')
@@ -85,12 +84,12 @@ def UpdateProjectTW(project_id, project_name, start_date, end_date, description 
     print(request.get_method())
     print(data)
 
-def DeleteProjectTW(projectt_id):
+def DeleteProjectTW(project_id):
     company = "project36"
     key = base64.b64encode(b'twp_TRKx81UCnv4deufBFU2b85350cXo:xxx')
-    projectt_id = projectt_id
+    project_id = project_id
     request = urllib.request.Request(
-        "https://{0}.teamwork.com/projects/{1}.json".format(company, projectt_id))
+        "https://{0}.teamwork.com/projects/{1}.json".format(company, project_id))
     print(request)
     request.add_header("Authorization", "BASIC " + key.decode())
     request.add_header("Content-type", "application/json")
@@ -101,4 +100,3 @@ def DeleteProjectTW(projectt_id):
     data = response.read()
     print(request.get_method())
     print(data)
-

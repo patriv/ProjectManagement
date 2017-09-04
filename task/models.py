@@ -25,6 +25,7 @@ class Task(models.Model):
 	project = models.ForeignKey(Project)
 	endDateReal = models.DateField(null= True)
 	idTeamWorkTask = models.IntegerField(blank=True, null=True)
+	idTaskTW = models.IntegerField(blank=True, null=True)
 
 	class Meta:
 		unique_together = ('name','project',)
