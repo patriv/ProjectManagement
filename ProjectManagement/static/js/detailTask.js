@@ -2,7 +2,6 @@ $(document).ready(function (){
     /*para pasar el link de modificar al modal*/
 
     $(document).on("click", ".open-AddBookDialogTask", function () {
-
         var myPk = $(this).data('pk');
         var path = window.location.href.split('/');
         var url= path[0]+"/"+path[1]+"/"+path[2]+"/"+"detail-task/"+path[4];

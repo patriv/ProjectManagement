@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="section" id="table_task" style="display: none;">
+           {% comment %} <div class="section" id="table_task" style="display: none;">
                 <h3 class="header bold"> Tareas</h3>
                 <div class="row">
                     <div class="col s12 m12 l12" id = "tabla">
@@ -137,12 +137,54 @@
                             </tr>
                             </tfoot>
                             <tbody id="info">
-                            
+
                             </tbody>
                         </table>
                     </div>
                 </div>
+            </div>{% endcomment %}
+
+        <div class="section" id="table_task" style="display: none;">
+            <!--DataTables Users-->
+            <div id="table-datatables">
+                <div class="row">
+                    <div class="col s12 m12 l12"  id = "tabla">
+                        <h3 class="header bold ">Tareas</h3>
+                        <table id="data-table-simple" class="responsive-table display centered striped tableProject" cellspacing="0">
+
+                            <thead>
+                             <tr id="filas">
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Responsable</th>
+                                <th>Fecha de Inicio</th>
+                                <th>Fecha Fin (Estimada)</th>
+                                <th>Requerida por</th> <!-- la otra tarea necesita de mi -->
+                                <th>Requiere de</th> <!-- Necesito de otra tarea -->
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Responsable</th>
+                                <th>Fecha de Inicio</th>
+                                <th>Fecha Fin (Estimada)</th>
+                                <th>Requerida por</th>
+                                <th>Requiere de</th>
+                                <th>Status</th>
+                            </tr>
+                            </tfoot>
+                            <tbody id="info">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
             </div>
+        </div>
         </div>
       <!-- END CONTENT -->
     <!-- //////////////////////////////////////////////////////////////////////////// -->

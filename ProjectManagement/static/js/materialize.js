@@ -727,7 +727,8 @@ if ($) { Vel = $.Velocity } else { Vel = Velocity};
     leanModal: function(options) {
       return this.each(function() {
         // Close Handlers
-        $(this).click(function(e) {
+
+        $('body').on('click','.modal-trigger',function(e) {
           var modal_id = $(this).attr("href") || '#' + $(this).data('target');
           $(modal_id).openModal(options);
           e.preventDefault();

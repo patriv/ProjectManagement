@@ -158,7 +158,6 @@ class New_Task(FormView):
                         task_dependence = Dependency(task = task_save, dependence=c.code)
                         task_dependence.save()
 
-
             messages.success(request, "La tarea se ha guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('new_task',
                                                     kwargs={'pk':project}))
@@ -174,10 +173,24 @@ def Gantt(request):
     print(tasks)
     #print(request.user.id) Con esto obtengo el id user log
     array = []
+    percent=0
     for task in tasks:
         duration = task.endDate - task.startDate
         print(task.code)
-        array.append([task.code,task.name,task.startDate, task.endDate, duration.days, 100, None ])
+        print("SOY STATUS!!!")
+        print(task.status)
+        if task.status == 'Done':
+            percent=100
+        elif task.status == 'In Progress':
+          percent = 20
+        elif task.status == 'Technical Review':
+            percent = 40
+        elif task.status == 'Functional Review':
+            percent = 60
+        elif task.status == 'Customer Acceptance':
+            percent = 80
+        print(percent)
+        array.append([task.code,task.name,task.startDate, task.endDate, duration.days, percent, None ])
     print(array)
     return JsonResponse(array, safe=False)
 
