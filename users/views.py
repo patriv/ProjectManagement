@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import random
-import json
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import *
 from django.core.mail import EmailMessage
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.views.generic import *
@@ -18,10 +15,19 @@ from users.forms import *
 from users.models import *
 from django.urls import reverse
 
+'''
+Clase que muestra la vista principal del sistme.Login
+'''
 class Login(TemplateView):
     template_name = 'page-login.html'
 
+'''
+Función que permite a un usuario iniciar sesión
+'''
 def user_login(request):
+    '''
+    Si hay una sesión iniciada y se trata de acceder nuevamente, se cierra ésta y se debe iniciar nuevamente.
+    '''
     if request.user.is_authenticated():
         print("autenticado")
         #messages.success(request, 'Error al registrar usuario')

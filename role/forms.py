@@ -26,13 +26,6 @@ class RoleForm(forms.ModelForm):
 		model = Group
 		fields = ('id',)
 
-	# def clean_name(self,**kwargs):
-	# 	name = self.cleaned_data.get('name')
-	# 	if Group.objects.filter(name=name).count() != 0:
-	# 		msj = "El nombre del rol ya existe, por favor verifique"
-	# 		self.add_error('name', msj)
-	# 	return name
-
 
 
 
