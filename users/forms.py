@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from django import forms
-from django.contrib.auth.models import User, Group
 from django.core.validators import RegexValidator
-
-from users.models import ProfileUser
-from django.db import models
 from role.forms import *
 
 PHONE_VALIDATOR = RegexValidator(
@@ -55,10 +50,8 @@ class UserForm(forms.ModelForm):
 		fields = ('first_name','last_name','username','email','groups',)
 
 	def clean_email(self):
-		print("Clean email")
 		email = self.cleaned_data.get('email')
 		if User.objects.filter(email=email).count() != 0:
-			print("dentro del if")
 			msj = "Este correo ya está siendo utilizado"
 			self.add_error('email', msj)
 		return email

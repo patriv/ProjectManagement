@@ -29,7 +29,6 @@ def user_login(request):
     Si hay una sesión iniciada y se trata de acceder nuevamente, se cierra ésta y se debe iniciar nuevamente.
     '''
     if request.user.is_authenticated():
-        print("autenticado")
         #messages.success(request, 'Error al registrar usuario')
         return HttpResponseRedirect(reverse_lazy('logout'))
 
@@ -42,15 +41,17 @@ def user_login(request):
             error_username = "Tu username/email o contraseña no son correctos."
 
             user_auth = authenticate_user(username)
-            print("esto es user_auth")
-            print(user_auth)
+            '''
+            Condicional que verifica que el usuario exista en la base de datos
+            '''
             if user_auth is not None:
-
+                '''
+                En caso de que el usuario esté como activo ingresa de manera exitosa al sistema
+                '''
                 if user_auth.is_active:
                     user = authenticate(username=user_auth.username,
                                         password=password)
-                    print("user login")
-                    print(user)
+
                     if user:
                         login(request, user)
                         return HttpResponseRedirect(reverse_lazy('project'))
@@ -58,13 +59,15 @@ def user_login(request):
                         form.add_error(None, error_username)
                         return render(request, 'page-login.html',
                                       {'form': form})
+                # En caso de que el usuario esté no activo, se lleva a la vista de cambio de contraseña
                 else:
-                    print("no active")
                     new_user = ProfileUser.objects.get(fk_profileUser_user=user_auth.pk)
-                    print(new_user)
                     activation_key = new_user.activationKey
+                    '''
+                    En caso de que la clave introducida sea la asignada por primera vez de manera aleatoria, se lleva al 
+                    usuario al cambio de contraseña.
+                    '''
                     if password == activation_key:
-                        print("son iguales")
                         return HttpResponseRedirect(reverse('first_session',
                                                             kwargs={'activationKey': activation_key}))
                     else:
@@ -82,6 +85,10 @@ def user_login(request):
     context = {'form': form}
     return render(request, 'page-login.html', context)
 
+'''
+Función que permite autenticar a un usuario bien sea por username o por correo electrónico
+@:param username: username o email del usuario.
+'''
 def authenticate_user(username=None):
     try:
         user = User.objects.get(username=username)
@@ -95,19 +102,23 @@ def authenticate_user(username=None):
         except User.DoesNotExist:
             return None
 
+
+'''
+Clase que permite visualizar a todos los usuarios registrados en el sistema.
+'''
 class Users(TemplateView):
     template_name = 'page-user.html'
 
     def get_context_data(self, **kwargs):
         context = super(
             Users, self).get_context_data(**kwargs)
-        print("get users")
         user = ProfileUser.objects.all()
-        for i in user:
-            print(i.phone)
         context['users'] = user
         return context
 
+'''
+Clase que permite agregar un nuevo usuario al sistema
+'''
 class New_Users(FormView):
     template_name = 'page-new-user.html'
     form_class = UserForm
@@ -119,14 +130,19 @@ class New_Users(FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        print("en post new user")
         post_values = request.POST.copy()
         form = UserForm(post_values)
-        print(form.is_valid())
         if form.is_valid():
             user = form.save(commit=False)
+            '''
+            Se crea un token aleatorio, el cual se convertirá en el password provisional del usuario registrado
+            '''
             activation_key = create_token()
             user.set_password(activation_key)
+            '''
+            Se le coloca como usuaio no activo con la finalidad de que al ingresar al sistema, la primera acción a realizar 
+            sea cambiar su contraseña.
+            '''
             user.is_active = 0
             user.save()
             user_pk = User.objects.get(id=user.id)
@@ -134,36 +150,43 @@ class New_Users(FormView):
             group= Group.objects.get(pk=role)
             user.groups.add(group)
             phone = post_values['phone']
+            '''
+            Se guardan los datos en la tabla uno a uno de la tabla user
+            '''
             new_user = ProfileUser(fk_profileUser_user = user_pk, phone=phone, activationKey=activation_key)
             new_user.save()
             new_user_pk= ProfileUser.objects.get(id=new_user.pk)
-            print('new_user ')
-            print(new_user_pk.pk)
+            '''
+            Se toman los proyectos asignados al usuario y se guardan en una lista, con la finalidad de verificar si
+            existen o no en la base de datos. Si el proyecto no existe, se crea en la base de datos.
+            '''
             proj1 = request.POST.get('project',None)
-            print(proj1)
             proj2 = proj1.split(', ')
-            print("esto es split")
-            print(proj2)
             for i in proj2:
                 proj = Project.objects.filter(name=i).exists()
-                print(proj)
                 if proj:
-                    print('el proyecto '+ str(i) + ' existe')
+                    '''
+                    Si el proyecto existe, se asocia el proyecto con el usuario. 
+                    '''
                     proj_exist= Project.objects.get(name=i)
-                    print(proj_exist.pk)
                     project_user = ProjectUser(project=proj_exist, user = new_user_pk)
                     project_user.save()
                 else:
                     if i != '':
-                        print('el proyecto '+ str(i) + ' no existe')
+                        '''
+                        En caso de que el proyecto n o exista, se crea y guarda en la base de datos y se asocia con el 
+                        usuario.
+                        '''
                         code = codeProject(i)
-                        print(code)
                         new_project = Project(code=code, name=i)
                         new_project.save()
                         proj_exist = Project.objects.get(name=i)
                         project_user = ProjectUser(project=proj_exist, user=new_user_pk)
                         project_user.save()
 
+            '''
+            Se envía un correo electrónico al usuario registrado en el sistema, con el username y password asignado.
+            '''
             c = {'usuario': user.first_name,
                     'username':user.username,
                     'key': activation_key,
@@ -174,25 +197,24 @@ class New_Users(FormView):
             email =[user.email]
             send_email(email_subject, message_template, c, email)
 
-            # new_user.save()
-            # user.groups.add(group)
-            # key_expires = datetime.datetime.today() + datetime.timedelta(days=1)
-
             messages.success(request, "El usuario ha sido guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('users'))
         else:
             messages.success(request, 'Error al registrar usuario')
             return render(request, 'page-new-user.html', {'form': form})
-            # return render(request, 'page-new-user.html',
-            #               {'form': form})
 
+'''
+Función que permite eliminar un usuario del sistema.
+@:param: request: solicitud del sistema.
+@:param: id: identificador del usaurio a ser eliminado.
+'''
 def DeleteUser(request,id):
     user = ProfileUser.objects.get(pk=id)
-    print(user.fk_profileUser_user)
     user_pk = User.objects.get(pk=user.fk_profileUser_user.pk)
     task=Task.objects.filter(users=user).count()
-    print("soy tareas")
-    print(task)
+    '''
+    Si el usuario tiene asignado tareas, no se puede eliminar.
+    '''
     if task > 0 :
         messages.success(request,"El usuario " + str(user.fk_profileUser_user.username) + " tiene tareas asociadas. No se puede eliminar")
         return HttpResponseRedirect(reverse_lazy('users'))
@@ -201,6 +223,13 @@ def DeleteUser(request,id):
     messages.success(request, "El usuario " + str(user.fk_profileUser_user.username) +" se ha eliminado exitosamente")
     return HttpResponseRedirect(reverse_lazy('users'))
 
+'''
+Función que permite el envío de correo electrónico a un usuario.
+@:param subject: Asunto del email
+@:param: message_template: Mensaje a enviar al usuario, viene dado por una plantilla HTML.
+@:param context: Información que se quiera pasar al message_template.
+@:param email: Dirección de correo electrónico al cual se le enviará el email.
+'''
 def send_email(subject, message_template, context, email):
     from_email = 'IDBC Group - Activación de cuenta'
     email_subject = subject
@@ -209,6 +238,10 @@ def send_email(subject, message_template, context, email):
     msg.content_subtype = 'html'
     msg.send()
 
+
+'''
+Función que permite generar un token aleatorio.
+'''
 def create_token():
     chars = list('ABCDEFGHIJKLMNOPQRSTUVWYZabcdefghijklmnopqrstuvwyz0123456789')
     random.shuffle(chars)
@@ -218,28 +251,27 @@ def create_token():
     key = token[:12]
     return key
 
+'''
+Clase que permite verificar si es la primera sesión del usuario.
+'''
 class First_Session(TemplateView):
     template_name = 'first_session.html'
 
     def post(self, request, *args, **kwargs):
         post_values = request.POST.copy()
         form = FirstSessionForm(post_values)
-        print(form.is_valid())
         if form.is_valid():
             activation_key = self.kwargs['activationKey']
             user = ProfileUser.objects.get(activationKey=activation_key)
             username = User.objects.get(pk = user.fk_profileUser_user.pk)
-            print(username.pk)
-            print(activation_key)
             password = post_values['password']
             password2 = post_values['password2']
-            print(password2)
-
+            '''
+            Si las contraseñas introducidas son iguales, el usuario pasa a ser activo y se guarda su nueva contraseña.
+            '''
             if password == password2:
                 username.set_password(password)
                 username.is_active= 1
-                print(username.is_active)
-                print(username.password)
                 username.save()
                 form.add_error(None, 'La contraseña ha sido cambiada exitosamente')
                 return render(request, 'page-login.html',
@@ -253,6 +285,9 @@ class First_Session(TemplateView):
             return render(request, 'first_session.html',
                           {'form': form})
 
+'''
+Clase que permite modificar un usuario.
+'''
 class Update_Users(TemplateView):
     template_name = 'page-new-user.html'
     form_class = UpdateUserForm
@@ -260,26 +295,24 @@ class Update_Users(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(
             Update_Users, self).get_context_data(**kwargs)
-
         context['title'] = 'Modificar'
         user = ProfileUser.objects.get(pk=self.kwargs['id'])
-        print("pk del usuario")
-        print(user.pk)
+        '''
+        Se obtienen todos los proyectos asociados al usuario a modificar y se guardan en una lista.
+        '''
         project_code = ProjectUser.objects.all().filter(user_id=user)
-        print("proyecto")
-        print(project_code)
         x = []
         for i in project_code:
             proj = Project.objects.get(code=i)
             x.append(proj.name)
-        print(x)
+        '''
+        Se le aplica join, con la finalidad de poder mostrarlos en la vista de modificar.
+        '''
         proj_ass = ", ".join(x)
-        print(proj_ass)
 
-        print("users")
-        print(self.kwargs['id'])
-        print(user)
-
+        '''
+        Data que se muestra en la plantilla de modificar.
+        '''
         data = {'first_name': user.fk_profileUser_user.first_name,
                  'last_name': user.fk_profileUser_user.last_name,
                  'username': user.fk_profileUser_user.username,
@@ -298,8 +331,6 @@ class Update_Users(TemplateView):
         if form.is_valid():
             user_pk = self.kwargs['id']
             userProfile = ProfileUser.objects.get(pk=user_pk)
-            print("editando un usuario")
-            print(userProfile)
             user = User.objects.get(pk=userProfile.fk_profileUser_user.pk)
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
@@ -314,55 +345,50 @@ class Update_Users(TemplateView):
             user.groups.add(group)
             user.save()
             proj1 = request.POST.get('project', None)
-            print("soy proje 1" + str(proj1))
+            '''
+            Si el campo de proyecto que se está recibiendo es vacío, es porque el usuario eliminó todos los proyectos
+            asociados a él.
+            '''
             if proj1 == '':
                 oldProject = ProjectUser.objects.filter(user_id=userProfile)
                 oldProject.delete()
             else:
                 proj2 = proj1.split(', ')
-                print("Soy el proyecto con split "+str(proj2))
-
                 for i in proj2:
 
-                    # Reviso los proyectos que introduce el usuario en el campo, si no existe se crea la tupla
+                    '''
+                    Reviso los proyectos que introduce el usuario en el campo, si no existe se crea la instancia
+                    '''
                     proj = Project.objects.filter(name=i).exists()
-                    print(proj)
                     if proj:
-                        print('el proyecto '+ str(i) + ' existe')
                         proj_exist= Project.objects.get(name=i)
-                        print(proj_exist.pk)
                         project_user=ProjectUser.objects.filter(user=user_pk, project=proj_exist.pk).exists()
-                        print("existe el par "+str(project_user))
+                        '''
+                        Si no existe la relación (usuario, proyecto) se asocia el proyecto con el usuario 
+                        '''
                         if not project_user:
                             new_project_user = ProjectUser(user=userProfile, project=proj_exist)
                             new_project_user.save()
-
-                    #project_user = Project_user(project=proj_exist, user = new_user_pk)
-                    #project_user.save()
                     else:
                         if i != '':
-                            print('el proyecto '+ str(i) + ' no existe')
+                            '''
+                            En caso de no existir el proyecto se crea su instancia y se asocia al usuario respectivo.
+                            '''
                             code = codeProject(i)
-                            print(code)
                             new_project = Project(code=code, name=i)
                             new_project.save()
                             proj_exist = Project.objects.get(name=i)
                             project_user = ProjectUser(project=proj_exist, user=userProfile)
                             project_user.save()
-
+                '''
+                En caso de que se haya quitado una asociación de usuario con algún proyecto, se elimina dicha relación.
+                '''
                 allProject = ProjectUser.objects.filter(user_id=userProfile)
-                print(allProject)
-
                 for m in allProject:
                     count_exist = proj2.count(m.project.name)
-                    print(count_exist)
                     if count_exist == 0:
-                        print("el proyecto "+ str(m.project.name) + " no existe")
-                        print()
                         p = Project.objects.get(code= m)
-                        print(p)
                         deleteProject = ProjectUser.objects.get(user_id = userProfile, project_id=p.code)
-                        print(deleteProject)
                         deleteProject.delete()
 
             messages.success(request, "El usuario ha sido modificado exitosamente")
@@ -371,6 +397,9 @@ class Update_Users(TemplateView):
             return render(request, 'page-new-user.html',
                               {'form': form, 'pk': self.kwargs['id']})
 
+'''
+Clase que permite solicitar un cambio de contraseña.
+'''
 class Password_Reset(TemplateView):
     template_name = 'password-reset-form.html'
     form_class = PasswordResetForm
@@ -378,22 +407,18 @@ class Password_Reset(TemplateView):
     def post(self, request, *args, **kwargs):
         post_values = request.POST.copy()
         form = PasswordResetForm(post_values)
-        print(form.is_valid())
         if form.is_valid():
             email = post_values['email']
-            print(email)
             user = User.objects.filter(email=email).exists()
-            print(user)
             if user:
-                print("en if")
                 username = User.objects.get(email = email)
-                print(username.is_active)
+                '''
+                Si el usuario está activo, se procede a enviar un correo electrónico con la URL que lo llevará a restaurar
+                su contraseña.
+                '''
                 if username.is_active:
                     user = ProfileUser.objects.get(fk_profileUser_user_id=username)
-                    print(user)
                     user.activationKey = create_token()
-                    print("user.activation")
-                    print(user.activationKey)
                     user.save()
 
                     c = {'usuario': username.first_name,
@@ -413,51 +438,44 @@ class Password_Reset(TemplateView):
                                   {'form': form})
 
             else :
-                print("else no user")
                 form.add_error(None, 'El correo ingresado no es válido, por favor verifique')
                 return render(request, 'password-reset-form.html',
                               {'form': form})
         else:
-            print("form is not valid")
             form.add_error(None, 'Ingrese un correo electrónico válido')
             return render(request,'password-reset-form.html',
                           {'form':form})
 
+
+'''
+Clase que permite cambiar cambiar una contraseña
+'''
 class Password_Reset_Confirm(TemplateView):
     template_name = 'password-reset-confirm.html'
 
     def post(self, request, *args, **kwargs):
-        print("post reset")
         post_values = request.POST.copy()
         form = FirstSessionForm(post_values)
-        print(form)
-        print(form.is_valid())
         if form.is_valid():
             activation_key = self.kwargs['token']
-            print(activation_key)
             user = ProfileUser.objects.get(activationKey=activation_key)
-            print(user)
             username = User.objects.get(pk=user.fk_profileUser_user.pk)
-            print(username.pk)
-            print(activation_key)
             password = post_values['password']
             password2 = post_values['password2']
-            print(password)
-            print(password2)
             if password == password2:
-                print("las claves son iguales")
                 username.set_password(password)
                 form.add_error(None, "Las contraseña se ha restablecido exitosamente.")
                 return render(request, 'page-login.html', {'form':form})
             else:
-                print("else")
                 messages.success(request, 'Las contraseñas no coinceden, por favor verifique.')
                 return HttpResponseRedirect(reverse_lazy('password_reset_confirm',
                                                          kwargs={'token': activation_key}))
         else:
-            #form.add_error(None,'Se ha producido un error ')
             return render(request, 'password-reset-confirm.html', {'form':form, 'token':self.kwargs['token']})
 
+'''
+Clase que permite visualizar y modificar el perfil de un usaurio.
+'''
 class Profile(TemplateView):
     template_name = 'page-profile.html'
     form_class = UpdateProfileForm
@@ -465,18 +483,8 @@ class Profile(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(
             Profile, self).get_context_data(**kwargs)
-        print("get")
-
-        print(self.kwargs['id'])
 
         user = ProfileUser.objects.get(fk_profileUser_user_id=self.kwargs['id'])
-        #print(user)
-        #if not user:
-         #   data = {
-          #      'first_name': User.first_name,
-           #     'last_name' : User.last_name
-            #}
-        #else:
         data = {'first_name': user.fk_profileUser_user.first_name,
                  'last_name': user.fk_profileUser_user.last_name,
                  'username': user.fk_profileUser_user.username,
@@ -492,40 +500,40 @@ class Profile(TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = UpdateProfileForm(request.POST, request.FILES)
-        print(form.is_valid())
         if form.is_valid():
             user_pk = kwargs['id']
             userProfile = ProfileUser.objects.get(fk_profileUser_user=user_pk)
-
             user = User.objects.get(pk=userProfile.fk_profileUser_user_id)
-            print(user)
             user.first_name = request.POST['first_name']
-            print(user.first_name)
             user.last_name = request.POST['last_name']
             userProfile.phone = request.POST['phone']
             if (request.FILES == {}):
                 pass
             else:
-                print(request.FILES)
                 userProfile.imageProfile = request.FILES['image_profile']
                 userProfile.loadPhoto = True
-
-            print(userProfile.imageProfile)
             user.username = request.POST['username']
             user.save()
             userProfile.save()
             messages.success(request, "Su perfil ha sido actualizado exitosamente")
             return HttpResponseRedirect(reverse_lazy('profile',
                                                      kwargs={'id': user_pk}))
-
         else:
             return render(request, 'page-profile.html',
                           {'form': form})
 
+'''
+Función que permite crear el código del proyecto de manera aleatoria de acuerdo a las iniciales de su nombre.
+@:param name: Nombre del proyecto al que se le va a crear un código.
+'''
 def codeProject(name):
     name = ''.join(name)
     return name[:3]
 
+'''
+Función que permite obtener los proyectos y son enviados mediante JSON a un JQuery. Esta función es utilizada para obtener
+mediante Jquery el kwargs del proyecto.
+'''
 def get_projects(request):
     print("en get project")
     if request.is_ajax():
@@ -543,6 +551,9 @@ def get_projects(request):
         print(results)
         return JsonResponse(results, safe=False)
 
+'''
+Función que permite validar si un email y/o un username existe en la base de datos
+'''
 def ValidateUser(request):
     email = request.POST.get('email', None)
     username = request.POST.get('username', None)

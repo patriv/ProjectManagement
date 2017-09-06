@@ -7,16 +7,17 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import *
-from psycopg2._psycopg import Date
 from google_calendar import create_event
 from project.models import ProjectUser
 from task.forms import *
 from newListTaskTW import NewTaskList
 from add_taskTW import AddTask, UpdateTaskTW, DeleteTaskTW
 
-
 # Create your views here.
 
+'''
+Clase que agrega una nueva tarea a un proyecto determinado.
+'''
 class New_Task(FormView):
     template_name = 'new_work.html'
     form_class = NewTaskForm
@@ -26,7 +27,6 @@ class New_Task(FormView):
             New_Task, self).get_context_data(**kwargs)
         project = Project.objects.get(code=self.kwargs['pk'])
         task = Task.objects.filter(project=project)
-
         context['title'] = 'Agregar'
         context['task'] = task
         context['code'] = self.kwargs['pk']
@@ -40,6 +40,10 @@ class New_Task(FormView):
             project=self.kwargs['pk']
             project_pk=Project.objects.get(code=project)
             task = form.save(commit=False)
+            '''
+            Si es la primera tarea que se crea, se le asigna el código del proyecto más el número que indica que es
+            la primera.
+            '''
             if (Task.objects.all().count()) == 0:
                 task.code = project + '-001'
                 id_TeamWork=NewTaskList("Tareas "+str(project_pk.name), project_pk.idTeamWorkProject, project_pk.name)

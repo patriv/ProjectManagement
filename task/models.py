@@ -5,8 +5,6 @@ from django.db import models
 from users.models import ProfileUser
 from project.models import Project
 
-# Create your models here.
-
 class Task(models.Model):
 	STATUS = (
 		('In Progress', 'In Progress'),

@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 #-*- coding: utf-8 -*-
 import datetime
-
 from django import forms
-from django.contrib.auth.models import User, Group
-from django.forms import DateField
+from django.contrib.auth.models import User
 from task.models import *
-from django.db import models
 
 
 class NewTaskForm(forms.ModelForm):
@@ -23,7 +20,6 @@ class NewTaskForm(forms.ModelForm):
     )
 
 	responsable_querySet = User.objects.all()
-	print(responsable_querySet)
 
 	users = forms.ModelChoiceField(
 		required=True,

@@ -8,7 +8,6 @@ urlpatterns = [
         New_Task.as_view(),
         name='new_task'),
 
-
     url(
         r'^ajax/gantt/$',
         Gantt,
