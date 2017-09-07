@@ -50,47 +50,72 @@ class New_Task(FormView):
                 task.idTeamWorkTask = id_TeamWork
             else:
                 task_all= Task.objects.filter(project=project)
+                '''
+                Si es la primera tarea de un determinado proyecto, se le asigna el código del proyecto más el número que indica 
+                que es la primera tarea de ese proyecto.
+                '''
                 if task_all.count() == 0:
-                    print("soy vacio")
                     task.code = project + '-001'
+                    ''''
+                    Se crea la nueva lista de tareas en Team Work. Por cada proyecto, inicialmente se crea una sola lista.
+                    con el nombre "Tareas NOMBRE DEL PROYECTO"
+                    '''
                     id_TeamWork=NewTaskList("Tareas " + str(project_pk.name), str(project_pk.idTeamWorkProject), project_pk.name)
                     task.idTeamWorkTask=id_TeamWork
-                    print(task.idTeamWorkTask)
                 else:
+                    '''
+                    En caso de que no sea la primera tarea, se almacena el codigo de la tarea en un arreglo
+                    '''
                     key = []
                     teamWork = 0
                     for i in task_all:
                         key.append(i.code.split('-'))
-                        teamWork=i.idTeamWorkTask
-                    key.sort()
-                    last = key.pop()
-                    newCode = int(last[1]) + 1
-                    print(newCode)
+                        print(key)
+                        teamWork=i.idTeamWorkTask #En la variable TeamWork se almacena el id de la lista de tareas de team
+                                                  # work, con la finalidad de que todas las tareas tengan esa sola lista
+                    key.sort() # Se ordena la lista que contiene todas las tareas del proyecto, con la finalidad de continuar
+                               # el orden del código
+                    last = key.pop() # Se extrae el útlimo elemento de la lista
+                    newCode = int(last[1]) + 1 #El nuevo codigo será el último de la fila +1
+                    '''
+                    A continuación se crea un patrón para el código para almacenar en la base de datos
+                    '''
                     if len(str(newCode)) == 1:
                         task.code = project + '-00'+ str(newCode)
                     elif len(str(newCode)) == 2:
                         task.code = project + '-0'+ str(newCode)
                     else:
                         task.code = project + '-'+ str(newCode)
+                    '''
+                    Se le asigna a la tarea el id de las listas de team work
+                    '''
                     task.idTeamWorkTask=teamWork
             task.project = Project.objects.get(code=project)
             task.name = post_values['name']
             user = post_values['users']
             task.users = ProfileUser.objects.get(id = user)
+            '''
+            Se comprueba que el usuario que se esté asociando a la tarea, esté igualmente asociado al proyecto al cual pertenece la 
+            tarea. En caso de que el ususario no esté asociado con el proyecto de la tarea, se asocia al usuario con este proyecto.
+            '''
             projectUser = ProjectUser.objects.filter(user=task.users).count()
             if projectUser == 0:
                 newRelation= ProjectUser(isResponsable=False, project=task.project, user_id=task.users.pk)
                 newRelation.save()
             responsable = ProjectUser.objects.get(project=project_pk, isResponsable=True)
-            print("RESPONSABLEEE " +str(responsable.user.fk_profileUser_user.email))
-            print(task.users.fk_profileUser_user.email)
+            '''
+            Esta conversión de fechas se hace con la finalidad de guardarlo según el formato que permite PostgreSQL
+            '''
             a = post_values['startDate'].split('-')
             startDate = a[2] + '-' + a[1] + '-' + a[0]
             task.startDate = startDate
             b = post_values['endDate'].split('-')
             endDate = b[2] + '-' + b[1] + '-' + b[0]
             task.endDate = endDate
-            #dateProject=project_pk.endDate.day
+            '''
+            Se comprueba que la fecha de inicio o fin de las tareas estén dentro del rango de las fechas de inicio y
+            culminación del proyecto.
+            '''
             if datetime.date(int(a[2]),int(a[1]),int(a[0])) > project_pk.endDate or datetime.date\
                         (int(b[2]),int(b[1]),int(b[0])) > project_pk.endDate :
                 messages.success(request, "El proyecto " +str(project_pk.name)+" finaliza el "
@@ -108,14 +133,12 @@ class New_Task(FormView):
             task.status=post_values['status']
             task.description= post_values['description']
 
-            # Se crea el evento para realizar la conexión con Google Calendar
-
+            '''
+            Se crea el evento para realizar la conexión con Google Calendar
+            '''
             tz = pytz.timezone('America/Caracas')
-            print(tz)
             start_datetime = tz.localize(datetime.datetime(int(a[2]), int(a[1]), int(a[0])))
-            print(start_datetime)
             stop_datetime = tz.localize(datetime.datetime(int(b[2]), int(b[1]), int(b[0])))
-            print(stop_datetime)
             event = {
                 'summary': 'Tarea ' + str(task.name)+" del proyecto "+str(project_pk.name),
                 'description': task.description,
@@ -134,34 +157,30 @@ class New_Task(FormView):
             }
 
             create_event(event)
-            print("se creo el evento")
-            print(startDate)
             ####################################################
-          #
+
             task.save()
             task = Task.objects.get(code=task.code)
-            print(str(task.startDate).split('-'))
             startDate= str(task.startDate).split('-')
             endDate=str(task.endDate).split('-')
-            print(''.join(startDate))
+            endDate=str(task.endDate).split('-')
             task.idTaskTW=AddTask(task.idTeamWorkTask, task.name, ''.join(startDate), ''.join(endDate))
             task.save()
-            #FALTA LA DEPENDENCIA
+            '''
+            Como la entrada de las dependencias es un string con ',' se guardan en una lista.
+            '''
             dependence = post_values['dependencia']
             if dependence != '':
                 dependences = dependence.split(',')
-                print("soy dependencia")
-                print(dependence)
                 task_save = Task.objects.get(code = task.code)
-
+                '''
+                Se guardan cada una de las tareas que dependen de la que se está creando.
+                '''
                 for i in dependences:
                     if i != '':
-                        print(i)
                         c = Task.objects.get(project=task.project, name = i)
-                        print(c)
                         task_dependence = Dependency(task = task_save, dependence=c.code)
                         task_dependence.save()
-
             messages.success(request, "La tarea se ha guardado exitosamente")
             return HttpResponseRedirect(reverse_lazy('new_task',
                                                     kwargs={'pk':project}))
@@ -169,20 +188,21 @@ class New_Task(FormView):
             messages.success(request, "Error al registrar la tarea")
             return render(request, 'new_work.html', {'form': form, 'pk': self.kwargs['pk']})
 
-
+'''
+Función que envía los datos necesarios al JS para crear el diagrama de Gantt.
+'''
 def Gantt(request):
     project = request.GET.get('project',None)
     project_pk = Project.objects.get(code=project)
     tasks = Task.objects.filter(project=project_pk)
-    print(tasks)
-    #print(request.user.id) Con esto obtengo el id user log
     array = []
     percent=0
     for task in tasks:
         duration = task.endDate - task.startDate
-        print(task.code)
-        print("SOY STATUS!!!")
-        print(task.status)
+        '''
+        Para determinar el porcentaje de las tareas, se calcula dependiendo del status en que ésta se encuentre.
+        Variando de 20% en 20%.
+        '''
         if task.status == 'Done':
             percent=100
         elif task.status == 'In Progress':
@@ -193,11 +213,12 @@ def Gantt(request):
             percent = 60
         elif task.status == 'Customer Acceptance':
             percent = 80
-        print(percent)
         array.append([task.code,task.name,task.startDate, task.endDate, duration.days, percent, None ])
-    print(array)
     return JsonResponse(array, safe=False)
 
+'''
+Clase que edita una tarea.
+'''
 class Update_Task(TemplateView):
     template_name = 'new_work.html'
     form_class = NewTaskForm
@@ -205,10 +226,8 @@ class Update_Task(TemplateView):
     def get_context_data(self, **kwargs):
             context = super(
                 Update_Task, self).get_context_data(**kwargs)
-            print("get de update tareas")
             context['title'] = 'Modificar'
             task_pk = Task.objects.get(code = self.kwargs['code'])
-            print(task_pk.project.code)
             task = Task.objects.filter(project=task_pk.project.code)
             if task_pk.startDate == None:
                 startDate = ''
@@ -219,12 +238,10 @@ class Update_Task(TemplateView):
             else:
                 endDate = task_pk.endDate.strftime("%d-%m-%Y")
             dependence = Dependency.objects.filter(task=task_pk)
-            print(dependence)
             z = []
             for i in dependence:
                 tarea = Task.objects.get(code = i)
                 z.append(tarea.name)
-
 
             data = {'name': task_pk,
                     'users': task_pk.users.fk_profileUser_user,
@@ -241,54 +258,59 @@ class Update_Task(TemplateView):
             return context
 
     def post(self, request, *args, **kwargs):
-        print("post de update tareas")
         post_values = request.POST.copy()
         form = NewTaskForm(post_values)
-        print(form.is_valid())
+
         if form.is_valid():
             task_pk = self.kwargs['code']
             task = Task.objects.get(code = task_pk)
-
-            print(task.project)
             task.name = post_values['name']
             profile_users = post_values['users']
             task.users = ProfileUser.objects.get(fk_profileUser_user=profile_users)
+            '''
+            Las fechas son cambiadas al formato de PostgreSQL
+            '''
             a = post_values['startDate'].split('-')
             startDate = a[2]+'-'+a[1]+'-'+a[0]
-            print(startDate)
             task.startDate =startDate
             b = post_values['endDate'].split('-')
             endDate = b[2]+'-'+b[1]+'-'+b[0]
             task.endDate = endDate
-            #FALTA DEPENDENCIA
-            dependency = Dependency.objects.filter(task=task)
-            print(dependency)
+
+            '''
+            Se guardan las dependencias introducidas por el usuario en un arrelgo.
+            '''
             dependence = post_values['dependencia']
             dependence = dependence.split(',')
             array_dependece = []
+            '''
+            Se ven las tareas dependientes que se tenian antes del update
+            '''
+            dependency = Dependency.objects.filter(task=task)
             for a in dependency:
                 array_dependece.append(Task.objects.get(code = a.dependence).name)
-                print(a.dependence)
-            print(array_dependece)
             for x in array_dependece:
-                print(x)
+                '''
+                Se pregunta si existe la tarea que se tenía anterirormente asociada con las modificaciones realizadas
+                por el usuario.
+                '''
                 count_exist = dependence.count(x)
-                print(count_exist)
+                '''
+                Si no existe, se elimina la relación entre las tareas.
+                '''
                 if count_exist == 0:
                     a = Task.objects.get(name=x).code
                     delete_dependence = Dependency.objects.get(dependence=a, task = task)
                     delete_dependence.delete()
 
+            '''
+            En caso de haber una nueva dependencia de tarea que anteriromente no existía, se crea la relación entre ellas.
+            '''
             for d in dependence:
-                print("soy d")
-                print(d)
                 if d != '':
                     code = Task.objects.get(name=d)
-                    print(code)
                     dependency = Dependency.objects.filter(dependence=code.code,task=task).exists()
-                    print(dependency)
                     if not dependency:
-                        print("dentro de dependency")
                         new = Dependency(dependence=code.code,task=task)
                         new.save()
 
@@ -296,14 +318,17 @@ class Update_Task(TemplateView):
             task.description = post_values['description']
             task.save()
 
+            '''
+            Se realizan conversiones de fechas para que sean guardados en teamwork 
+            '''
             task = Task.objects.get(code=task.code)
-            print(str(task.startDate).split('-'))
             startDate = str(task.startDate).split('-')
             endDate = str(task.endDate).split('-')
             print(''.join(startDate))
-
+            '''
+            Función que facilita la conexión con TeamWork.
+            '''
             UpdateTaskTW(task.idTaskTW, task.name, ''.join(startDate), ''.join(endDate))
-            print("despues del update")
 
             messages.success(request, "La tarea ha sido modificada exitosamente")
             return HttpResponseRedirect(reverse_lazy('detail_project',
@@ -311,6 +336,9 @@ class Update_Task(TemplateView):
         else:
             return render(request, 'new_work.html', {'form':form, 'code':self.kwargs['code']})
 
+'''
+Función que permite la validación de tareas, y es pasado en formato JSON a un JS.
+'''
 def ValidateTask(request):
     name = request.GET.get('name', None)
     code = request.GET.get('code', None)
@@ -320,6 +348,10 @@ def ValidateTask(request):
 
     return JsonResponse(data)
 
+'''
+Función que permite la eliminación de una tarea.
+@:param code: código de la tarea a eliminar.
+'''
 def DeleteTask(request,code):
     task = Task.objects.get(code=code)
     project = Project.objects.get(code=task.project.code)
@@ -334,7 +366,9 @@ def DeleteTask(request,code):
         messages.success(request, "La tarea " + str(task.name) + " se ha eliminado exitosamente")
         return HttpResponseRedirect(reverse_lazy('detail_project',kwargs={"pk":task.project.code}))
 
-
+'''
+Función que permite enviar mediante un JSON los detalles de una tarea a un JS.
+'''
 def DetailTask(request, code):
     code = request.GET.get('code', None)
     print(code)

@@ -25,20 +25,22 @@ from django.urls import reverse
 from users.views import send_email
 from project_TW import add_project, UpdateProjectTW, DeleteProjectTW
 
-
+'''
+Clase que muestra todos los proyectos.
+'''
 class Home(TemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
         context = super(
             Home, self).get_context_data(**kwargs)
-        print("get")
         project = Project.objects.all()
-        print(project)
         context['project'] = project
-        print(context)
         return context
 
+'''
+Clase que permite la creación de un nueco proyecto.
+'''
 class New_Project(FormView):
     template_name = 'page-new-project.html'
     form_class = NewProjectForm
@@ -55,14 +57,23 @@ class New_Project(FormView):
         if form.is_valid():
             project = form.save(commit=False)
             project.name = post_values['name']
+            '''
+            Se genera un código aleatorio a partir del nombre del proyecto.
+            '''
             code = codeProject(project.name)
             code_exist = Project.objects.filter(code=code).exists()
+            '''
+            Si el código del proyecto existe, se agrega el caracter siguiente del nombre del proyecto.
+            '''
             if code_exist:
                 length = len(code)
                 code = code + project.name[length]
                 project.code=code
             else:
                 project.code = code
+            '''
+            Se transforma el formato de las fechas a como las guarda PostgreSQL.    
+            '''
             a = post_values['startDate'].split('-')
             startDate = a[2]+'-'+a[1]+'-'+a[0]
             project.startDate = startDate
@@ -101,16 +112,17 @@ class New_Project(FormView):
             }
 
             create_event(event)
-            print("se creo el evento")
-
 
             project.save()
+            '''
+            Se busca el proyecto guardado con la finalidad de guardarlo en TeamWork
+            '''
             new_project= Project.objects.get(code = project.code)
-
-            print(str(new_project.startDate).split('-'))
+            '''
+            Se cambia el formato de las fechs a como es aceptado en TeamWork
+            '''
             startDate = str(new_project.startDate).split('-')
             endDate = str(new_project.endDate).split('-')
-            print(''.join(startDate))
 
             #####################Conexion con Team Work###############################
             id_team_work= add_project(project.name, project.description, ''.join(startDate), ''.join(endDate))
@@ -120,9 +132,13 @@ class New_Project(FormView):
             project.save()
             ##################################################
 
-            # relacion cliente proyecto
+            '''
+            Se guarda la relación entre el cliente y el proyecto.
+            '''
             project_user_client = ProjectUser(user= profile_client, project=new_project)
-            #relacion empresa proyecto
+            '''
+            Se guarda la relación entre el responsable por parte de IDBC y el proyecto.
+            '''
             project_user_emp = ProjectUser(user= profile_emp, project=new_project, isResponsable= True)
 
             project_user_client.save()
@@ -134,6 +150,9 @@ class New_Project(FormView):
 
             return render(request, 'page-new-project.html', {'form': form})
 
+'''
+Clase que permite modificar un proyecto.
+'''
 class Update_Project(TemplateView):
     template_name = 'page-new-project.html'
     form_class = UpdateProjectForm
@@ -143,6 +162,9 @@ class Update_Project(TemplateView):
             Update_Project, self).get_context_data(**kwargs)
         context['title'] ='Modificar'
         project = Project.objects.get(code=self.kwargs['pk'])
+        '''
+        Se verifica si los proyectos tienen fechas asociadas de modo que sean mostradas en la respectiva vista. 
+        '''
         if project.startDate == None:
             startDate = ''
         else:
@@ -160,10 +182,8 @@ class Update_Project(TemplateView):
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
 
             if i.isResponsable:
-                print("Soy responsable" + str(i.isResponsable))
                 responsable=user
             else:
-                print("no es responsable")
                 if str(user.groups.all()[0])=='Cliente':
                     client=user
         data = {'name':project,
@@ -174,47 +194,34 @@ class Update_Project(TemplateView):
                 'status': project.status,
                 'description':project.description
         }
-        print(data)
 
         form = NewProjectForm(initial=data)
         context['form'] = form
         return context
 
     def post(self, request, *args, **kwargs):
-        print("post de update project")
         post_values = request.POST.copy()
         form = UpdateProjectForm(post_values)
         if form.is_valid():
             project_pk = kwargs['pk']
             project = Project.objects.get(pk = project_pk)
-            print(project.code)
+            '''
+            En caso de que sea el mismo proyecto pero diferente responsable, se busca el responsable actual
+            '''
             # caso 1: mismo codigo diferente responsable
             old_responsable = ProjectUser.objects.filter(project = project, isResponsable=True).exists()
-            print(old_responsable)
-
             project.name=post_values['name']
             project.status = post_values['status']
-
-            print("este es el nuevo project" + str(project))
-
             auth_cliente = post_values['client']
             auth_emp = post_values['company']
-            print("comany")
-            print(auth_emp)
-            print("client" + str(auth_cliente))
-            # id de responsable de la empresa
+            # id de nuevo responsable de la empresa
             profile_emp = ProfileUser.objects.get(fk_profileUser_user_id = auth_emp)
-            print(profile_emp.pk)
             userProject = ProjectUser.objects.filter(user_id=profile_emp.pk, project=project)
-            print(userProject)
             if userProject:
                 # caso de que exista la relacion entre usuario y proyecto pero no es responsable
                 for i in userProject:
                     if i.isResponsable == False:
-                        print("is false")
-                        print(i.id)
                         relation = ProjectUser.objects.get(id=i.id)
-                        print(relation)
                         if old_responsable:
                             old_responsable = ProjectUser.objects.get(project = project, isResponsable=True)
                             old_responsable.isResponsable = False
@@ -692,6 +699,10 @@ class ChangeStatus(TemplateView):
             messages.success(request, "Error al cambiar status de tarea")
             return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
 
+'''
+Función que permite activar el botón de cerrar proyecto, siempre y cuando todas sus tareas asociadas estén en estado
+'Done' 
+'''
 def ChangeButton(request):
     code = request.GET.get('code', None)
     all_task = Task.objects.filter(project=code).count()
@@ -708,14 +719,14 @@ def ChangeButton(request):
 
     return JsonResponse(data)
 
+'''
+Función que permite cerrar un proyecto siempre y cuando el status del mismo sea 'Done'
+@:param pk: identificador del proyecto.
+'''
 def CloseProject(request, pk):
-    print("Close Project")
     project = Project.objects.get(code=pk)
-    print(project.status)
     project.status ='Done'
-    print(project.status)
     project.save()
-
     messages.success(request, "El Proyecto "+str(project.name)+ " se ha cerrado.")
     return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": project.code}))
 
