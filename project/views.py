@@ -229,7 +229,6 @@ class Update_Project(TemplateView):
                         relation.isResponsable = True
                         relation.save()
                     else:
-                        print("sigue siendo el mismo cliente")
                         pass
 
             else:
@@ -238,7 +237,6 @@ class Update_Project(TemplateView):
                     old_responsable.isResponsable = False
                     old_responsable.save()
                 project_user_emp = ProjectUser(user= profile_emp, project=project, isResponsable= True)
-                print(project_user_emp)
                 project_user_emp.save()
 
             profile_client = ProfileUser.objects.get(fk_profileUser_user = auth_cliente)
@@ -290,6 +288,9 @@ class Update_Project(TemplateView):
         else:
             return render(request, 'page-new-project.html', {'form':form, 'pk':self.kwargs['pk']})
 
+'''
+Clase que permite detallar un proyecto.
+'''
 class Detail_Project(TemplateView):
     template_name = 'page-detail-project.html'
     form_class= statusForm
@@ -298,19 +299,19 @@ class Detail_Project(TemplateView):
         context = super(
             Detail_Project, self).get_context_data(**kwargs)
         project = Project.objects.get(code=self.kwargs['pk'])
-        # DOCUMENTOS
+        '''
+        Documentos asociados a un proyecto.
+        '''
         documents = Documents.objects.filter(fk_documents_project=project)
-        print("**** USUARIOS************")
         users = User.objects.all()
 
-        print("****************TAREAS*****************************")
-        # TAREAS
+        '''
+        Tareas relacionadas a un proyecto.
+        '''
 
         user_pk= self.request.user.id
         user = User.objects.get(pk=user_pk)
         profileUser = ProfileUser.objects.get(fk_profileUser_user_id = user_pk)
-        print(profileUser.pk)
-        print(user_pk)
         if (user.has_perms(['project.add_project'])):
             task = Task.objects.filter(project=project)
         else:
@@ -319,49 +320,70 @@ class Detail_Project(TemplateView):
 
         projectUser = ProjectUser.objects.filter(project_id=project.code)
         now = datetime.datetime.now()
-        print(project.endDate)
+        '''
+        En caso de que no se tenga una frecha establecida, se muestra '---'
+        '''
         if (project.endDate == None):
             project.endDate = "----"
             context['resta']= project.endDate
         else:
+            '''
+            Se resta el día de culminación del proyecto con el día actual, para saber cuante tiempo queda para entregar el proyecto.
+            '''
             resta = project.endDate - now.date()
             context['resta'] = resta.days
-            print("RESTAAAAA")
-            print(resta.days)
-            if resta.days == 1:
-                emailUser =[]
-                for i in projectUser:
-                    emailUser.append(i.user.fk_profileUser_user.email)
-                print("correoooooosss")
-                print(emailUser)
-                email_subject = 'IDBC Group - Entrega de  ' + str(project.name)
-                message_template = 'emailEndProject.html'
-                c = {'project': project.name,
-                     'endDate':project.endDate
-                     }
-                print(c)
 
-                send_email(email_subject, message_template, c, emailUser)
-
+            '''
+            Esto se qeuría hacer con la finalidad de enviar un correo de recordatorio, al restar un día, sin embargo 
+            debe hacerse en otro lado
+            '''
+            # if resta.days == 1:
+            #     emailUser =[]
+            #     for i in projectUser:
+            #         emailUser.append(i.user.fk_profileUser_user.email)
+            #     print("correoooooosss")
+            #     print(emailUser)
+            #     email_subject = 'IDBC Group - Entrega de  ' + str(project.name)
+            #     message_template = 'emailEndProject.html'
+            #     c = {'project': project.name,
+            #          'endDate':project.endDate
+            #          }
+            #
+            #
+            #     send_email(email_subject, message_template, c, emailUser)
+        '''
+        En caso de que el proyecto no cuente con una descripción, se mostrará 'Descripción no disponible'
+        '''
         if (project.description == ''):
             project.description = 'Descripción no disponible'
-
+        '''
+        En caso de que el proyecto no cuente con las fechas establecidas, se mostrará 'No disponible'
+        '''
         if project.startDate == None or project.endDate== None:
             project.startDate = 'No Disponible'
             project.endDate = 'No Disponible'
 
+        '''
+        Inicialmente, se colocará al cliente 'No disponible'. Si el el proyecto cuenta con un cliente, esta variable 
+        cambia con el nombre del mismo
+        '''
         client ='No Disponible'
         for i in projectUser:
-            print(i.user_id)
             profileUser = ProfileUser.objects.get(id = i.user_id)
             user = User.objects.get(id=profileUser.fk_profileUser_user_id)
-            print(user)
-
-            group = user.groups.all()[0]
+            '''
+            Si el usuario ocupa el rol de cliente, la variable client tendrá este nombre
+            '''
             if str(user.groups.all()[0]) == "Cliente":
                 client = user.get_full_name()
 
+        '''
+        Se guarda en un arreglo los estados del proyecto. Estos estados pueden verse por el responsable del proyecto.
+        '''
         status_project= ['In Progress','Technical Review','Functional Review', 'Customer Acceptance','Done']
+        '''
+        Estos status se pueden ver por el resto de los usuarios.
+        '''
         status = ['In Progress','Technical Review']
 
 
@@ -377,10 +399,18 @@ class Detail_Project(TemplateView):
 
         return context
 
+'''
+Función que permite crear el código del proyecto.
+@:param name: Nombre del proyecto.
+@:return las tres primeras letras del proyecto.
+'''
 def codeProject(name):
     name = ''.join(name)
     return name[:3]
 
+'''
+Función que permite validar el nombre de un proyecto.
+'''
 def ValidateName(request):
     name = request.POST.get('name', None)
     data = {
@@ -389,19 +419,33 @@ def ValidateName(request):
 
     return JsonResponse(data)
 
+'''
+Función que envía los datos por un formato Json a un JS para construir el diagrama de barras. 
+'''
 def BarProgress(request):
     user = request.user.id
     user_pk = User.objects.get(pk=user)
 
+    '''
+    Si el usuario cuenta con los permisos de agregar un proyecto, se le muestra en el diagrama todos los proyectos
+    registrados en el sistema
+    '''
     if (user_pk.has_perms(['project.add_project'])):
         proj = Project.objects.all()
         x = [p.name for p in proj]
+        '''
+        En caso contrario, solo se le muestran los proyectos a los cuales él esté vinculado.
+        '''
     else:
         user = ProfileUser.objects.get(fk_profileUser_user=user_pk)
         proj = ProjectUser.objects.filter(user=user)
         x=[]
         for i in proj:
             x.append(Project.objects.get(code=i).name)
+    '''
+    Estimada se refiere a la cantidad de días que ha de durar un proyecto, esto a través de la duración de sus tareas.
+    Real se refiere a la verdadera cantidad de días que se demoró el proyecto, esto en vista a la duración de las tareas.
+    '''
 
     array = ([
         ['Proyecto', 'Estimada', 'Real']
@@ -411,36 +455,44 @@ def BarProgress(request):
     durationDone =[]
     for i in x:
         project = Project.objects.get(name=i)
-        print("******* PROJECT *******************")
-        print(project)
         tasksCount = Task.objects.filter(project_id=project.code).count()
+        '''
+        En caso de que un proyecto no cuente con tareas asociadas, en el diagrama de barra se mostrará unicamente el 
+        nombre del proyecto
+        '''
         if tasksCount == 0:
             days = 0
-            array.append([i,days,0])
+            real=0
+            array.append([i,days,real])
         else:
             tasks = Task.objects.filter(project_id=project.code)
-            print("soy tareas" + str(tasks))
             for task in tasks:
-                print(task)
+                '''
+                La duración de los dias estimados se calcula en base a la resta de la fecha final establecida en un 
+                principio menos la fecha inicial
+                '''
                 days = task.endDate - task.startDate
-                print("soy los dias "+str(days.days))
-                print(duration)
+                '''
+                Como se necesita tener la cantidad de días que dura cada tarea, se procede a guardar en un arreglo la 
+                duración de cad tarea, con la finalidad de sumarlos todos y poder tener un total de días establecidos.
+                '''
                 duration.append(days.days)
             days=sum(duration)
             duration = []
-            print(duration)
 
+            '''
+            Para calcular la cantidad de tareas que ya han sido terminadas, es decir, que su status se encuentre en
+            estado 'Done', se procede a filtrar estas tareas con este status.
+            '''
             taskDone = Task.objects.filter(project_id=project.code, status='Done')
-            print("")
-            print(taskDone)
             if taskDone:
                 for t in taskDone:
-                    print(t.startDate)
-                    print(t.endDateReal)
+                    '''
+                    Como al cambiar el estado de una tarea en Done, se almacena la fecha de culminación del mismo, ésta
+                    es la mostrada en el diagrama de barras como 'Real'.
+                    '''
                     daysDone = t.endDateReal - t.startDate
-                    print(daysDone.days)
                     durationDone.append(daysDone.days)
-                print(durationDone)
                 daysDone = sum(durationDone)
                 durationDone = []
 
@@ -450,6 +502,10 @@ def BarProgress(request):
 
     return JsonResponse(array, safe=False)
 
+'''
+Función que permite mostrar los detalles de un proyecto, es decir, permite dirigir hacia la vista de 'Detail Project'
+Para esto, se envía toda la información necesaria mediante un Json a un JS.
+'''
 def ShowDetails(request):
     nameProject = request.GET.get('nameProject', None)
 
@@ -466,10 +522,8 @@ def ShowDetails(request):
             if i.isResponsable:
                 data['responsable']=user.get_full_name()
             else:
-                group = user.groups.all()[0]
                 if str(user.groups.all()[0]) == "Cliente":
                     data['client'] = user.get_full_name()
-
 
         data['name']= project.name
         data['start'] = project.startDate
@@ -487,16 +541,25 @@ def ShowDetails(request):
             data['status'] = "Sin status"
         return JsonResponse(data)
 
+'''
+Función que permite obtener el código de un proyecto, con la finalidad de redirigir a la página de 'Detail Project' de
+cada uno de los proyectos.
+'''
 def getCode(request):
     nameProject= request.GET.get('nameProject',None)
     data ={'code' : Project.objects.get(name=nameProject).code}
     return JsonResponse(data)
 
+'''
+Función que permite eliminar un proyecto.
+@:param code: Código del proyecto.
+'''
 def DeleteProject(request,code):
-    print("delete Project")
-    print(request.method)
     project = Project.objects.get(code=code)
     task = Task.objects.filter(project=project.code).count()
+    '''
+    Si el proyecto tiene al menos una tarea asociada el proyecto no se puede eliminar.
+    '''
     if task > 0:
         messages.success(request, "El proyecto " + str(project.name) + " tiene tareas asociadas. No se puede eliminar")
         return HttpResponseRedirect(reverse_lazy('project'))
@@ -506,31 +569,37 @@ def DeleteProject(request,code):
         messages.success(request, "El proyecto " + str(project.name) + " se ha eliminado exitosamente")
         return HttpResponseRedirect(reverse_lazy('project'))
 
+'''
+Clase que permite la visualización de los documentos pertenecientes a un proyecto.
+'''
 class DocumentsView(FormView):
     template_name = 'page-detail-project.html'
     form_class = DocumentsForm
 
     def post(self, request, *args, **kwargs):
-        print("en post Documets")
         form = DocumentsForm(request.POST, request.FILES)
         if form.is_valid():
             project_pk = self.kwargs['pk']
             project = Project.objects.get(pk=project_pk)
-
             if (request.FILES == {}):
                 pass
             else:
+                '''
+                Como al agregar un documento, se pueden agregar varios simultaneamente, se obtienen todos los documentos
+                con sus descripciones ingresados por el usuario. Luego se almacenan en su respecctiva tabla.
+                '''
                 desc = request.POST.getlist('description')
                 files =request.FILES.getlist('file')
                 for i in zip(files, desc):
-
                     doc = Documents(file=i[0],
                                     fk_documents_project= project,
                                     description=i[1])
                     doc.save()
-                    print(doc.file)
+                    '''
+                    Luego de guardarlo en la base de datos, se procede a almacenar el documento en el google Drive del
+                    correo asociado. 'path' se refiere a la ruta donde serán almacenados los docuemntos 
+                    '''
                     path= 'ProjectManagement/static/media/'+str(doc.file)
-                    print(path)
                     upload_file(path)
 
             messages.success(request, "El Documento ha sido guardado exitosamente")
@@ -539,26 +608,30 @@ class DocumentsView(FormView):
             messages.success(request, "No se puede guardar el documento")
             return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
 
+'''
+Clase que permite agregar más usuarios a un proyecto. Estos usuarios deberán estar registrados previamente en el
+sistema
+'''
 class MoreUsersView(FormView):
     template_name = 'page-detail-project.html'
     form_class = MoreUsersForm
 
     def post(self, request, *args, **kwargs):
-        print("more users")
         post_values = request.POST.copy()
         form = MoreUsersForm(post_values)
-        print(form)
         if form.is_valid():
             project_pk = self.kwargs['pk']
             project = Project.objects.get(code=project_pk)
 
+            '''
+            Se obtiene la lista de todos los usuarios ingresados por el usuario.
+            '''
             users = post_values.getlist('user')
             for user in users:
                 user = User.objects.get(pk=user)
                 userProfile = ProfileUser.objects.get(fk_profileUser_user=user)
                 existUser = ProjectUser.objects.filter(user=userProfile, project=project).exists()
-                print("existe " + str(existUser))
-                print(user)
+
                 if not existUser:
                     projectUser = ProjectUser(isResponsable=False, project=project, user=userProfile)
                     projectUser.save()
@@ -569,6 +642,10 @@ class MoreUsersView(FormView):
             messages.success(request, "Erro al registrar usuarios en el proyecto " + str(project.name))
             return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
 
+'''
+Función que permite mostrar la tabla de tareas asociadas a un proyecto. La información es enviada mediante Json
+a un JS.
+'''
 def ShowTable(request):
     nameProject = request.GET.get('nameProject', None)
     project=Project.objects.get(name=nameProject)
@@ -577,25 +654,31 @@ def ShowTable(request):
     user = request.user.id
     user_pk = User.objects.get(pk=user)
     profileUser = ProfileUser.objects.get(fk_profileUser_user=user_pk)
+
+    '''
+    Si el usuario tiene permisos de agregar un proyecto se muestran todos las tareas asociadas al proyecto
+    '''
+
     if (user_pk.has_perms(['project.add_project'])):
         task = Task.objects.filter(project=project)
     else:
+        '''
+        De lo contrario, solo se muestran las tareas correspondientes al usuario 
+        '''
         task = Task.objects.filter(users=profileUser.pk, project=project)
 
     x = []
     j = 0
     for i in task:
-        print(i.name)
         # usuario dueño de la tarea
         user=User.objects.get(pk=i.users.fk_profileUser_user_id)
         dependence = Dependency.objects.filter(task_id=i.code)
-        d = []
+        d = [] # Arreglo de las tareas que dependen 'requieren de'.
         for dep in dependence:
-            print()
             d.append(dep.dependence)
         d = (' ').join(d)
         required= Dependency.objects.filter(dependence=i.code)
-        r = []
+        r = [] # Arreglos de las tareas que requieren de una tarea 'requerido por'
         for req in required:
             r.append(req.task_id)
         r = (' ').join(r)
@@ -603,6 +686,9 @@ def ShowTable(request):
         start = str(a.day)+'-'+str(a.month)+'-'+str(a.year)
         b = i.endDate
         end = str(b.day)+'-'+str(b.month)+'-'+str(b.year)
+        '''
+        La información es enviada mediante arrelgos de arrelgos.
+        '''
         y=[]
         y.append(i.code)
         y.append(i.name)
@@ -615,36 +701,30 @@ def ShowTable(request):
         y.append(i.status)
         x.append(y)
         j =j+1
-    print(x)
+
     data['task']=x
 
     return JsonResponse(data)
 
+'''
+Clase que permite el cambio de status de una tarea
+'''
 class ChangeStatus(TemplateView):
     template_name = 'page-detail-project.html'
     form_class= statusForm
 
     def post(self, request, *args, **kwargs):
-        print("post de STATUUUUUUSSSS")
         post_values = request.POST.copy()
         form = statusForm(post_values)
-        print(form)
         if form.is_valid():
             project_pk = self.kwargs['pk']
             code_task = self.kwargs['code']
-            print(project_pk)
-            print(code_task)
             user_pk = self.request.user.id
             users = User.objects.get(pk=user_pk)
             project = Project.objects.get(pk=project_pk)
-            print(project.code)
             task = Task.objects.get(code=code_task, project=project_pk)
-            print("status viejo")
-            print(task.status)
-            print(task.startDate)
-            #Calculo la fecha actual para saber cuando se cambia el status
+            #Se calcula la fecha actual para saber cuando se cambia el status
             endDateReal = datetime.date.today()
-            print(endDateReal)
             task.endDateReal = endDateReal
             # Si la fecha de inicio de la tarea es mayor que la actual no se debe cambiar el status
             if (task.startDate > task.endDateReal ):
@@ -652,18 +732,18 @@ class ChangeStatus(TemplateView):
                 return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
             old_status = task.status
             task.status = post_values['status']
-            print("task.status nuevo " + str(task.status))
-            print(task.users.fk_profileUser_user.email)
             projectUser = ProjectUser.objects.filter(project_id = project)
-            print(projectUser)
+
+            '''
+            Se envía un correo electrónico informando a los usuarios interesados que se ha cambiado el status de una 
+            determinada tarea. Estos usuarios interesados son el responsable de la tarea y el responsable de IDBC del proyecto
+            '''
             email_subject = 'IDBC Group - Cambio de Estado de tarea del proyecto ' + str(project.name)
             message_template = 'emailStatusTask.html'
             for i in projectUser:
                 if i.isResponsable == True:
                     name_responsable = i.user.fk_profileUser_user.first_name
                     email_responsable = [i.user.fk_profileUser_user.email]
-                    print(email_responsable)
-                    print(i.user_id)
                     c = {'usuario': name_responsable,
                          'name_task': task.name,
                          'project' : project.name,
@@ -672,9 +752,6 @@ class ChangeStatus(TemplateView):
                          'new_status': task.status,
                          'host': request.META['HTTP_HOST']
                          }
-                    print(c)
-                    print(email_responsable)
-
                     send_email(email_subject, message_template, c, email_responsable)
 
             email_task = [task.users.fk_profileUser_user.email]
@@ -688,11 +765,7 @@ class ChangeStatus(TemplateView):
                  'host': request.META['HTTP_HOST']
                  }
             send_email(email_subject, message_template, c, email_task)
-
-
             task.save()
-            print("despues de save")
-
             messages.success(request, "El status de la tarea ha sido modificado exitosamente")
             return HttpResponseRedirect(reverse_lazy('detail_project', kwargs={"pk": self.kwargs['pk']}))
         else:
