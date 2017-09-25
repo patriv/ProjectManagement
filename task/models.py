@@ -31,7 +31,6 @@ class Task(models.Model):
 	def __str__(self):
 		return self.name
 
-
 	def get_startDate(self):
 		formato = "%d-%m-%Y"
 		if self.startDate is None:

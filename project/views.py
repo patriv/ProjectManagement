@@ -125,9 +125,8 @@ class New_Project(FormView):
             endDate = str(new_project.endDate).split('-')
 
             #####################Conexion con Team Work###############################
-            id_team_work= add_project(project.name, project.description, ''.join(startDate), ''.join(endDate))
-            print(id_team_work)
-            project.idTeamWorkProject=id_team_work
+            #id_team_work= add_project(project.name, project.description, ''.join(startDate), ''.join(endDate))
+            #project.idTeamWorkProject=id_team_work
             project.save()
             project.save()
             ##################################################
@@ -274,12 +273,9 @@ class Update_Project(TemplateView):
             print(''.join(startDate))
 
             # ****************** Team Work ***********************
-            print("AQUIIIIIIII")
 
-            print(request.method)
-            UpdateProjectTW(project.idTeamWorkProject, project.name, ''.join(startDate), ''.join(endDate),
-                            project.description)
-            print("Despues del update")
+            #UpdateProjectTW(project.idTeamWorkProject, project.name, ''.join(startDate), ''.join(endDate),
+             #               project.description)
 
             # *******************************************************
 
@@ -564,7 +560,7 @@ def DeleteProject(request,code):
         messages.success(request, "El proyecto " + str(project.name) + " tiene tareas asociadas. No se puede eliminar")
         return HttpResponseRedirect(reverse_lazy('project'))
     else:
-        DeleteProjectTW(project.idTeamWorkProject)
+        #DeleteProjectTW(project.idTeamWorkProject)
         project.delete()
         messages.success(request, "El proyecto " + str(project.name) + " se ha eliminado exitosamente")
         return HttpResponseRedirect(reverse_lazy('project'))

@@ -11,7 +11,7 @@ from google_calendar import create_event
 from project.models import ProjectUser
 from task.forms import *
 from newListTaskTW import NewTaskList
-from add_taskTW import AddTask, UpdateTaskTW, DeleteTaskTW
+from task_TW import AddTask, UpdateTaskTW, DeleteTaskTW
 
 # Create your views here.
 
